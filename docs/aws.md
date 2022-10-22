@@ -405,4 +405,4 @@ Kind regards, Daniel.
 
 Una vez que el servidor haya sido creado, y que éste sea considerado estable, es altamente recomendable contratar la instancia usando [Saving Plans], lo que nos permitirá reducir el coste que supone el uso de la instancia EC2 desplegada.
 
-https://aws.amazon.com/es/savingsplans/?nc1=h_ls
+[Saving Plans]: https://aws.amazon.com/es/savingsplans/?nc1=h_ls

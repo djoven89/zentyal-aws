@@ -209,6 +209,7 @@ Consideraciones
 
 * Durante la generación del par de claves, es el único momento donde podemos descargarnos la clave privada.
 * La clave privada descargada ha de ser securizada, ya que con ella es posible conectarse a la instancia sin necesidad de establer una contraseña.
+  * Los permisos que debe tener la clave son de sólo lectura para el usuario, que en notación Linux serían: 0400
 
 Los requisitos serán:
 

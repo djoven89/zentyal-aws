@@ -192,6 +192,171 @@ Las acciones a realizar son:
 
 ### General
 
+Antes de proceder a instalar y configurar los módulos, lo que haremos será establecer un serie de configuraciones generales.
+
+1. Lo primero que haremos será desde el panel de administración de Zentyal el idioma, puerto. Para ello iremos a `System -> General`:
+
+![Configuration of language and GUI port](images/zentyal/05-general-1.png "Configuration of language and GUI port")
+
+2. Después, desde el mismo lugar, establecemos el nombre del servidor y su dominio:
+
+    **NOTA:** En el momento que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
+
+![Configuration of FQDN and domain](images/zentyal/06-general-2.png "Configuration of FQDN and domain")
+
+A continuación, procederemos a crear las particiones y el sistema de archivo para los volúmenes EBS adicionales que añadimos para los buzones de correo y recursos compartidos.
+
+**NOTA:** En caso que sólo uséis un único volumen EBS, omitid las siguientes acciones.
+
+1. Listamos los volúmenes:
+
+    ```
+    lsblk
+        NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+        nvme1n1      259:0    0   10G  0 disk
+        nvme0n1      259:1    0   30G  0 disk
+        ├─nvme0n1p1  259:2    0 29.9G  0 part /
+        ├─nvme0n1p14 259:3    0    4M  0 part
+        └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+        nvme2n1      259:5    0   10G  0 disk
+    ```
+
+2. En los volúmenes `nvme1n1` y `nvme2n1` creamos una única partición que ocupe todo el disco:
+
+    ```
+    for disk in nvme1n1 nvme2n1; do
+        echo -e 'n\np\n\n\n\nt\n8e\nw' | sudo fdisk /dev/$disk
+    done
+    ```
+
+3. Revisamos que se hayan creado las particiones correctamente:
+
+    ```
+    lsblk
+        NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+        nvme1n1      259:0    0   10G  0 disk
+        └─nvme1n1p1  259:7    0   10G  0 part
+        nvme0n1      259:1    0   30G  0 disk
+        ├─nvme0n1p1  259:2    0 29.9G  0 part /
+        ├─nvme0n1p14 259:3    0    4M  0 part
+        └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+        nvme2n1      259:5    0   10G  0 disk
+        └─nvme2n1p1  259:8    0   10G  0 part
+    ```
+
+4. Establecemos como sistema de archivos `ext4` a cada partición:
+
+    ```
+    for disk in nvme1n1p1 nvme2n1p1; do
+        sudo mkfs -t ext4 /dev/$disk
+    done
+    ```
+
+5. Finalmente, volvemos a revisar que todo haya ido bien:
+
+    ```
+    lsblk -f
+        NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
+        nvme1n1
+        └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
+        nvme0n1
+        ├─nvme0n1p1  ext4   cloudimg-rootfs 418a4763-c829-4fb6-b538-9a38158da803   26.8G     7% /
+        ├─nvme0n1p14
+        └─nvme0n1p15 vfat   UEFI            CBF7-D252                              99.2M     5% /boot/efi
+        nvme2n1
+        └─nvme2n1p1  ext4                   e903ff6f-c431-4e3a-92a1-9f476c66b3be
+    ```
+
+Por último, realizaremos una serie de acciones adicionales **opcionales** para optimizar recursos así como mejorar la administración del servidor a través de la CLI.
+
+1. Desinstalaremos SNAP, ya que no se utiliza en Zentyal:
+
+    1. Paramos el servicio:
+
+        ```
+        sudo systemctl stop snapd snapd.socket
+        ```
+
+    2. Eliminamos el paquete:
+
+        ```
+        sudo apt remove --purge snapd
+        ```
+
+    3. Eliminamos los directorios que quedan en el sistema de archivos:
+
+        ```
+        sudo rm -vf /root/snap/
+        ```
+
+2. Habilitamos el color del prompt para mejorar la legibilidad mientras realizamos tareas desde la CLI.
+
+    1. Para habilitar el color en los usuarios existentes:
+
+        ```
+        for user in /root /home/ubuntu /home/djoven; do sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc; done
+        ```
+
+    2. Para habilitar el color para futuros usuarios que creemos:
+
+        ```
+        sudo sed -i 's/#force_color_prompt/force_color_prompt/' /etc/skel/.bashrc
+        ```
+
+3. Establecemos una serie de opciones adicionales relativas al historial de los usuarios (comando history).
+
+    1. Añadimos las opciones a los usuarios existentes del sistema:
+
+        ```
+        for user in /root /home/ubuntu /home/djoven; do
+
+        sudo cat <<EOF >> $user/.bashrc
+        ## Custom options
+        HISTTIMEFORMAT="%F %T  "
+        PROMPT_COMMAND='history -a'
+        HISTIGNORE='clear:history'
+        EOF
+
+            sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
+                        -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
+                        -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
+                    $user/.bashrc
+        done
+        ```
+
+    2. Realizamos las mismas acciones pero para los futuros usuarios:
+
+        ```
+        sudo cat <<EOF >> /etc/skel/.bashrc
+        ## Custom options
+        HISTTIMEFORMAT="%F %T  "
+        PROMPT_COMMAND='history -a'
+        HISTIGNORE='clear:history'
+        EOF
+
+        sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
+                        -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
+                        -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
+                    /etc/skel/.bashrc
+        ```
+
+4. Añadimos una configuración personalizada sencilla para el editor de textos `vim` tanto para los usuarios existentes como futuros:
+
+    ```
+    for user in /root /home/ubuntu /home/djoven /etc/skel; do
+
+    sudo cat <<EOF > $user/.vimrc
+    set tabstop=2
+    syntax on
+    set number
+    color desert
+    set shiftwidth=2
+    auto FileType yaml,yml setlocal ai ts=2 sw=2 et
+    EOF
+
+    done
+    ```
+
 ### Network
 
 ### Logs

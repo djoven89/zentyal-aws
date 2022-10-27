@@ -37,7 +37,7 @@ Vamos a crear una VPC con los siguientes requisitos:
 * **IPv6:** Deshabilitado
 * **Tenancy:** Default
 * **Tags:**
-  * **Env** = Production
+  * **Env**: Production
 
 **NOTA:** Como Zentyal no permite IPv6, lo deshabilitamos para evitar posibles brechas de seguridad.
 

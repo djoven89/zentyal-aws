@@ -357,13 +357,67 @@ Por último, realizaremos una serie de acciones adicionales **opcionales** para 
     done
     ```
 
-### Network
 
 ### Logs
 
+Inicialmente, simplemente habilitaremos los dos 'dominios' que hay, aunque cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores.
+
+![Initial log configuration](images/zentyal/logs_initial.png "Initial log configuration")
+
+
 ### Firewall
 
+Para la configuración de red que tenemos (interna) y los módulos que usaremos, las secciones del firewall que usaremos son:
+
+* Filtering rules from internal networks to Zentyal
+* Filtering rules from traffic comming out from Zentyal
+
+Las políticas definidas por defecto en ambas secciones del firewall son seguras, no obstante, procederemos a añadir una regla de tipo `LOG` para las conexiones por SSH, ya que siempre es buena idea tener la mayor información posible sobre este servicio tan crítico. Para ello, iremos a `Firewall -> Packet Filter -> Filtering rules from internal networks to Zentyal`.
+
+![Firewall SSH rule 1](images/zentyal/firewall_initial-ssh-1.png "Firewall SSH rule 1")
+![Firewall SSH rule 2](images/zentyal/firewall_initial-ssh-2.png "Firewall SSH rule 2")
+
+**Consideraciones:**
+
+1. Es importante que la nueva regla vaya por encima de la regla que acepta la conexión SSH, de lo contrario nunca se ejecutará, ya que cuando una regla se cumple, no se siguen analizando el resto.
+2. Recordad que a parte de este firewall, también tenemos el de AWS (Security Group asociado a la instancia), por lo que tendremos que asegurarnos que ambos firewall tienen las mismas reglas, aunque también se podría configurar en uno de ellos que se permita todo y que el otro se haga cargo de las reglas.
+
+
+### Software
+
+Una vez que tenemos la base del sistema configurado, procederemos a programar la hora de las actualizaciones automáticas así como a instalar todos los módulos que usaremos.
+
+1. Desde el panel de administración, iremos a `Software Management -> Settings`, habilitaremos las actualizaciones automáticas e indicaremos una hora para las actualizaciones.
+
+**NOTA:** Es conveniente que la hora sea posterior a posibles snapshots del servidor, así tenemos un punto de restauración estable, ya que hay posibilidades de que una actualización pudiera causar una incidencia.
+
+![Automatic software updates](images/zentyal/software_automatic-updates.png "Automatic software updates")
+
+Después, procederemos a instalar **únicamente** los módulos que vayamos a usar, para ello vamos a `Software Management -> Zentyal Components`.
+
+![Modules installation](images/zentyal/software_installation.png "Modules installation")
+
+
 ### NTP
+
+El primero de los módulos que hemos instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente.
+
+1. Vamos a `System -> Date/Time` y establecemos la zona horaria.
+
+![NTP timezone](images/zentyal/ntp_timezone.png "NTP timezone")
+
+2. Habilitamos la opción que permite sincronizar la hora con servidores externos.
+
+![NTP sync option](images/zentyal/ntp_sync.png "NTP sync option")
+
+3. Modificamos los servidores NTP establecidos por defecto, por los oficiales que tenemos disponibles en [esta](https://www.pool.ntp.org/en) web.
+
+![NTP servers](images/zentyal/ntp_servers.png "NTP servers")
+
+4. Finalmente, habilitamos el módulo de NTP desde `Modules Status`.
+
+![NTP enable](images/zentyal/modules_ntp.png "NTP enable")
+
 
 ### DNS
 

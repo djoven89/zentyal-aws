@@ -204,6 +204,7 @@ Antes de proceder a instalar y configurar los módulos, lo que haremos será est
 
 ![Configuration of FQDN and domain](images/zentyal/06-general-2.png "Configuration of FQDN and domain")
 
+
 Por último, realizaremos una serie de acciones adicionales **opcionales** para optimizar recursos así como mejorar la administración del servidor a través de la CLI.
 
 1. Desinstalaremos SNAP, ya que no se utiliza en Zentyal:
@@ -292,6 +293,59 @@ Por último, realizaremos una serie de acciones adicionales **opcionales** para 
     EOF
 
     done
+    ```
+
+### Partición SWAP
+
+Es altamente recomendable configurar una partición SWAP en el servidor para incrementar la disponibilidad del servidor en caso de picos. Las acciones que realizaremos están documentadas [aquí](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/).
+
+1. Creamos un archivo vacío de 4GB, que será el tamaño de nuestra partición SWAP:
+
+    ```
+    sudo dd if=/dev/zero of=/swapfile1 bs=128M count=32
+    ```
+
+2. Establecemos los permisos correctos:
+
+    ```
+    sudo chmod 0600 /swapfile1
+    ```
+
+3. Establecemos el archivo como una área de SWAP:
+
+    ```
+    sudo mkswap /swapfile1
+    ```
+
+4. Habilitamos la partición SWAP:
+
+    ```
+    sudo swapon /swapfile1
+    ```
+
+5. Verificamos que el sistema la esté reconociendo:
+
+    ```
+    sudo swapon -s
+        Filename				Type		Size	Used	Priority
+        /swapfile1                             	file    	4194300	0	-2
+
+    sudo free -m
+                      total        used        free      shared  buff/cache   available
+        Mem:           3875        1218         209           2        2447        2396
+        Swap:          4095           0        4095
+    ```
+
+6. Establecemos la partición en el archivo de configuración `/etc/fstab`:
+
+    ```
+    echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' >> | sudo tee -a /etc/fstab
+    ```
+
+7. Comprobamos que la nueva entrada en el archivo no cause errores al montar los discos:
+
+    ```
+    sudo mount -a
     ```
 
 
@@ -624,7 +678,7 @@ Desde `Registered domains` en AWS Route53 hay que establecer los registros `NS` 
 
 Y después, modificar los de la propia zona. **NOTA:** Pueden tardar varios minutos en actualizarse los registros indicados en la información de la zona.
 
-**TODO**
+![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
 
 
 ### Controlador de dominio
@@ -1140,7 +1194,77 @@ Para generar el certificado para el **Correo** realizaremos lo siguiente:
 
 ### Antivirus
 
+El siguiente módulo que configuraremos será el [Antivirus], este es especialmente importante - aunque consume mucha RAM - para analizar los emails que nos llegan desde el exterior.
+
+[Antivirus]: https://doc.zentyal.org/es/antivirus.html
+
+La configuración de este módulo para la versión Development es muy limitada, por lo que las acciones a realizar son muy breves.
+
+1. Habilitamos el módulo:
+
+    ![Antivirus enable](images/zentyal/modules_antivirus.png "Antivirus enable")
+
+2. Actualizamos la base de datos de firmas:
+
+    ```
+    sudo freshclam -v
+    ```
+
+
 ### Mailfilter
+
+Tras tener habilitado el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre los emails que recibimos.
+
+[Mailfilter]: https://doc.zentyal.org/es/mailfilter.html
+
+Las configuraciones que estableceremos son:
+
+1. Habilitaremos los servicios de este módulo y estableceremos un correo electrónico para emails problemáticos que no sean spam:
+
+    ![Mailfilter services](images/zentyal/mailfilter-general.png "Mailfilter services")
+
+2. Estableceremos las políticas antispam:
+
+    ![Mailfilter Antispam configuration](images/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
+
+3. Opcionalmente, también podemos añadir a nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
+
+    ![Mailfilter whitelist](images/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
+
+4. Estableceremos las políticas por defecto relativas al comportamiento del módulo ante ciertos eventos:
+
+    ![Mailfilter event policies](images/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
+
+5. Deshabilitamos las siguientes extensiones desde `Mail Filter -> Files ACL -> File extensions`:
+
+    * bas
+    * bat
+    * cmd
+    * dll
+    * exe
+    * ini
+    * msi
+    * reg
+    * sh
+
+    ![Mailfilter file extensions](images/zentyal/mailfilter-files_extensions.png "Mailfilter file extensions")
+
+6. Habilitamos el módulo:
+
+    ![Mailtiler enable](images/zentyal/modules_mailfilter.png "Mailfilter enable")
+
+7. Finalmente, nos enviamos un email desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
+
+    ```
+    Nov  5 10:39:31 arthas amavis[9409]: (09409-01) 9Vx6OoIz2Q4W FWD from <someuser@gmail.com> -> <postmaster@icecrown.es>, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF
+
+    Nov  5 10:39:31 arthas amavis[9409]: (09409-01) Passed CLEAN, [127.0.0.1] <someuser@gmail.com> -> <postmaster@icecrown.es>, Message-ID: <CAB89cFCp7rhmrjxbMzphfEV3qR4gMBaHTmYg=PXUgBbBZMEh1Zw@mail.gmail.com>, Hits: -0.017
+
+    Nov  5 10:39:31 arthas postfix/smtp[9512]: 1245B43D97: to=<postmaster@icecrown.es>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.5, delays=0.02/0/0.49/3, dsn=2.0.0, status=sent (250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF)
+    ```
+
+    Como se puede ver, el mensaje llegó desde una cuenta de Gmail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
+
 
 ### Securización adicional del correo
 

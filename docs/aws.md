@@ -23,7 +23,6 @@ Como se puede ver en la imagen, en mi caso concreto, he selecionado todas las re
 
 [esta]: https://www.awsspeedtest.com/latency
 
-
 ## VPC
 
 El primer servicio que configuraremos es [AWS VPC], el cual es básicamente una red virtual donde ubicaremos nuestro servidor Zentyal.
@@ -110,7 +109,7 @@ Para este caso, tendremos que editar el recurso ya existente y realizar las sigu
 
 ### Network ACL
 
-La siguiente recurso que modificaremos será las ACL de red, las cuales nos permiten denegar o permitir el tráfico entrante y saliente de nuestra subnets.
+La siguiente recurso que modificaremos será las [ACL de red], las cuales nos permiten denegar o permitir el tráfico entrante y saliente de nuestra subnets.
 
 [ACL de red]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/vpc-network-acls.html
 
@@ -176,7 +175,6 @@ Además, también le establecemos las siguientes etiquetas:
 Finalmente, estableceremos que todo tráfico saliente sea permitido:
 
 ![Security Group outbound](images/aws/aws-15-vpc_securityGroup-3.png "Security Group outbound")
-
 
 ## EC2
 
@@ -390,7 +388,7 @@ Para poder enviar emails desde el servidor Zentyal a través de la IP estática,
 
 Un ejemplo podría ser:
 
-```
+```java
 Hi Support team,
 
 We have deployed a new EC2 instance that acts as a Mail server using Zentyal operating system. Would you mind removing the default restriction so my users can send emails outside, please?

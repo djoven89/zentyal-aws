@@ -98,15 +98,15 @@ Para este caso, tendremos que editar el recurso ya existente y realizar las sigu
 
 1. Crear las tags al recurso tal y como muestra la imagen:
 
-![Route tags](images/aws/aws-06-vpc_route-1.png "Route tags")
+    ![Route tags](images/aws/aws-06-vpc_route-1.png "Route tags")
 
 2. Asegurar que la subned está asociada.
 
-![Route subnets](images/aws/aws-07-vpc_route-2.png "Route subnets")
+    ![Route subnets](images/aws/aws-07-vpc_route-2.png "Route subnets")
 
 3. Establecer la puerta de enlace.
 
-![Route gateway](images/aws/aws-08-vpc_route-3.png "Route gateway")
+    ![Route gateway](images/aws/aws-08-vpc_route-3.png "Route gateway")
 
 ### Network ACL
 
@@ -118,19 +118,19 @@ Una vez más, AWS nos crea por defecto una ACL de red. Las modificaciones que te
 
 1. Crear las tags al recurso tal y como muestra la imagen:
 
-![NACL tags](images/aws/aws-09-vpc_nacl-1.png "NACL tags")
+    ![NACL tags](images/aws/aws-09-vpc_nacl-1.png "NACL tags")
 
 2. Asegurar que la subned está asociada.
 
-![Route subnets](images/aws/aws-10-vpc_nacl-2.png "Route subnets")
+    ![Route subnets](images/aws/aws-10-vpc_nacl-2.png "Route subnets")
 
 3. Verificar que todo el tráfico entrante está permitido:
 
-![Route Inbound](images/aws/aws-11-vpc_nacl-3.png "Route Inbound")
+    ![Route Inbound](images/aws/aws-11-vpc_nacl-3.png "Route Inbound")
 
 4. Verificar que todo el tráfico saliente está permitido:
 
-![Route Outbound](images/aws/aws-12-vpc_nacl-4.png "Route Outbound")
+    ![Route Outbound](images/aws/aws-12-vpc_nacl-4.png "Route Outbound")
 
 ### Security Group
 
@@ -308,6 +308,7 @@ Para la modificación del volumen root asociado a la instancia, simplemente le e
 A continuación, crearé dos volúmenes con los siguientes requisitos:
 
 **Para los buzones de correo:**
+
 * **Volume Type:** General Purpose SSD (gp3)
 * **Size:** 10GiB
 * **IOPS:** 3000
@@ -326,6 +327,7 @@ A continuación, crearé dos volúmenes con los siguientes requisitos:
 ![Mail volume creation 2](images/aws/aws-28-ec2_volume-3.png "Mail volume creation 2")
 
 **Para los recursos compartidos:**
+
 * **Volume Type:** General Purpose SSD (gp3)
 * **Size:** 10GiB
 * **IOPS:** 3000

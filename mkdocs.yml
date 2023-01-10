@@ -1,0 +1,33 @@
+---
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - toc.integrate
+  language: es
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+
+site_name: Implementación de Zentyal
+nav:
+  - Home: 'index.md'
+  - AWS: 'aws.md'
+  - Instalación: 'zentyal-installation.md'
+  - Configuración: 'zentyal-configuration.md'
+  - Certificados: 'zentyal-certificates.md'
+  - Securización: 'zentyal-hardening.md'
+  - Mantenimiento: 'maintenance.md'
+  - Monitorización: 'monitoring.md'
+
+...

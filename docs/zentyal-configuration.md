@@ -1,108 +1,134 @@
 # Configuración de los módulos
 
-## General
+En este apartado vamos a proceder a la configuración inicial tanto del servidor como de los módulos que usaremos.
 
-Antes de proceder a instalar y configurar los módulos, lo que haremos será establecer un serie de configuraciones generales.
+## Objetivo
 
-1. Lo primero que haremos será desde el panel de administración de Zentyal el idioma, puerto. Para ello iremos a `System -> General`:
+Las configuraciones que se realizarán serán:
 
-    ![Configuration of language and GUI port](images/zentyal/05-general-1.png "Configuration of language and GUI port")
+Opcionales:
 
-2. Después, desde el mismo lugar, establecemos el nombre del servidor y su dominio:
+* Desinstalación de Snap.
+* Configuración para los usuarios locales del:
+  * Prompt.
+  * Historial.
+  * Editor Vim.
 
-    **NOTA:** En el momento que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
+Requeridas:
 
-    ![Configuration of FQDN and domain](images/zentyal/06-general-2.png "Configuration of FQDN and domain")
+* Partición SWAP.
+* Configuración de los volúmenes EBS adicionales.
+* Implementación de Quotas.
 
-Por último, realizaremos una serie de acciones adicionales **opcionales** para optimizar recursos así como mejorar la administración del servidor a través de la CLI.
+Zentyal:
 
-1. Desinstalaremos SNAP, ya que no se utiliza en Zentyal:
+* Idioma y puerto.
+* Hostname y dominio.
+* Instalación y configuración de los modulos.
 
-    1. Paramos el servicio:
+## Configuraciones opcionales
 
-        ```bash
-        sudo systemctl stop snapd snapd.socket
-        ```
+A continuación se van a realizar una serie de configuraciones totalmente opcionales sobre el servidor.
 
-    2. Eliminamos el paquete:
+### Snap
 
-        ```bash
-        sudo apt remove --purge snapd
-        ```
+Como Zentyal no usa Snap, procederemos a su desinstalación.
 
-    3. Eliminamos los directorios que quedan en el sistema de archivos:
+1. Paramos el servicio:
 
-        ```bash
-        sudo rm -vf /root/snap/
-        ```
+    ```sh
+    sudo systemctl stop snapd snapd.socket
+    ```
 
-2. Habilitamos el color del prompt para mejorar la legibilidad mientras realizamos tareas desde la CLI.
+2. Eliminamos el paquete:
 
-    1. Para habilitar el color en los usuarios existentes:
+    ```sh
+    sudo apt remove --purge snapd
+    ```
 
-        ```bash
-        for user in /root /home/ubuntu /home/djoven; do sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc; done
-        ```
+3. Eliminamos los directorios que quedan en el sistema de archivos:
 
-    2. Para habilitar el color para futuros usuarios que creemos:
+    ```sh
+    sudo rm -vf /root/snap/
+    ```
 
-        ```bash
-        sudo sed -i 's/#force_color_prompt/force_color_prompt/' /etc/skel/.bashrc
-        ```
+### Prompt
 
-3. Establecemos una serie de opciones adicionales relativas al historial de los usuarios (comando history).
+Habilitamos el color del prompt para mejorar la legibilidad mientras realizamos tareas desde la CLI.
 
-    1. Añadimos las opciones a los usuarios existentes del sistema:
+1. Para habilitar el color en los usuarios existentes:
 
-        ```bash
-        for user in /root /home/ubuntu /home/djoven; do
+    ```sh
+    for user in /root /home/ubuntu /home/djoven; do sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc; done
+    ```
 
-        sudo cat <<EOF >> $user/.bashrc
-        ## Custom options
-        HISTTIMEFORMAT="%F %T  "
-        PROMPT_COMMAND='history -a'
-        HISTIGNORE='clear:history'
-        EOF
+2. Para habilitar el color para futuros usuarios que creemos:
 
-        sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
-                    -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
-                    -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
-                $user/.bashrc
-        done
-        ```
+    ```sh
+    sudo sed -i 's/#force_color_prompt/force_color_prompt/' /etc/skel/.bashrc
+    ```
 
-    2. Realizamos las mismas acciones pero para los futuros usuarios:
+### Historial
 
-        ```bash
-        sudo cat <<EOF >> /etc/skel/.bashrc
-        ## Custom options
-        HISTTIMEFORMAT="%F %T  "
-        PROMPT_COMMAND='history -a'
-        HISTIGNORE='clear:history'
-        EOF
+Establecemos una serie de opciones adicionales relativas al historial de los usuarios (comando history).
 
-        sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
-                        -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
-                        -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
-                    /etc/skel/.bashrc
-        ```
+1. Añadimos las opciones a los usuarios existentes del sistema:
 
-4. Añadimos una configuración personalizada sencilla para el editor de textos `vim` tanto para los usuarios existentes como futuros:
+    ```sh
+    for user in /root /home/ubuntu /home/djoven; do
 
-    ```bash
-    for user in /root /home/ubuntu /home/djoven /etc/skel; do
-
-    sudo cat <<EOF > $user/.vimrc
-    set tabstop=2
-    syntax on
-    set number
-    color desert
-    set shiftwidth=2
-    auto FileType yaml,yml setlocal ai ts=2 sw=2 et
+    sudo cat <<EOF >> $user/.bashrc
+    ## Custom options
+    HISTTIMEFORMAT="%F %T  "
+    PROMPT_COMMAND='history -a'
+    HISTIGNORE='clear:history'
     EOF
 
+    sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
+                -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
+                -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
+            $user/.bashrc
     done
     ```
+
+2. Realizamos las mismas acciones pero para los futuros usuarios:
+
+    ```sh
+    sudo cat <<EOF >> /etc/skel/.bashrc
+    ## Custom options
+    HISTTIMEFORMAT="%F %T  "
+    PROMPT_COMMAND='history -a'
+    HISTIGNORE='clear:history'
+    EOF
+
+    sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
+                    -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
+                    -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
+                /etc/skel/.bashrc
+    ```
+
+### Vim
+
+Añadimos una configuración personalizada sencilla para el editor de textos `vim` tanto para los usuarios existentes como futuros:
+
+```sh
+for user in /root /home/ubuntu /home/djoven /etc/skel; do
+
+sudo cat <<EOF > $user/.vimrc
+set tabstop=2
+syntax on
+set number
+color desert
+set shiftwidth=2
+auto FileType yaml,yml setlocal ai ts=2 sw=2 et
+EOF
+
+done
+```
+
+## Configuraciones requeridas
+
+A continuación se realizan las configuraciones requeridas en el servidor antes de proceder a la instalación y configuración de los módulos de Zentyal.
 
 ### Partición SWAP
 
@@ -110,31 +136,31 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 1. Creamos un archivo vacío de 4GB, que será el tamaño de nuestra partición SWAP:
 
-    ```bash
+    ```sh
     sudo dd if=/dev/zero of=/swapfile1 bs=128M count=32
     ```
 
 2. Establecemos los permisos correctos:
 
-    ```bash
+    ```sh
     sudo chmod 0600 /swapfile1
     ```
 
 3. Establecemos el archivo como una área de SWAP:
 
-    ```bash
+    ```sh
     sudo mkswap /swapfile1
     ```
 
 4. Habilitamos la partición SWAP:
 
-    ```bash
+    ```sh
     sudo swapon /swapfile1
     ```
 
 5. Verificamos que el sistema la esté reconociendo:
 
-    ```bash
+    ```sh
     sudo swapon -s
         Filename				Type		Size	Used	Priority
         /swapfile1                             	file    	4194300	0	-2
@@ -147,23 +173,23 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 6. Establecemos la partición en el archivo de configuración `/etc/fstab`:
 
-    ```bash
+    ```sh
     echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' >> | sudo tee -a /etc/fstab
     ```
 
 7. Comprobamos que la nueva entrada en el archivo no cause errores al montar los discos:
 
-    ```bash
+    ```sh
     sudo mount -a
     ```
 
 ### Volúmenes EBS adicionales
 
-En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso para los buzones de correo y recursos compartidos, procederemos a realizar las siguientes acciones.
+En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso para los buzones de correo y recursos compartidos-, procederemos a configurarlos y montarlos en el servidor.
 
 1. Listamos los volúmenes:
 
-    ```bash
+    ```sh
     lsblk
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
@@ -176,7 +202,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 2. En los volúmenes `nvme1n1` y `nvme2n1` creamos una única partición que ocupe todo el disco:
 
-    ```bash
+    ```sh
     for disk in nvme1n1 nvme2n1; do
         echo -e 'n\np\n\n\n\nt\n8e\nw' | sudo fdisk /dev/$disk
     done
@@ -184,7 +210,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 3. Revisamos que se hayan creado las particiones correctamente:
 
-    ```bash
+    ```sh
     lsblk
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
@@ -199,7 +225,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 4. Establecemos como sistema de archivos `ext4` a cada partición:
 
-    ```bash
+    ```sh
     for disk in nvme1n1p1 nvme2n1p1; do
         sudo mkfs -t ext4 /dev/$disk
     done
@@ -207,7 +233,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 5. Volvemos a revisar que todo haya ido bien:
 
-    ```bash
+    ```sh
     lsblk -f
         NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
         nvme1n1
@@ -222,13 +248,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 6. Creamos los directorios donde se montarán ambos volúmenes EBS:
 
-    ```bash
+    ```sh
     sudo mkdir -v /home/samba /var/vmail
     ```
 
 7. Obtenemos el identificador (UUID) de los volúmenes:
 
-    ```bash
+    ```sh
     sudo sudo blkid | egrep "nvme[12]n1p1"
         /dev/nvme2n1p1: UUID="28e5471e-8fc1-48b5-8729-778c56a19b90" TYPE="ext4" PARTUUID="558dd3b7-01"
         /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
@@ -236,36 +262,90 @@ En caso de que hayamos añadido volúmenes EBS adicionales como ha sido mi caso 
 
 8. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
 
-    ```bash
+    ```sh
     ## AWS EBS - Shares
-    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home/samba	ext4	defaults,noexec,nodev,nosuid,usrquota,grpquota 0 2
+    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /home/samba ext4 defaults,noexec,nodev,nosuid 0 2
 
     ## AWS EBS - Mailboxes
-    UUID=28e5471e-8fc1-48b5-8729-778c56a19b90	/var/vmail	ext4	defaults,noexec,nodev,nosuid,usrquota,grpquota 0 2
+    UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
     ```
 
 9. Montamos los volúmenes:
 
-    ```bash
+    ```sh
     sudo mount -a
     ```
 
-10. Confirmamos que se hayan montado bien: **TODO:** NO ESTÁ LA OPCIÓN DE QUOTAS
+10. Confirmamos que se hayan montado bien:
 
-    ```bash
+    ```sh
     mount | egrep 'nvme[12]n1p1'
         /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
         /dev/nvme1n1p1 on /home/samba type ext4 (rw,nosuid,nodev,noexec,relatime)
     ```
 
-### Logs
+### Quota
+
+Si queremos hacer uso de la funcionalidad de recursos compartidos del módulo de controlador de dominio, tendremos que instalar y configurar las quotas.
+
+1. Instalamos los siguientes paquetes:
+
+    ```sh
+    sudo apt update
+    sudo apt install quota quotatool linux-modules-extra-aws
+    ```
+
+2. Creamos los archivos requeridos:
+
+    ```sh
+    sudo touch /home/samba/quota.user
+    sudo touch /home/samba/quota.group
+    ```
+
+3. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
+
+    ```sh
+    ## AWS EBS - Shares
+    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home/samba	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
+    ```
+
+4. Re-montamos el volumen:
+
+    ```sh
+    sudo mount -o remount /home/samba/
+    ```
+
+5. Finalmente, verificamos que la Quota está correctamente habilitada para el volumen EBS:
+
+    ```sh
+    sudo quotacheck -vug /home/samba/
+    ```
+
+## Configuración de Zentyal
+
+En este apartado de detallará la configuración completa de los módulos de Zentyal que serán usados.
+
+### General
+
+Antes de proceder a instalar y configurar los módulos, lo que haremos será establecer un serie de configuraciones generales desde el menú `System -> General`.
+
+1. Lo primero que haremos será desde el panel de administración de Zentyal el idioma, puerto.
+
+    ![Configuration of language and GUI port](images/zentyal/05-general-1.png "Configuration of language and GUI port")
+
+2. Después, desde el mismo lugar, establecemos el nombre del servidor y su dominio:
+
+    **NOTA:** En el momento que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
+
+    ![Configuration of FQDN and domain](images/zentyal/06-general-2.png "Configuration of FQDN and domain")
+
+### Módulo de Logs
 
 Inicialmente, simplemente habilitaremos los dos 'dominios' que hay, aunque cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores.
 
 ![Initial log configuration](images/zentyal/logs_initial.png "Initial log configuration")
 
-
-### Firewall
+### Módulo de Cortafuegos
 
 Para la configuración de red que tenemos (interna) y los módulos que usaremos, las secciones del firewall que usaremos son:
 
@@ -282,7 +362,7 @@ Las políticas definidas por defecto en ambas secciones del firewall son seguras
 1. Es importante que la nueva regla vaya por encima de la regla que acepta la conexión SSH, de lo contrario nunca se ejecutará, ya que cuando una regla se cumple, no se siguen analizando el resto.
 2. Recordad que a parte de este firewall, también tenemos el de AWS (Security Group asociado a la instancia), por lo que tendremos que asegurarnos que ambos firewall tienen las mismas reglas, aunque también se podría configurar en uno de ellos que se permita todo y que el otro se haga cargo de las reglas.
 
-### Software
+### Módulo de Software
 
 Una vez que tenemos la base del sistema configurado, procederemos a programar la hora de las actualizaciones automáticas así como a instalar todos los módulos que usaremos.
 
@@ -296,7 +376,7 @@ Después, procederemos a instalar **únicamente** los módulos que vayamos a usa
 
 ![Modules installation](images/zentyal/software_installation.png "Modules installation")
 
-### NTP
+### Módulo de NTP
 
 El primero de los módulos que hemos instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente.
 
@@ -318,7 +398,7 @@ El primero de los módulos que hemos instalado que vamos a configurar es [NTP], 
 
     ![NTP enable](images/zentyal/modules_ntp.png "NTP enable")
 
-### DNS
+### Módulo de DNS
 
 El siguiente módulo que procederemos a configurar será el [DNS].
 
@@ -350,7 +430,7 @@ El siguiente módulo que procederemos a configurar será el [DNS].
 
 7. Lo siguiente que haremos será comprobar que podemos resolver los registros DNS configurados desde el propio servidor.
 
-    ```bash
+    ```sh
     ## Para el dominio
     dig icecrown.es
 
@@ -484,7 +564,7 @@ Y después, modificar los de la propia zona. **NOTA:** Pueden tardar varios minu
 
 ![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
 
-### Controlador de dominio
+### Módulo de Controlador de dominio
 
 Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [controlador de dominio]. En mi caso concreto, haré las siguientes ajustes, aunque son totalmente opciones y se puede directamente habilitar el módulo (paso 4).
 
@@ -510,15 +590,11 @@ Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [con
 
     ![DC default structure](images/zentyal/dc-default_structure.png "DC default structure")
 
-6. Establecemos una política restrictiva de contraseñas **TODO**
-
-
-
-8. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y será miembro del grupo de administradores `Domain Admins`.
+6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y será miembro del grupo de administradores `Domain Admins`.
 
     ![DC administrator](images/zentyal/dc-administrator.png "DC administrator")
 
-### Correo
+### Módulo de Correo
 
 Teniendo configurado el módulo de controlador de dominio, ya podremos configurar el módulo de [correo], ya que por dependencia requiere que el anterior esté habilitado previamente.
 
@@ -570,7 +646,7 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird login](images/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
-### Webmail
+### Módulo de Webmail
 
 El siguiente módulo a configurar será el [Webmail] (Sogo). Este módulo es muy sencillo de configurar.
 
@@ -579,8 +655,6 @@ El siguiente módulo a configurar será el [Webmail] (Sogo). Este módulo es muy
 1. Opcionalmente, habilitamos [ActiveSync]. Para ello iremos a `Mail -> ActiveSync`.
 
     ![Webmail ActiveSync](images/zentyal/webmail-activesync.png "Webmail ActiveSync")
-
-[ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
 
 2. Habilitamos el módulo:
 
@@ -596,29 +670,31 @@ El siguiente módulo a configurar será el [Webmail] (Sogo). Este módulo es muy
 
     ![Webmail user login](images/zentyal/webmail-access_user.png "Webmail user login")
 
+[ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
+
 Opcionalmente, habilitaré la configuración de los mensajes automáticos de las vacaciones, ya que por defecto está deshabilitado.
 
 1. Creamos el diretorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes:
 
-    ```bash
+    ```sh
     sudo mkdir -vp /etc/zentyal/stubs/sogo
     ```
 
 2. Copiamos la plantilla de configuración:
 
-    ```bash
+    ```sh
     sudo cp -v /usr/share/zentyal/stubs/sogo/sogo.conf.mas /etc/zentyal/stubs/sogo/
     ```
 
 3. Establecemos el parámetro `SOGoVacationEnabled` a `YES` en la plantilla recién copiada:
 
-    ```bash
+    ```sh
     sudo sed -i 's/SOGoVacationEnabled.*/SOGoVacationEnabled = YES;/' /etc/zentyal/stubs/sogo/sogo.conf.mas
     ```
 
 4. Reiniciamos el módulo de Webmail para aplicar el cambio:
 
-    ```bash
+    ```sh
     sudo zs sogo restart
     ```
 
@@ -630,24 +706,24 @@ También, de forma opcional, estableceré 8 workers en lugar de 15 en Sogo, así
 
 1. Establecemos el valor, que en mi caso será `8` en el archivo de configuración `/etc/zentyal/sogo.conf`:
 
-    ```bash
+    ```sh
     sed -i 's/#sogod_prefork.*/sogod_prefork=8/' /etc/zentyal/sogo.conf
     ```
 
 2. Reiniciamos el módulo de Webmail para aplicar el cambio:
 
-    ```bash
+    ```sh
     sudo zs sogo restart
     ```
 
 3. Finalmente, comprobamos que únicamente se hayan creado 8 procesos para Sogo:
 
-    ```bash
+    ```sh
     ps -ef | grep sogod | head -1
         sogo       24430       1  0 00:40 ?        00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
     ```
 
-### Antivirus
+### Módulo de Antivirus
 
 El siguiente módulo que configuraremos será el [Antivirus], este es especialmente importante - aunque consume mucha RAM - para analizar los emails que nos llegan desde el exterior.
 
@@ -661,11 +737,11 @@ La configuración de este módulo para la versión Development es muy limitada, 
 
 2. Actualizamos la base de datos de firmas:
 
-    ```bash
+    ```sh
     sudo freshclam -v
     ```
 
-### Mailfilter
+### Módulo de Mailfilter
 
 Tras tener habilitado el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre los emails que recibimos.
 
@@ -709,7 +785,7 @@ Las configuraciones que estableceremos son:
 
 7. Finalmente, nos enviamos un email desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
 
-    ```bash
+    ```sh
     Nov  5 10:39:31 arthas amavis[9409]: (09409-01) 9Vx6OoIz2Q4W FWD from <someuser@gmail.com> -> <postmaster@icecrown.es>, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF
 
     Nov  5 10:39:31 arthas amavis[9409]: (09409-01) Passed CLEAN, [127.0.0.1] <someuser@gmail.com> -> <postmaster@icecrown.es>, Message-ID: <CAB89cFCp7rhmrjxbMzphfEV3qR4gMBaHTmYg=PXUgBbBZMEh1Zw@mail.gmail.com>, Hits: -0.017
@@ -719,6 +795,6 @@ Las configuraciones que estableceremos son:
 
     Como se puede ver, el mensaje llegó desde una cuenta de Gmail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
 
-### OpenVPN
+### Módulo de OpenVPN
 
 TODO

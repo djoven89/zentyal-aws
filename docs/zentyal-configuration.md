@@ -246,13 +246,31 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
         └─nvme2n1p1  ext4                   e903ff6f-c431-4e3a-92a1-9f476c66b3be
     ```
 
-6. Creamos los directorios donde se montarán ambos volúmenes EBS:
+6. Creamos el directorio donde se montará el volumen EBS para los buzones de correo:
 
     ```sh
-    sudo mkdir -v /home/samba /var/vmail
+    sudo mkdir -v /var/vmail
     ```
 
-7. Obtenemos el identificador (UUID) de los volúmenes:
+7. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
+
+    ```sh
+    sudo mount /dev/nvme1n1p1 /mnt
+    ```
+
+8. Copiamos el contenido del directorio `/home` al directorio temporal donde hemos montado el volumen EBS:
+
+    ```sh
+    sudo cp -aR /home/* /mnt/
+    ```
+
+9. Desmontamos el volumen EBS:
+
+    ```sh
+    sudo umount /mnt
+    ```
+
+10. Obtenemos el identificador (UUID) de los volúmenes:
 
     ```sh
     sudo sudo blkid | egrep "nvme[12]n1p1"
@@ -260,28 +278,28 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
         /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
 
-8. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
+11. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
 
     ```sh
     ## AWS EBS - Shares
-    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /home/samba ext4 defaults,noexec,nodev,nosuid 0 2
+    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /home ext4 defaults,noexec,nodev,nosuid 0 2
 
     ## AWS EBS - Mailboxes
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
     ```
 
-9. Montamos los volúmenes:
+12. Montamos los volúmenes manualmente para verificar que no hay errores de sintáxis en el archivo del paso anterior:
 
     ```sh
     sudo mount -a
     ```
 
-10. Confirmamos que se hayan montado bien:
+13. Finalmente, confirmamos que se hayan montado bien:
 
     ```sh
     mount | egrep 'nvme[12]n1p1'
         /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
-        /dev/nvme1n1p1 on /home/samba type ext4 (rw,nosuid,nodev,noexec,relatime)
+        /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
     ```
 
 ### Quota
@@ -298,27 +316,27 @@ Si queremos hacer uso de la funcionalidad de recursos compartidos del módulo de
 2. Creamos los archivos requeridos:
 
     ```sh
-    sudo touch /home/samba/quota.user
-    sudo touch /home/samba/quota.group
+    sudo touch /home/quota.user
+    sudo touch /home/quota.group
     ```
 
 3. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
 
     ```sh
     ## AWS EBS - Shares
-    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home/samba	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
+    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
 
 4. Re-montamos el volumen:
 
     ```sh
-    sudo mount -o remount /home/samba/
+    sudo mount -o remount /home/
     ```
 
 5. Finalmente, verificamos que la Quota está correctamente habilitada para el volumen EBS:
 
     ```sh
-    sudo quotacheck -vug /home/samba/
+    sudo quotacheck -vug /home/
     ```
 
 ## Configuración de Zentyal
@@ -797,4 +815,121 @@ Las configuraciones que estableceremos son:
 
 ### Módulo de OpenVPN
 
-TODO
+El último módulo que configuraremos será el de OpenVPN. La finalidad es que cualquier usuario puede hacer uso de los recursos compartidos configurados en el módulo de controlador de dominio de forma segura.
+
+1. Configuraremos el módulo de CA para crear una entidad certificadora con la que poder expedir los certificados de los usuarios que usarán la VPN. Para ello vamos a `Certificate Authority -> General`:
+
+    ![CA creation](images/zentyal/ca-creation.png "CA Creation")
+
+2. Guardamos cambios.
+
+3. Creamos un certificado cuyo nombre tendrá un prefijo concreto, de esta forma, sólo permitiremos en las conexiones VPN certificados que empiecen por este patrón. De esta forma podremos distinguir los certificados emitidos.
+
+    ![CA prefix certificate](images/zentyal/ca-prefix-certificate.png "CA prefix certificate")
+
+4. Con la entidad certificadora creada, procedemos a crear una conexión VPN desde `VPN -> Servers`:
+
+    ![OpenVPN server](images/zentyal/vpn-server.png "OpenVPN server")
+
+5. A continuación, procedemos a configurar la conexión:
+
+    ![OpenVPN configuration 1](images/zentyal/vpn-configuration-1.png "OpenVPN configuration 1")
+    ![OpenVPN configuration 1](images/zentyal/vpn-configuration-2.png "OpenVPN configuration 1")
+
+    Como se puede apreciar, se ha modificado el puerto por defecto tanto de OpenVPN como de la red. Además, también se ha establecido como política de seguridad que los certificados válidos deberán comenzar por: '**Icecrown-RC-**'.
+
+6. Después, nos aseguramos de estar publicando la red interna del servidor. Para ello vamos a `VPN -> Servers -> Advertised networks`.
+
+    ![OpenVPN network configuration](images/zentyal/vpn-network-configuration.png "OpenVPN network configuration")
+
+7. Habilitamos el módulo:
+
+    ![OpenVPN enable](images/zentyal/modules_openvpn.png "OpenVPN enable")
+
+8. Creamos un servicio de red, el cual contendrá el puerto establecido en el paso 5:
+
+    ![OpenVPN network service](images/zentyal/vpn-service-1.png "OpenVPN network service")
+    ![OpenVPN network service port](images/zentyal/vpn-service-2.png "OpenVPN network service port")
+
+9. Creamos una regla en el firewall de Zentyal que permita la conexión:
+
+    ![OpenVPN firewall rule](images/zentyal/vpn-firewall.png "OpenVPN firewall rule")
+
+Para probar el funcionamiento del módulo, realizaremos las siguientes acciones:
+
+1. Creamos un certificado llamado `Icecrown-RC-Maria`:
+
+    ![OpenVPN test certificate](images/zentyal/vpn-test-certificate.png "OpenVPN test certificate")
+
+2. Creamos un usuario del dominio llamado `maria`:
+
+    ![OpenVPN test user](images/zentyal/vpn-test-user.png "OpenVPN test user")
+
+3. Creamos una carpeta compartida llamada `rrhh` con permisos de lectura y escritura para el usuario creado.
+
+    ![OpenVPN test share](images/zentyal/vpn-test-share-1.png "OpenVPN test share")
+    ![OpenVPN test share permissons](images/zentyal/vpn-test-share-2.png "OpenVPN test share permissons")
+
+4. Guardamos los cambios para que se apliquen los cambios anteriores.
+
+5. Descargamos un bundle con la configuración de la conexión VPN para el cliente, para ello vamos a `VPN -> Servers -> Download client bundle`.
+
+    ![OpenVPN test bundle](images/zentyal/vpn-test-bundle.png "OpenVPN test bundle")
+
+    **NOTA:** Para este ejemplo concreto, usaré una máquina Ubuntu Desktop 20.04 para establecer la conexión VPN y realizar las pruebas.
+
+6. Copiamos el bundle al cliente desde donde queramos establecer la conexión VPN y configuramos el cliente de OpenVPN:
+
+    ![OpenVPN client configuration](images/zentyal/vpn-client-configuration.png "OpenVPN client configuration")
+
+7. Establecemos la conexión desde el cliente de OpenVPN. Si todo fue bien, podremos ver en el archivo de log de la conexión VPN de Zentyal llamado `/var/log/openvpn/Icecrown-RecursosCompartidos.log` unos registros similares a:
+
+    ```sh
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 TLS: Initial packet from [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5), sid=7c56b72b 70d7b663
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=1, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown CA Authority Certificate
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY X509NAME OK: C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=0, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_VER=2.6.0
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_PLAT=win
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_TCPNL=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_MTU=1600
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_NCP=2
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_CIPHERS=AES-256-GCM:AES-128-GCM
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_PROTO=478
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZ4=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZ4v2=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZO=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_COMP_STUB=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_COMP_STUBv2=1
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_GUI_VER=OpenVPN_GUI_11
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_SSO=openurl,webauth,crtext
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 WARNING: 'tun-mtu' is used inconsistently, local='tun-mtu 1532', remote='tun-mtu 1500'
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 WARNING: 'cipher' is present in local config but missing in remote config, local='cipher AES-256-CBC'
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 Control Channel: TLSv1.3, cipher TLSv1.3 TLS_AES_256_GCM_SHA384, 4096 bit RSA
+    Sat Feb  4 20:51:33 2023 88.6.127.36:35754 [Icecrown-RC-Maria] Peer Connection Initiated with [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5)
+    Sat Feb  4 20:51:33 2023 Icecrown-RC-Maria/88.6.127.36:35754 MULTI_sva: pool returned IPv4=192.168.210.2, IPv6=(Not enabled)
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 PUSH: Received control message: 'PUSH_REQUEST'
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 SENT CONTROL [Icecrown-RC-Maria]: 'PUSH_REPLY,route 10.0.1.0 255.255.255.0,route-gateway 192.168.210.1,ping 10,ping-restart 120,ifconfig 192.168.210.2 255.255.255.0,peer-id 0,cipher AES-256-GCM' (status=1)
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Data Channel: using negotiated cipher 'AES-256-GCM'
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Outgoing Data Channel: Cipher 'AES-256-GCM' initialized with 256 bit key
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Incoming Data Channel: Cipher 'AES-256-GCM' initialized with 256 bit key
+    Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 MULTI: Learn: 00:ff:83:a2:23:96 -> Icecrown-RC-Maria/88.6.127.36:35754
+    ```
+
+8. Una vez que hayamos establecido la conexión, desde el navegador de archivos, estableceremos la URL del servidor, en este caso sería: `\\arthas.icecrown.es`. Tras lo cual, nos pedirá las credenciales del usuario.
+
+    ![OpenVPN client log in credentials](images/zentyal/vpn-client-credentials.png "OpenVPN client log in credentials")
+
+9. Tras logearnos, deberíamos de ver el directorio personal del usuario y los recursos compartidos. Además, que también deberíamos de poder añadir archivos a dichos recursos.
+
+    ![OpenVPN client view](images/zentyal/vpn-client-shares.png "OpenVPN client view")
+
+10. Finalmente, verificaremos desde el propio servidor Zentyal como los archivos fueron correctamente creados:
+
+    ```sh
+    ls -l /home/maria/test-file-1.txt
+        -rwxrwx--x+ 1 ICECROWN\maria ICECROWN\domain users 0 Feb  4 20:56 /home/maria/test-file-1.txt
+
+    ls -l /home/samba/shares/rrhh/test-file-2.txt
+        -rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 0 Feb  4 20:56 /home/samba/shares/rrhh/test-file-2.txt
+    ```

@@ -158,7 +158,7 @@ Después, crearemos otro recurso, el cual permitirá el acceso a los siguientes 
 * **465/TCP** SMTPS.
 * **587/TCP** SMTPS con StartTLS.
 * **993/TCP** IMAPS.
-* **1194/TCP** OpenVPN.
+* **11994/UDP** OpenVPN.
 * **8443/TCP** Zentyal GUI.
 
 ![Security Group for Zentyal](images/aws/aws-14-vpc_securityGroup-2.png "Security Group for Zentyal")

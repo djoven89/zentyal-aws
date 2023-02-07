@@ -1,42 +1,43 @@
 # AWS
 
-A continuación se indican los recursos en AWS necesarios para la configuración del entorno necesario y recomendable para desplegarlas Zentyal.
+En este documento se explicará como configurar el entorno del proveedor cloud AWS para poder desplegar el servidor Zentyal.
 
 ## Requisitos
 
-* Se ha de tener creada una cuenta de AWS.
-* El usuario con el que se realicen las acciones, deberá de tener permisos para los siguientes servicos:
-    * Route53
+Para poder seguir este documento, se necesitará lo siguiente:
+
+1. Una cuenta en AWS.
+2. Un usuario con permisos para los siguientes servicios:
+    * Route53 (en caso de tener alojado el dominio en este servicio)
     * VPC
     * KMS
     * EC2
-    * SNS
-    * CloudWatch
 
 ## Región
 
-Antes de empezar a crear los recursos, tenemos que saber cual es la mejor región a usar. Para ello, haremos uso de [esta] página web, donde podremos seleccionar las ubicaciones más próximas geográficamente.
+Antes de empezar a crear los recursos, tenemos que saber cual es la mejor región a usar. Para ello, haremos uso de [esta] página web, donde podremos seleccionar las ubicaciones más próximas geográficamente desde donde se conectarán los trabajadores.
 
 ![Regiones ](images/aws/aws-01-latency.png "Regiones")
 
-Como se puede ver en la imagen, en mi caso concreto, he selecionado todas las regiones de Europa, ya que me encuentro en España. El resultado mostrado indica que **Paris** es la región con mejor latencia, por lo tanto, ésta será la región donde desplegaré el entorno.
+Como se puede ver en la imagen, en mi caso concreto, he seleccionado todas las regiones de Europa, ya que me encuentro en España. El resultado mostrado indica que **Paris** es la región con mejor latencia, por lo tanto, ésta será la región donde desplegaré el entorno.
 
 [esta]: https://www.awsspeedtest.com/latency
 
 ## VPC
 
-El primer servicio que configuraremos es [AWS VPC], el cual es básicamente una red virtual donde ubicaremos nuestro servidor Zentyal.
+El primer servicio que configuraremos es [VPC], el cual es básicamente una red virtual donde ubicaremos nuestro servidor Zentyal.
 
-[AWS VPC]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/what-is-amazon-vpc.html
+[VPC]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/what-is-amazon-vpc.html
 
-Vamos a crear una VPC con los siguientes requisitos:
+Vamos a crear una VPC con la siguiente configuración:
 
 * **Name:** VPC-Prod-Zentyal
 * **IPv4 CIDR:** 10.0.0.0/16
 * **IPv6:** Deshabilitado
 * **Tenancy:** Default
 * **Tags:**
-  * **Env**: Production
+    * **Name:** VPC-Prod-Zentyal
+    * **Env**: Production
 
 **NOTA:** Como Zentyal no permite IPv6, lo deshabilitamos para evitar posibles brechas de seguridad.
 
@@ -46,22 +47,23 @@ A continuación una imagen con la configuración.
 
 Una vez que haya sido creada, podremos habilitar opcionalmente las siguientes opciones:
 
-* DNS hostnames
+* DNS hostname
 * DNS resolution
 
 ### Subnet
 
-Una vez que tenemos nuestra VPC creada, procederemos a crear [subred] pública, que será donde ubicaremos nuestro servidor Zentyal.
+Una vez que tenemos nuestra VPC creada, procederemos a crear una [subred] pública, que será donde ubicaremos nuestro servidor Zentyal.
 
 [subred]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/configure-subnets.html
 
-Los requisitos de la subnet serán:
+La configuración de la subnet será:
 
 * **Name**: SUB-Prod-Public-1
 * **Availability zone**: eu-west-3a
 * **IPv4 CIDR**: 10.0.1.0/24
 * **Tags**:
-  * **Env**: Production
+    * **Name**: SUB-Prod-Public-1
+    * **Env**: Production
 
 A continuación una imagen con la configuración.
 
@@ -69,15 +71,16 @@ A continuación una imagen con la configuración.
 
 ### Gateway
 
-Lo siguiente que haremos será configurar la puerta de enlace de tipo [Internet gateway] para nuestra VPC.
+Lo siguiente que haremos será configurar la puerta de enlace de tipo [Internet gateway] para nuestra VPC para que la subred creada tenga acceso al exterior.
 
 [Internet gateway]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/VPC_Internet_Gateway.html
 
-Los requisitos de la subnet serán:
+La configuración de la puerta de enlace será:
 
 * **Name**: GW-Prod-1
 * **Tags**:
-  * **Env**: Production
+    * **Env**: Production
+    * **Name**: GW-Prod-1
 
 A continuación una imagen con la configuración.
 
@@ -89,177 +92,190 @@ Finalmente, asociaremos el recurso recién creado a nuestra VPC.
 
 ### Routes
 
-Una vez que tenemos la subred y la puerta de enlace creadas, tendremos que crear modificar la [tabla de enrutamiento] que AWS nos crea por defecto cuando creamos una VPC.
+Una vez que tenemos tanto la subred como la puerta de enlace creadas, tendremos que crear modificar la [tabla de enrutamiento] que AWS nos crea por defecto cuando creamos una VPC.
 
 [tabla de enrutamiento]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/VPC_Route_Tables.html
 
 Para este caso, tendremos que editar el recurso ya existente y realizar las siguientes acciones:
 
-1. Crear las tags al recurso tal y como muestra la imagen:
+1. Creamos los tags tal y como muestra la imagen:
 
     ![Route tags](images/aws/aws-06-vpc_route-1.png "Route tags")
 
-2. Asegurar que la subned está asociada.
+2. Nos aseguramos que la subred esté asociada:
 
     ![Route subnets](images/aws/aws-07-vpc_route-2.png "Route subnets")
 
-3. Establecer la puerta de enlace.
+3. Establecemos la puerta de enlace para que resuelva el resto de rangos de red.
 
     ![Route gateway](images/aws/aws-08-vpc_route-3.png "Route gateway")
 
 ### Network ACL
 
-La siguiente recurso que modificaremos será las [ACL de red], las cuales nos permiten denegar o permitir el tráfico entrante y saliente de nuestra subnets.
+El siguiente recurso que modificaremos será las [ACL de red], las cuales nos permiten denegar o permitir el tráfico entrante y saliente de nuestra subnets.
 
 [ACL de red]: https://docs.aws.amazon.com/es_es/vpc/latest/userguide/vpc-network-acls.html
 
-Una vez más, AWS nos crea por defecto una ACL de red. Las modificaciones que tendremos que hacer sobre este recurso son:
+Una vez más, AWS nos crea por defecto una ACL de red, la cual modificaremos de la siguiente manera:
 
-1. Crear las tags al recurso tal y como muestra la imagen:
+1. Creamos los tags tal y como muestra la imagen:
 
     ![NACL tags](images/aws/aws-09-vpc_nacl-1.png "NACL tags")
 
-2. Asegurar que la subned está asociada.
+2. Nos aseguramos que la subred esté asociada:
 
     ![Route subnets](images/aws/aws-10-vpc_nacl-2.png "Route subnets")
 
-3. Verificar que todo el tráfico entrante está permitido:
+3. Verificamos que todo el tráfico entrante está permitido:
 
     ![Route Inbound](images/aws/aws-11-vpc_nacl-3.png "Route Inbound")
 
-4. Verificar que todo el tráfico saliente está permitido:
+4. Verificamos que todo el tráfico saliente está permitido:
 
     ![Route Outbound](images/aws/aws-12-vpc_nacl-4.png "Route Outbound")
 
 ### Security Group
 
-El último recurso que modificaremos es el [grupo de seguridad] que asociaremos al servidor Zentyal, es cual básicamente actua como un firewall virtual.
+El último recurso que modificaremos en el servicio de VPC es el [grupo de seguridad] que asociaremos al servidor Zentyal, es cual básicamente es firewall virtual que permite establecer los puertos e IPs que se permiten.
 
 [grupo de seguridad]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-security-groups.html
 
-En este recurso concreto, haremos 2 cosas:
+Para este recurso concreto, haremos 2 cosas:
 
 1. Modificaremos las tags del recurso que creó AWS por defecto cuando creamos la VPC.
 2. Crearemos un nuevo recurso, el cual contendrá los puertos que permitiremos acceder públicamente.
+tags correctas.
 
-Para la modificación del recurso por defecto, simplemente le estableceremos las etiquetas correctas.
+    ![Default Security Group](images/aws/aws-13-vpc_securityGroup-1.png "Default Security Group")
 
-![Default Security Group](images/aws/aws-13-vpc_securityGroup-1.png "Default Security Group")
+Después, crearemos un nuevo recurso, el cual permitirá el acceso a los siguientes puertos:
 
-Después, crearemos otro recurso, el cual permitirá el acceso a los siguientes puertos:
+* **ICMP-IPv4 echo request** -> Permite poder hacer un `ping` al servidor.
+* **22/TCP** -> SSH.
+* **25/TCP** -> SMTP.
+* **53/UDP** -> DNS.
+* **53/TCP** -> DNS.
+* **143/TCP** -> IMAP.
+* **443/TCP** -> HTTPS.
+* **465/TCP** -> SMTPS.
+* **587/TCP** -> SMTPS con StartTLS.
+* **993/TCP** -> IMAPS.
+* **8443/TCP** -> Zentyal GUI.
+* **11994/UDP** -> OpenVPN.
 
-* **ICMP-IPv4 echo request** Permite poder hacer un `ping` al servidor.
-* **22/TCP** SSH.
-* **25/TCP** SMTP.
-* **53/UDP** DNS vía UDP.
-* **53/TCP** DNS vía TCP.
-* **143/TCP** IMAP.
-* **443/TCP** HTTPS.
-* **465/TCP** SMTPS.
-* **587/TCP** SMTPS con StartTLS.
-* **993/TCP** IMAPS.
-* **11994/UDP** OpenVPN.
-* **8443/TCP** Zentyal GUI.
+El resultado deberá ser el siguiente:
 
 ![Security Group for Zentyal](images/aws/aws-14-vpc_securityGroup-2.png "Security Group for Zentyal")
 
-Además, también le establecemos las siguientes etiquetas:
+Además, también le establecemos las siguientes tags:
 
 * **Name**: SG-Prod-Zentyal
 * **Tags**:
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
+    * **Name**: SG-Prod-Zentyal
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
+
+**NOTA:** El host 'arthas.icecrown.es' será el nombre que le daré al servidor Zentyal.
 
 ![Security Group tags](images/aws/aws-15-vpc_securityGroup-3.png "Security Group tags")
 
-Finalmente, estableceremos que todo tráfico saliente sea permitido:
+Finalmente, nos aseguraremos de que todo tráfico saliente esté permitido:
 
-![Security Group outbound](images/aws/aws-15-vpc_securityGroup-3.png "Security Group outbound")
+![Security Group outbound](images/aws/aws-16-vpc_securityGroup-4.png "Security Group outbound")
 
 ## EC2
 
-Una vez que tenemos la red configurada, procederemos a crear los recursos necesarios para poder crear nuestro servidor Zentyal.
+Una vez que tenemos la red (VPC) configurada, procederemos a crear los recursos necesarios en el servicio de [EC2] para poder crear nuestro servidor Zentyal.
+
+[EC2]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html
 
 ### Group Placement
 
-El primer recurso que crearemos será un [grupo de ubicación], el cual nos permitirá distruir nuestras instancias (servidores) en hardware distinto, por lo que minimizaremos posibles errores que puedan surgir por parte de AWS.
+El primer recurso que crearemos será un [grupo de ubicación], el cual nos permitirá distribuir las instancias (servidores) en hardware distinto, por lo que minimizaremos posibles errores que puedan surgir por parte de AWS.
 
 [grupo de ubicación]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/placement-groups.html
 
-Los requisitos serán:
+La configuración que estableceremos será:
 
 * **Name**: GP-Prod-1
 * **Placement strategy**: Spread
 * **Spread level:** Rack
 * **Tags:**
-  * **Name**: GP-Prod-1
-  * **Env**: Production
+    * **Name**: GP-Prod-1
+    * **Env**: Production
 
 ![Group Placement creation](images/aws/aws-17-ec2_groupPlacement.png "Group Placement creation")
 
 ### Key Pair
 
-Después, crearemos un [par de claves], las cuales nos permitirán conectarnos a la instancia.
+Después, crearemos un de [pares de claves], las cuales nos permitirán conectarnos a la instancia a través de SSH.
 
-[par de claves]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-key-pairs.html
+[pares de claves]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-key-pairs.html
 
-Consideraciones
+**Consideraciones:**
 
-* Durante la generación del par de claves, es el único momento donde podemos descargarnos la clave privada.
-* La clave privada descargada ha de ser securizada, ya que con ella es posible conectarse a la instancia sin necesidad de establer una contraseña.
-  * Los permisos que debe tener la clave son de sólo lectura para el usuario, que en notación Linux serían: 0400
+* Únicamente durante la generación del par de claves será posible descargar la clave privada.
+* El acceso a la clave privada descargada deberá estar restringido, ya que con este clave tendremos acceso completo como administrador a la instancia sin necesidad de establecer una contraseña (comportamiento por defecto en las instancias Linux de AWS).
+* Los permisos que debe tener la clave son de sólo lectura para el usuario, en notación octal es: **0400**.
 
-Los requisitos serán:
+La configuración que estableceremos será:
 
 * **Name**: KP-Prod-Zentyal
 * **Key pair type**: RSA
 * **Private ket file format:** .pem
 * **Tags:**
-  * **Name**: KP-Prod-Zentyal
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
+    * **Name**: KP-Prod-Zentyal
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
 
 ![Key Pair creation](images/aws/aws-18-ec2_keypair.png "Key Pair creation")
 
 ### Network interface
 
-El siguiente recurso que usaremos serà crear una [interfaz de red], lo que nos permitirá establecer una IP estática, evitando así posibles incidencias.
+El siguiente recurso que usaremos será crear una [interfaz de red], la cual nos permitirá establecer una IP estática y asociarla con la instancia de Zentyal, evitando así posibles incidencias en el módulo crítico de red.
 
-Los requisitos serán:
+La configuración que estableceremos será:
 
 * **Name**: NI-Prod-Zentyal
 * **Subnet**: SUB-Prod-Public-1
-* **Private IPv4 address:** Custom -> 10.0.1.200
+* **Private IPv4 address:** 10.0.1.200
 * **Security Group**: SG-Prod-Zentyal
 * **Tags:**
-  * **Name**: NI-Prod-Zentyal
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
+    * **Name**: NI-Prod-Zentyal
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
 
 ![Network interface creation 1](images/aws/aws-19-ec2_network-1.png "Network interface creation 1")
 ![Network interface creation 2](images/aws/aws-20-ec2_network-2.png "Network interface creation 2")
 
 ### Instance
 
-Una vez que hemos creado todos los recursos anteriores, procederemos a crear el recurso que contendrá nuestro servidor Zentyal, el cual es llamado [instancia de computación].
+Una vez que hemos creado todos los recursos anteriores en el servicio de EC2, procederemos a crear la [instancia de computación] (servidor) sobre el que instalaremos Zentyal.
 
 [instancia de computación]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html
 
 **Consideraciones:**
 
-* Para los módulos que voy a usar yo, requiero de un mínimo de 2 vCPU y 4GB de RAM.
-  * He optado por la instancia de tipo general [t3a.medium]
-* El particionado que voy a definir yo personalmente para mi entorno será el siguiente:
-  * Disco del sistema de 30GB.
-  * Disco para los emails de 10GB.
-  * Disco para los recursos compartidos de 10GB.
-* He habilitado la monitorización avanzada ya que usaré AWS CloudWatch como sistema de monitorización.
-* Las opciones que he configurado y que presentan costes adicionales son:
+* Debido a los módulos de Zentyal que usaremos, la instancia deberá tener un mínimo de 4GB de RAM.
+* Para las pruebas del proyecto, he optado por la instancia más económica posible, que es de tipo general y se llama [t3a.medium].
+* El precio de la instancia lo podéis obtener de [aquí].
+    * En mi caso concreto, el coste por hora (en caso de estar iniciada) será de '**0.04$**'.
+        ![Instance price](images/aws/aws-ec2_price.png "Instance price")
+* Usaré 3 volúmenes EBS (discos duros) para establecer el siguiente particionado:
+    * EBS del sistema de 30GB.
+    * EBS para los emails de 10GB.
+    * EBS para los directorios personales y los recursos compartidos de 10GB.
+* Habilitaré la monitorización avanzada ya que usaré AWS CloudWatch como sistema de monitorización.
+    * **NOTA:** Esta opción tiene un coste añadido, el cual se puede consultar [aquí](https://aws.amazon.com/cloudwatch/pricing/).
+* Las opciones que configuraré y que suponen un coste mensual son:
   * Instance type.
   * Root volume.
   * Detailed CloudWatch monitoring.
 
-Los requisitos serán:
+[t3a.medium]: https://aws.amazon.com/ec2/instance-types/t3/
+[aquí]: https://aws.amazon.com/ec2/pricing/on-demand/
+
+Por lo tanto, la configuración que definiremos será:
 
 * **Name**: arthas.icecrown.es
 * **AMI**: Ubuntu Server 20.04 LTS (HVM), SSD Volume Type
@@ -267,22 +283,22 @@ Los requisitos serán:
 * **Instance type**: t3a.medium
 * **Key pair**: KP-Prod-Zentyal
 * **Network settings**:
-  * **VPC**: VPC-Prod-Zentyal
-  * **Subnet**: SUB-Prod-Public-1
-  * **Auto-assign public IP**: Disable
-  * **Firewall**: Select existint security group
-  * **Network interface:** NI-Prod-Zentyal
+    * **VPC**: VPC-Prod-Zentyal
+    * **Subnet**: SUB-Prod-Public-1
+    * **Auto-assign public IP**: Disable
+    * **Firewall**: Select existint security group
+    * **Network interface:** NI-Prod-Zentyal
 * **Configure storage:**
-  * **Root volume:** 30 GB, GP3
+    * **Root volume:** 30 GB, GP3
 * **Advanced details:**
-  * **Shutdown behavior:** Stop
-  * **Termination protection:** Enable
-  * **Detailed CloudWatch monitoring:** Enable
-  * **Placement group:** GP-Prod-1
+    * **Shutdown behavior:** Stop
+    * **Termination protection:** Enable
+    * **Detailed CloudWatch monitoring:** Enable
+    * **Placement group:** GP-Prod-1
 * **Tags:**
-  * **Name**: arthas.icecrown.es
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
+    * **Name**: arthas.icecrown.es
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
 
 ![Instance creation 1](images/aws/aws-21-ec2_ec2-1.png "Instance creation 1")
 ![Instance creation 2](images/aws/aws-22-ec2_ec2-2.png "Instance creation 2")
@@ -292,18 +308,22 @@ Los requisitos serán:
 
 ### Volumes
 
-Una vez que tenemos la instancia creada, tendremos que definir las etiquetas de nuestro volumen como mínimo. En mi caso, crearé adicionalmente 2 volúmenes donde se ubicarán los buzones de correo y los recursos compartidos.
+Una vez que tenemos la instancia creada, procederemos a configurar el [volumen] (disco duro) de nuestro servidor Zentyal. En mi caso concreto, crearé dos volúmenes adicionales, uno para alojar los emails y otro para los directorios personales y los recursos compartidos. El motivo es que me permite poder definir políticas de copias de seguridad distintas a nivel de AWS, además que los datos están en discos separados, con las ventajas que eso conlleva.
 
-Para la modificación del volumen root asociado a la instancia, simplemente le estableceré las siguientes etiquetas:
+Antes de proceder a crear los volúmenes adicionales, estableceremos las tags para el volumen del sistema asociado a la instancia en ejecucción:
 
 * **Name**: EBS-Prod-System-Zentyal
 * **Env**: Production
 * **Host:** arthas.icecrown.es
 * **Type:** System
 
+[volumen]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volumes.html
+
 ![Volumen root modification](images/aws/aws-26-ec2_volume-1.png "Volumen root modification")
 
-A continuación, crearé dos volúmenes con los siguientes requisitos:
+A continuación, creamos los volúmenes adicionales:
+
+  **NOTA:** Los volúmenes deberán estar en la misma zona de disponibilidad que la instancia, 'eu-west-3a' en mi caso.
 
 **Para los buzones de correo:**
 
@@ -314,17 +334,17 @@ A continuación, crearé dos volúmenes con los siguientes requisitos:
 * **Availability zone:** eu-west-3a
 * **Snapshot ID:** Don't create volume from a snapshot
 * **Encryption:** Enabled
-  * **KMS key:** (default) aws/ebs
+    * **KMS key:** (default) aws/ebs
 * **Tags:**
-  * **Name:** EBS-Prod-Mail-Zentyal
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
-  * **Type:** Mail
+    * **Name:** EBS-Prod-Mail-Zentyal
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
+    * **Type:** Mail
 
 ![Mail volume creation 1](images/aws/aws-27-ec2_volume-2.png "Mail volume creation 1")
 ![Mail volume creation 2](images/aws/aws-28-ec2_volume-3.png "Mail volume creation 2")
 
-**Para los recursos compartidos:**
+**Para los directorios personales y recursos compartidos:**
 
 * **Volume Type:** General Purpose SSD (gp3)
 * **Size:** 10GiB
@@ -333,12 +353,12 @@ A continuación, crearé dos volúmenes con los siguientes requisitos:
 * **Availability zone:** eu-west-3a
 * **Snapshot ID:** Don't create volume from a snapshot
 * **Encryption:** Enabled
-  * **KMS key:** (default) aws/ebs
+    * **KMS key:** (default) aws/ebs
 * **Tags:**
-  * **Name:** EBS-Prod-Shares-Zentyal
-  * **Env**: Production
-  * **Host:** arthas.icecrown.es
-  * **Type:** Shares
+    * **Name:** EBS-Prod-Shares-Zentyal
+    * **Env**: Production
+    * **Host:** arthas.icecrown.es
+    * **Type:** Shares
 
 ![Shares volume creation 1](images/aws/aws-29-ec2_volume-4.png "Shares volume creation 1")
 ![Shares volume creation 2](images/aws/aws-30-ec2_volume-5.png "Shares volume creation 2")
@@ -354,7 +374,7 @@ El siguiente recurso que crearemos será una [IP elástica], que no es más que 
 
 [IP elástica]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html
 
-Las etiquetas que definiremos al recurso serán:
+Las tags que definiremos al recurso serán:
 
 * **Name:** EIP-Prod-Zentyal
 * **Env**: Production
@@ -368,25 +388,28 @@ Finalmente, asociamos el recurso recién creado a la instancia.
 
 ## Route 53
 
-La siguiente acción necesaria es crear el registro DNS en el dominio para que apunte a nuestra Elastic IP recién creada.
+La siguiente acción necesaria es crear el registro DNS en el dominio para que apunte a la IP pública asociada a la instancia. En mi caso concreto, usaré el servicio [Route 53] para la creación del registro DNS de tipo `A`, ya que es allí donde tengo contratado el dominio.
 
-En mi caso concreto, usaré Route 53 para la creación del registro DNS de tipo `A`.
+[Route 53]: https://docs.aws.amazon.com/es_es/Route53/latest/DeveloperGuide/Welcome.html
 
 ![DNS record](images/aws/aws-35-ec2_route53-1.png "DNS record")
 
-## Solicitar envio de correos
+## Solicitar envió de correos
 
-Para poder enviar emails desde el servidor Zentyal a través de la IP estática, es necesario solicitar a AWS a través de un formulario que nos elimine la restricción que tienen por defecto. Para ello, simplemente hay que seguir [este] enlace donde se explican los pasos.
+Para poder enviar emails desde el servidor Zentyal a través de la IP estática asociada, es necesario solicitar a AWS a través de un formulario que nos elimine la restricción que tienen por defecto. Para ello, simplemente hay que seguir [este] enlace donde se explican los pasos.
 
 [este]: https://aws.amazon.com/premiumsupport/knowledge-center/ec2-port-25-throttle/
 
-**Consideraciones:**
+**Consideraciones sobre el mensaje:**
 
-* El mensaje ha de ser escrito en Inglés.
-* El mensaje ha de ser detallado, de lo contrario te solicitarán más información o incluso podrían negar la request.
-  * Es altamente recomendable indicar el número aproximado de emails que se enviarán por hora.
+* Debe estar escrito en Inglés.
+* Ha de ser detallado, de lo contrario te solicitarán más información o incluso podrían negar la solicitud.
+* Algunos detalles recomendados son:
+    * Uso que se le dará al servidor.
+    * Número de usuarios que usarán el correo.
+    * Número aproximado de emails que se enviarán por hora.
 
-Un ejemplo podría ser:
+Un ejemplo del mensaje:
 
 ```java
 Hi Support team,
@@ -397,13 +420,13 @@ Below you have more information:
 
 * We are a small IT business focused on web development.
 * Around 20 users will send and receive emails every day.
-* We think we might be sending around 50 emails per hour.
+* We think we might send around 50 emails per hour.
 
 Kind regards, Daniel.
 ```
 
 ## Saving Plans
 
-Una vez que el servidor haya sido creado, y que éste sea considerado estable, es altamente recomendable contratar la instancia usando [Saving Plans], lo que nos permitirá reducir el coste que supone el uso de la instancia EC2 desplegada.
+Una vez que el servidor haya sido creado, configurado y testado en profundidad, es altamente recomendable contratar la instancia usando [Saving Plans], ya que nos permitirá reducir significativamente el coste que supone el uso de la instancia EC2 desplegada.
 
 [Saving Plans]: https://aws.amazon.com/es/savingsplans/?nc1=h_ls

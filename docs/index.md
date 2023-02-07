@@ -37,7 +37,7 @@ Para este proyecto en concreto, se harán uso de los siguientes servicios dispon
 
 ## Zentyal
 
-El servidor Zentyal usará la última versión estable disponible, que a fecha de hoy es 7.0. Además, no se usará una licencia comercial, aunque es altamente recomendable debido a las funcionalidades adicionales que ofrece como por ejemplo, tener la posibilidad de contactar con soporte.
+El servidor Zentyal usará la última versión estable disponible, que a fecha de hoy es 7.0. Además, no se usará una licencia comercial, aunque es recomendable debido a las funcionalidades adicionales que ofrece así como la posibilidad de contactar con soporte en caso de incidencia o duda.
 
 Los módulos que se instalarán y configurarán serán:
 
@@ -55,12 +55,12 @@ Los módulos que se instalarán y configurarán serán:
 * [CA](https://doc.zentyal.org/es/ca.html)
 * [OpenVPN](https://doc.zentyal.org/es/vpn.html)
 
-Además, también se realizarán las siguientes configuraciones adicionales:
+Adicionalmente, se realizarán las siguientes configuraciones adicionales:
 
 * Creación de una partición para el SWAP.
-* Uso de varios volúmenes EBS para varios puntos de montaje del sistema de archivos.
+* Uso de varios volúmenes EBS para almacenar allí distintos tipos de información.
 * Generación de certificados con [Let's Encrypt].
-* Fortalecer el servicio de correo con: [SPF], [DKIM] y [DMARC].
+* Implementación de: [SPF], [DKIM] y [DMARC] para incrementar la seguridad del servicio de correo.
 * Políticas de seguridad y rotación de contraseñas del dominio.
 
 [Let's Encrypt]: https://letsencrypt.org/es/
@@ -72,16 +72,17 @@ Además, también se realizarán las siguientes configuraciones adicionales:
 
 Para poder implementar o probar los pasos descritos en este proyecto, se requerirá de lo siguiente:
 
-1. Conocimiento en entorno Linux, y más concretamente, en Ubuntu.
-2. Conocimientos a nivel de administración de sistemas operativos.
-3. Conocimientos en el manejo de la CLI (línea de comandos).
-4. (Opcionalmente) Una cuenta en AWS para la creación y configuración de los recursos en caso de querer usarse.
+1. Conocimiento en la administración de sistemas operativos Linux, y más concretamente, en Ubuntu.
+2. Conocimiento en el manejo de la CLI (línea de comandos).
+3. Privilegios de administrador sobre el servidor.
+4. En caso de querer usar AWS, se deberá de tener una cuenta con permisos suficientes para los servicios mencionados en el apartado 'AWS'.
 
 ## Consideraciones
 
-A continuación se indican algunas consideraciones a tener en cuenta para poder implementar y/o probar el proyecto:
+A continuación se indican algunas consideraciones a tener en cuenta si se quiere implementar o probar el proyecto:
 
-1. En caso de no tener conocimientos robustos sobre Linux, es recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
-2. No es necesario usar AWS como proveedor Cloud, se pueden usar otras soluciones o incluso servidores físicos de la organización.
-3. Si se usa un proveedor Cloud, el despliegue tendrá un coste económico mensual.
-4. Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM.
+1. En caso de no tener conocimientos robustos sobre Linux pero querer implementarlo para vuestra organización en producción, es recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
+2. El proyecto ha sido probado en el proveedor cloud AWS, no obstante, debería poder funcionar en otros proveedores cloud.
+3. En caso de usarse un proveedor cloud, es muy probable que el despliegue tenga un coste económico mensual.
+4. El módulo de red es el módulo más crítico en caso de querer implementar este proyecto en un proveedor cloud.
+5. Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM para la realización de pruebas, no obstante, si se quiere usar en producción habrá que añadir más RAM.

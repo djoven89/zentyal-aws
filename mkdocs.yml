@@ -27,7 +27,8 @@ nav:
   - Configuración: 'zentyal-configuration.md'
   - Certificados: 'zentyal-certificates.md'
   - Securización: 'zentyal-hardening.md'
-  - Mantenimiento: 'maintenance.md'
   - Monitorización: 'monitoring.md'
+  - Mantenimiento: 'maintenance.md'
+  - Sobre mi: 'about.md'
 
 ...

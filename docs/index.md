@@ -86,3 +86,16 @@ A continuación se indican algunas consideraciones a tener en cuenta si se quier
 3. En caso de usarse un proveedor cloud, es muy probable que el despliegue tenga un coste económico mensual.
 4. El módulo de red es el módulo más crítico en caso de querer implementar este proyecto en un proveedor cloud.
 5. Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM para la realización de pruebas, no obstante, si se quiere usar en producción habrá que añadir más RAM.
+
+## Índice
+
+El índice del proyecto para su implementación es:
+
+1. AWS
+2. Instalación
+3. Configuración
+4. Securización
+5. Monitorización
+6. Mantenimiento
+
+En caso de querer implementar o probar el proyecto en un servidor físico ajeno a un proveedor cloud, los pasos 1 y 5 no se aplicarían.

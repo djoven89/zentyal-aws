@@ -1,117 +1,102 @@
 # Zentyal
 
-A continuación se detalla tanto la instalación como configuración del sistema operativo así como de los módulos.
+En este documento se explicará como instalar Zentyal 7.0 sobre un Ubuntu Server 20.04 en una instancia EC2 del proveedor cloud AWS. El objetivo es simplemente instalar Zentyal 7.0 con sólo los módulos esenciales y confirmar que no hay incidencias a nivel de red ante un reinicio.
 
-## Objetivo
-
-El objetivo principal de este servidor es configurar como servidor de correo, aunque también se usará para compartir recursos compartidos, los cuales serán accesibles a través del módulo de OpenVPN.
-
-Las acciones que se realizarán son:
-
-1. Instalación del sistema operativo.
-2. Instalación y configuración de los siguientes módulos:
-    * Network
-    * Logs
-    * Firewall
-    * Software
-    * NTP
-    * DNS
-    * Controlador de dominio
-    * Correo
-    * Webmail
-    * Antivirus
-    * Mailfilter
-3. Configuración de varios volúmenes EBS (discos) adicionales para los buzones de correo así como para los recursos compartidos.
-4. Se securizará el servicio de correo usando: SPF, DKIM y DMARC.
-
-Adicionalmente, mencionar que la información que estableceré para la configuración del servidor será:
+Los datos del entorno que crearé para el proyecto son:
 
 * **Nombre del servidor**: arthas
 * **Dominio**: icecrown.es
 * **IP:** 10.0.1.200/24
 * **Tipo de red:** Interna
+* **Nombre de un usuario administrador adicional:** djoven
 
 ## Requisitos
 
-* Antes de proceder a realizar las acciones que se explican en las siguientes secciones, es recomendable tener configurado el entorno de AWS tal y como se describe en [este] enlace. Si bien es cierto que no es necesario, es recomendable.
-* El despliegue que se explica en este documento sólo ha sido probado sobre el proveedor cloud de Amazon (AWS).
-* Se requiere que la instancia (servidor) tenga un mínimo de 2vCPU y 4GB de RAM, ya que el módulo de Antivirus consume bastante recursos.
-* El sistema operativo **debe** de la instancia tiene que ser **Ubuntu 20.04 LTS**.
+* El sistema operativo **debe** ser **Ubuntu 20.04 LTS**.
+* El servidor tiene que tener un mínimo de 4GB de RAM.
+* Se necesita un usuario con permisos de administrador (grupo `sudo`).
 
 ## Consideraciones
 
-* En caso de no tener conocimientos robustos sobre Linux, es recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
-* La estabilidad del módulo de red es imperativa, ya que no se tiene acceso físico al servidor para resolver incidencias de dicha índole. Algunas recomendaciones son:
+* Los pasos descritos a continuación son idénticos tantos en entornos cloud como en entornos tradicionales.
+* En caso de no tener conocimientos robustos sobre Linux, es recomendable usar la versión comercial, ya que se puede contratar acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
+* En caso de instalar el servidor en un proveedor cloud o en una ubicación sin acceso físico al servidor, la estabilidad del módulo de red será crítica. A continuación se indican algunas recomendaciones al respecto:
     * Definir previamente la configuración que se establecerá.
-    * Asignar una IP concreta a la interfaz de red de la instancia.
+    * Asignar una IP concreta a la interfaz de red de la instancia (en caso de usarse un proveedor cloud).
     * Establecer la IP de la instancia como estática en Zentyal.
     * Se recomienda configurar la tarjeta de red en Zentyal como interna, así se evita bloquearse a uno mismo durante la configuración inicial.
 
 ## Instalación
 
-Para la instalación, se usará [este] script disponible por parte de Zentyal. Mencionar que como es lógico, se instalará Zentyal sin entorno gráfico, ya que no tenemos acceso físico a la instancia.
+Para la instalación, usaremos [este] script disponible por parte de Zentyal. Mencionar que instalaremos Zentyal sin entorno gráfico, ya que queremos reducir el uso de recursos que consume el servidor, además que para este proyecto en concreto, al estar alojado en AWS no tendremos acceso físico al servidor.
 
 [este]: https://doc.zentyal.org/es/installation.html#instalacion-sobre-ubuntu-20-04-lts-server-o-desktop
 
-Las acciones a realizar son:
+Las acciones que procederemos a realizar son:
 
 1. Nos conectamos a la instancia usando la clave privada que nos hemos descargado (key pair):
 
     ```bash
-    ssh -i ~/.aws/keys/KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
+    ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
     ```
 
-2. Actualizamos el sistema:
+2. Actualizamos los paquetes del servidor:
 
     ```bash
     sudo apt update
     sudo apt dist-upgrade -y
     ```
 
-3. Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal - al menos inicialmente - :
+3. Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal desde la interfaz de administración:
 
     ```bash
     sudo useradd -m -d /home/djoven -G sudo -s /bin/bash djoven
     sudo passwd djoven
     ```
 
-4. Nos logeamos con dicho usuario y le añadimos nuestra clave pública de SSH para que podamos conectarnos a través de SSH:
+    **NOTA:** Es importante que el usuario pertenezca al grupo `sudo`, de lo contrario no podremos usarlo para acceder a la interfaz de administración.
+
+4. Nos logeamos con el usuario recién creado, creamos el directorio y archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH y finalmente, añadimos el contenido de nuestra clave pública:
 
     ```bash
     su - djoven
     mkdir -v .ssh
     touch .ssh/authorized_keys
-    vim .ssh/authorized_keys
+    vim .ssh/authorized_keys  ## Añadiremos el contenido de nuestra clave pública
     ```
 
 5. Creamos un directorio donde almacenaremos el script de instalación de Zentyal:
 
     ```bash
-    mkdir /opt/zentyal-install
-    cd /opt/zentyal-install
+    sudo mkdir /opt/zentyal-install
     ```
 
 6. Nos descargamos el script y le damos los permisos adecuados:
 
     ```bash
-    sudo wget https://zentyal.com/zentyal_installer.sh
-    sudo chmod 0750 zentyal_installer.sh
+    sudo wget -O /opt/zentyal-install/zentyal_installer.sh https://zentyal.com/zentyal_installer.sh
+    sudo chmod 0750 /opt/zentyal-install/zentyal_installer.sh
     ```
 
-7. Instalamos Zentyal a través del script, contestando `n` a la pregunta sobre la instalación del entorno gráfico:
+7. Instalamos Zentyal a través del script:, contestando `n` a la pregunta sobre la instalación del entorno gráfico:
 
     ```bash
-    ./zentyal_installer.sh
-    Do you want to install the Zentyal Graphical environment? (n|y) n
+    sudo bash /opt/zentyal-install/zentyal_installer.sh
     ```
 
-    El script nos instalará los siguientes paquetes:
+    **NOTA:** Contestaremos `n` a la pregunta: '*Do you want to install the Zentyal Graphical environment?*'.
+
+    Los paquetes de Zentyal que nos instalará el script serán:
 
     * zentyal (meta-paquete)
     * zentyal-core
     * zentyal-software
 
-8. Una vez que el script haya terminado, nos logearemos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
+    **NOTA:** Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos su acceso.
+
+8. Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
+
+    **NOTA:** En caso de que no hayamos creado el registro `A` en el DNS, usaremos la dirección IP pública de la instancia.
 
 9. Nos logeamos con el usuario administrador que hemos creado previamente, que en mi caso es `djoven`.
 
@@ -119,27 +104,28 @@ Las acciones a realizar son:
 
     ![Initial wizard - Packages](images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
 
-11. Configuramos la red como `estática` e `internal` tal y como se ha explicado en el apartado de *consideraciones*.
-
-    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
+11. Configuramos la tarjeta de red como `estática` e `internal`:
 
     ![Initial wizard - Network 1](images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
     ![Initial wizard - Network 2](images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
+
+    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
 
 12. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 
     ![Zentyal initial dashboard](images/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
 
-13. Finalmente, antes de procedes a la configuración, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor en AWS:
+13. Finalmente, antes de procedes a configurar el servidor, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor:
 
-    1. Que los módulos estén habilitados.
-    2. Que la máquina tiene acceso a Internet.
+    1. Nos aseguramos que todos los módulos estén habilitados (`Modules Status`).
+    2. Que la máquina tenga acceso a Internet.
 
         ```bash
-        ping google.es
+        ping -c4 8.8.8.8
+        ping -c4 google.es
         ```
 
-    3. Que no haya habido ningún error en el log `/var/log/zentyal/zentyal.log`. A continuación un ejemplo de los registros que fueron registrados en nuestro archivo de log:
+    3. Que no haya habido ningún error en el log `/var/log/zentyal/zentyal.log`. A continuación un ejemplo del logs sin ningún error:
 
         ```bash
         2022/10/23 08:17:51 DEBUG> PAM.pm:83 Authen::Simple::PAM::check - Successfully authenticated user 'djoven' using service 'zentyal'.
@@ -180,7 +166,7 @@ Las acciones a realizar son:
         reboot
         ```
 
-    5. Finalmente, volvemos a conectarnos tanto vía SSH como desde la GUI de Zentyal para confirmar que la instalación de Zentyal fue exitosa y que es estable.
+    5. Verificamos que podemos conectarnos a través de SSH y a la interfaz de administración de Zentyal.
 
 [firewall]: https://doc.zentyal.org/es/firewall.html
 [network]: https://doc.zentyal.org/es/firststeps.html#configuracion-basica-de-red-en-zentyal

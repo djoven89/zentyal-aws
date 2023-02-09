@@ -1,34 +1,36 @@
-# Configuración de los módulos
+# Configuración de Zentyal
 
-En este apartado vamos a proceder a la configuración inicial tanto del servidor como de los módulos que usaremos.
+En este documento se abordará la configuración del servidor Zentyal para que actúe como servidor de correo y compartición de ficheros.
 
-## Objetivo
+Las objetivos que se realizarán serán:
 
-Las configuraciones que se realizarán serán:
+1. (Opcional) Desinstalación de Snap.
+2. (Opcional) Configuración adicional de los usuarios locales del sistema:
+    * Modificación del Prompt.
+    * Modificaciones sobre el historial.
+    * Configuración para el editor `vim`.
+3. Creación de una partición SWAP.
+4. Configuración de los volúmenes EBS adicionales.
+5. Implementación de quotas en el sistema de archivo.
+6. Configuración de los siguientes módulos de Zentyal:
+    * Logs
+    * Firewall
+    * Software
+    * NTP
+    * DNS
+    * Controlador de dominio
+    * Correo
+    * Webmail
+    * Antivirus
+    * Mailfilter
+    * CA
+    * OpenVPN
 
-Opcionales:
+Al término de este documento, el servidor Zentyal quedará listo para usarse, aunque en siguientes documentos seguiremos estableciendo configuraciones adicionales como la configuración de certificados emitidos por Let's Encrypt o configuraciones opciones pero altamente recomendables como por ejemplo, hardening del servicio de correo.
 
-* Desinstalación de Snap.
-* Configuración para los usuarios locales del:
-  * Prompt.
-  * Historial.
-  * Editor Vim.
+## Configuración opcional
 
-Requeridas:
-
-* Partición SWAP.
-* Configuración de los volúmenes EBS adicionales.
-* Implementación de Quotas.
-
-Zentyal:
-
-* Idioma y puerto.
-* Hostname y dominio.
-* Instalación y configuración de los modulos.
-
-## Configuraciones opcionales
-
-A continuación se van a realizar una serie de configuraciones totalmente opcionales sobre el servidor.
+En esta sección se realizarán las configuraciones opcionales sobre el servidor Zentyal, por lo que se puede omitir e ir a la sección `Configuración previa`.
 
 ### Snap
 
@@ -54,9 +56,9 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 
 ### Prompt
 
-Habilitamos el color del prompt para mejorar la legibilidad mientras realizamos tareas desde la CLI.
+Para mejorar la experiencia de usuario cuando realizamos tareas desde la CLI, procederemos a habilitar el color del prompt para los usuarios locales existentes y futuros.
 
-1. Para habilitar el color en los usuarios existentes:
+1. Para habilitar el color en los usuarios existentes - en mi caso, `root`, `ubuntu` y `djoven`, usaremos el siguiente bucle:
 
     ```sh
     for user in /root /home/ubuntu /home/djoven; do sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc; done
@@ -70,9 +72,9 @@ Habilitamos el color del prompt para mejorar la legibilidad mientras realizamos 
 
 ### Historial
 
-Establecemos una serie de opciones adicionales relativas al historial de los usuarios (comando history).
+Con la finalidad de almacenar más información en el historial personal de los usuarios y que además, haya un timestamp que indique la fecha y hora en la que fue ejecutado determinado comando, añadiremos una serie de opciones adicionales a los usuarios locales tanto existentes como futuros.
 
-1. Añadimos las opciones a los usuarios existentes del sistema:
+1. Añadimos las opciones a los usuarios locales existentes -  en mi caso, `root`, `ubuntu` y `djoven` -:
 
     ```sh
     for user in /root /home/ubuntu /home/djoven; do
@@ -109,7 +111,15 @@ Establecemos una serie de opciones adicionales relativas al historial de los usu
 
 ### Vim
 
-Añadimos una configuración personalizada sencilla para el editor de textos `vim` tanto para los usuarios existentes como futuros:
+Añadiremos una configuración personalizada sencilla para el editor de textos `vim` tanto para los usuarios existentes como futuros. Esta configuración establecerá lo siguiente:
+
+* Tabulación de 2 espacios.
+* Habilita el resaltado de sintaxis.
+* Muestra el número de la líneas.
+* Usa el esquema de color 'desert'
+* Configura el editor para usar archivos Yaml.
+
+Para establecer la configuración, simplemente habrá que crear un archivo llamado `.vimrc` en el directorio personal de los usuarios.
 
 ```sh
 for user in /root /home/ubuntu /home/djoven /etc/skel; do
@@ -126,13 +136,13 @@ EOF
 done
 ```
 
-## Configuraciones requeridas
+## Configuración previa
 
-A continuación se realizan las configuraciones requeridas en el servidor antes de proceder a la instalación y configuración de los módulos de Zentyal.
+A continuación se realizan las configuraciones previas a la configuración de los módulos de Zentyal. Salvo el apartado de `Volúmenes EBS adicionales`, que sería opcional, el resto deberían de implementarse.
 
 ### Partición SWAP
 
-Es altamente recomendable configurar una partición SWAP en el servidor para incrementar la disponibilidad del servidor en caso de picos. Las acciones que realizaremos están documentadas [aquí](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/).
+Es altamente recomendable configurar una partición SWAP en el servidor para incrementar la disponibilidad del servidor en caso de picos relacionados con la memoria RAM. Las acciones que realizaremos están documentadas [aquí](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/).
 
 1. Creamos un archivo vacío de 4GB, que será el tamaño de nuestra partición SWAP:
 
@@ -140,7 +150,7 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
     sudo dd if=/dev/zero of=/swapfile1 bs=128M count=32
     ```
 
-2. Establecemos los permisos correctos:
+2. Establecemos los permisos para el archivo:
 
     ```sh
     sudo chmod 0600 /swapfile1
@@ -152,32 +162,39 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
     sudo mkswap /swapfile1
     ```
 
-4. Habilitamos la partición SWAP:
+4. Habilitamos la partición SWAP de forma temporal:
 
     ```sh
     sudo swapon /swapfile1
     ```
 
-5. Verificamos que el sistema la esté reconociendo:
+5. Verificamos que el sistema reconoce la nueva partición SWAP ejecutando los siguientes comandos:
 
     ```sh
     sudo swapon -s
-        Filename				Type		Size	Used	Priority
-        /swapfile1                             	file    	4194300	0	-2
-
     sudo free -m
-                      total        used        free      shared  buff/cache   available
-        Mem:           3875        1218         209           2        2447        2396
-        Swap:          4095           0        4095
     ```
 
-6. Establecemos la partición en el archivo de configuración `/etc/fstab`:
+    El resultado que deberíamos obtener es:
+
+    ```sh
+    ## Comando 'swapon'
+    Filename				Type		Size	Used	Priority
+    /swapfile1                             	file    	4194300	0	-2
+
+    ## comando 'free'
+                    total        used        free      shared  buff/cache   available
+    Mem:           3875        1218         209           2        2447        2396
+    Swap:          4095           0        4095
+    ```
+
+6. Establecemos la partición en el archivo de configuración `/etc/fstab` para que persista ante el reinicio del servidor:
 
     ```sh
     echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' >> | sudo tee -a /etc/fstab
     ```
 
-7. Comprobamos que la nueva entrada en el archivo no cause errores al montar los discos:
+7. Finalmente, comprobamos que la nueva entrada en el archivo no contenga errores de sintaxis:
 
     ```sh
     sudo mount -a
@@ -185,12 +202,19 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 ### Volúmenes EBS adicionales
 
-En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso para los buzones de correo y recursos compartidos-, procederemos a configurarlos y montarlos en el servidor.
+En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi caso para los buzones de correo y recursos compartidos -, procederemos a configurarlos y montarlos en el servidor.
 
-1. Listamos los volúmenes:
+**NOTA:** Para el punto de montaje de los recursos compartidos, podría usar `/home/samba/` en lugar de `/home/`. El motivo es que si un usuario quiere almacenar información en su directorio compartido personal (letra '*H*' por defecto), ésta información no se almacenaría en el volumen EBS adicional, ya que los directorios personales se crean en `/home/` y no en `/home/samba/`.
+
+1. Listamos los volúmenes con el comando:
 
     ```sh
     lsblk
+    ```
+
+    En mi caso concreto, me muestra el siguiente resultado:
+
+    ```sh
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
         nvme0n1      259:1    0   30G  0 disk
@@ -208,10 +232,17 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
     done
     ```
 
+    **NOTA:** '8e' estable como etiqueta 'Linux' a la partición.
+
 3. Revisamos que se hayan creado las particiones correctamente:
 
     ```sh
     lsblk
+    ```
+
+    En mi caso concreto, me muestra el siguiente resultado:
+
+    ```sh
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
         └─nvme1n1p1  259:7    0   10G  0 part
@@ -223,7 +254,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
         └─nvme2n1p1  259:8    0   10G  0 part
     ```
 
-4. Establecemos como sistema de archivos `ext4` a cada partición:
+4. Establecemos como sistema de archivos `ext4` a las nuevas particiones:
 
     ```sh
     for disk in nvme1n1p1 nvme2n1p1; do
@@ -231,10 +262,15 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
     done
     ```
 
-5. Volvemos a revisar que todo haya ido bien:
+5. Volvemos a revisar que todo haya ido bien con el comando:
 
     ```sh
     lsblk -f
+    ```
+
+    En mi caso concreto, me muestra el siguiente resultado:
+
+    ```sh
         NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
         nvme1n1
         └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
@@ -249,33 +285,38 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
 6. Creamos el directorio donde se montará el volumen EBS para los buzones de correo:
 
     ```sh
-    sudo mkdir -v /var/vmail
+    sudo mkdir -v -m0775 /var/vmail
     ```
 
-7. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
+7. Obtenemos el identificador (UUID) de los volúmenes:
+
+    ```sh
+    sudo sudo blkid | egrep "nvme[12]n1p1"
+    ```
+
+    En mi caso concreto, me muestra el siguiente resultado:
+
+    ```sh
+    /dev/nvme2n1p1: UUID="28e5471e-8fc1-48b5-8729-778c56a19b90" TYPE="ext4" PARTUUID="558dd3b7-01"
+    /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
+    ```
+
+8. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
 
     ```sh
     sudo mount /dev/nvme1n1p1 /mnt
     ```
 
-8. Copiamos el contenido del directorio `/home` al directorio temporal donde hemos montado el volumen EBS:
+9. Copiamos el contenido del directorio `/home/` al directorio temporal donde hemos montado el volumen EBS:
 
     ```sh
     sudo cp -aR /home/* /mnt/
     ```
 
-9. Desmontamos el volumen EBS:
+10. Desmontamos el volumen EBS:
 
     ```sh
     sudo umount /mnt
-    ```
-
-10. Obtenemos el identificador (UUID) de los volúmenes:
-
-    ```sh
-    sudo sudo blkid | egrep "nvme[12]n1p1"
-        /dev/nvme2n1p1: UUID="28e5471e-8fc1-48b5-8729-778c56a19b90" TYPE="ext4" PARTUUID="558dd3b7-01"
-        /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
 
 11. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
@@ -288,25 +329,37 @@ En caso de que hayamos añadido volúmenes EBS adicionales -como ha sido mi caso
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
     ```
 
-12. Montamos los volúmenes manualmente para verificar que no hay errores de sintáxis en el archivo del paso anterior:
+    **NOTA:** Tendréis que cambiar el valor del parámetro `UUID` por vuestro valor obtenido en el paso 7.
+
+12. Montamos los volúmenes manualmente para verificar que no hay errores de sintaxis en el archivo del paso anterior:
 
     ```sh
     sudo mount -a
     ```
 
-13. Finalmente, confirmamos que se hayan montado bien:
+13. Finalmente, confirmamos que se hayan montado bien ejecutando los siguientes comandos:
 
     ```sh
     mount | egrep 'nvme[12]n1p1'
-        /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
-        /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
+    df -h
+    ```
+
+    En mi caso concreto, me muestra el siguiente resultado: **TODO**
+
+    ```sh
+    ## Comando 'mount'
+    /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
+    /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
+
+    ## Comando 'df'
     ```
 
 ### Quota
 
-Si queremos hacer uso de la funcionalidad de recursos compartidos del módulo de controlador de dominio, tendremos que instalar y configurar las quotas.
+**TODO**
+Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo como de usuario del dominio, procederemos a instalar y configurar esta funcionalidad para las particiones `/home/` y `/var/vmail/` creadas en el apartado anterior.
 
-1. Instalamos los siguientes paquetes:
+1. Instalamos los siguientes paquetes requeridos para instances en AWS:
 
     ```sh
     sudo apt update
@@ -327,7 +380,9 @@ Si queremos hacer uso de la funcionalidad de recursos compartidos del módulo de
     UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
 
-4. Re-montamos el volumen:
+    **NOTA:** Las opciones añadidas son: `usrjquota`, `grpjquota` y `jqfmt`.
+
+4. Volvemos a montar la partición `/home/`:
 
     ```sh
     sudo mount -o remount /home/
@@ -339,9 +394,16 @@ Si queremos hacer uso de la funcionalidad de recursos compartidos del módulo de
     sudo quotacheck -vug /home/
     ```
 
+    **TODO**
+    En mi caso concreto, me muestra el siguiente resultado:
+
+    ```sh
+
+    ```
+
 ## Configuración de Zentyal
 
-En este apartado de detallará la configuración completa de los módulos de Zentyal que serán usados.
+A lo largo de esta sección se detallará la instalación y configuración de los módulos de Zentyal.
 
 ### General
 

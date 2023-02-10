@@ -344,7 +344,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     df -h
     ```
 
-    En mi caso concreto, me muestra el siguiente resultado: **TODO**
+    En mi caso concreto, me muestra el siguiente resultado: **>>TODO<<**
 
     ```sh
     ## Comando 'mount'
@@ -356,7 +356,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 ### Quota
 
-**TODO**
+**>>TODO<<**
 Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo como de usuario del dominio, procederemos a instalar y configurar esta funcionalidad para las particiones `/home/` y `/var/vmail/` creadas en el apartado anterior.
 
 1. Instalamos los siguientes paquetes requeridos para instances en AWS:
@@ -394,26 +394,26 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
     sudo quotacheck -vug /home/
     ```
 
-    **TODO**
+    **>>TODO<<**
     En mi caso concreto, me muestra el siguiente resultado:
 
     ```sh
 
     ```
 
-## Configuración de Zentyal
+## Configuración de los módulos
 
-A lo largo de esta sección se detallará la instalación y configuración de los módulos de Zentyal.
+En esta sección se instalarán los módulos de Zentyal, configurarán y comprobarán.
 
 ### General
 
-Antes de proceder a instalar y configurar los módulos, lo que haremos será establecer un serie de configuraciones generales desde el menú `System -> General`.
+Lo primero de todo que debemos hacer es configurar la base de Zentyal desde el menú `System -> General`.
 
-1. Lo primero que haremos será desde el panel de administración de Zentyal el idioma, puerto.
+1. Estableceremos el idioma del panel de administración así como el puerto por el cual escuchará el módulo *webadmin*:
 
     ![Configuration of language and GUI port](images/zentyal/05-general-1.png "Configuration of language and GUI port")
 
-2. Después, desde el mismo lugar, establecemos el nombre del servidor y su dominio:
+2. Después, desde el mismo panel, establecemos el nombre del servidor y el dominio:
 
     **NOTA:** En el momento que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
 
@@ -421,7 +421,7 @@ Antes de proceder a instalar y configurar los módulos, lo que haremos será est
 
 ### Módulo de Logs
 
-Inicialmente, simplemente habilitaremos los dos 'dominios' que hay, aunque cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores.
+Inicialmente, habilitaremos los dos 'dominios' que hay disponibles, cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores:
 
 ![Initial log configuration](images/zentyal/logs_initial.png "Initial log configuration")
 
@@ -430,9 +430,9 @@ Inicialmente, simplemente habilitaremos los dos 'dominios' que hay, aunque cambi
 Para la configuración de red que tenemos (interna) y los módulos que usaremos, las secciones del firewall que usaremos son:
 
 * Filtering rules from internal networks to Zentyal
-* Filtering rules from traffic comming out from Zentyal
+* Filtering rules from traffic coming out from Zentyal
 
-Las políticas definidas por defecto en ambas secciones del firewall son seguras, no obstante, procederemos a añadir una regla de tipo `LOG` para las conexiones por SSH, ya que siempre es buena idea tener la mayor información posible sobre este servicio tan crítico. Para ello, iremos a `Firewall -> Packet Filter -> Filtering rules from internal networks to Zentyal`.
+Las políticas definidas por defecto en ambas secciones del firewall son seguras, no obstante, procederemos a añadir una regla de tipo `LOG` para las conexiones por SSH, ya que siempre es buena idea tener la mayor información posible sobre este servicio tan crítico. Para ello, iremos a `Firewall -> Packet Filter -> Filtering rules from internal networks to Zentyal` y añadiremos la siguiente regla:
 
 ![Firewall SSH rule 1](images/zentyal/firewall_initial-ssh-1.png "Firewall SSH rule 1")
 ![Firewall SSH rule 2](images/zentyal/firewall_initial-ssh-2.png "Firewall SSH rule 2")
@@ -444,37 +444,37 @@ Las políticas definidas por defecto en ambas secciones del firewall son seguras
 
 ### Módulo de Software
 
-Una vez que tenemos la base del sistema configurado, procederemos a programar la hora de las actualizaciones automáticas así como a instalar todos los módulos que usaremos.
+Con la finalidad de tener nuestro servidor actualizado, habilitaremos y estableceremos la hora en la que se instalarán las actualizaciones automáticamente. Además, procederemos a instalar los módulos que vamos a usar.
 
-1. Desde el panel de administración, iremos a `Software Management -> Settings`, habilitaremos las actualizaciones automáticas e indicaremos una hora para las actualizaciones.
+1. Desde el menú `Software Management -> Settings`, establecemos las configuraciones de las actualizaciones automáticas:
 
-**NOTA:** Es conveniente que la hora sea posterior a posibles snapshots del servidor, así tenemos un punto de restauración estable, ya que hay posibilidades de que una actualización pudiera causar una incidencia.
+    **NOTA:** Es conveniente que la hora sea posterior a posibles snapshots del servidor, así tenemos un punto de restauración estable en caso de incidencia crítica causado por la actualización de un paquete.
 
-![Automatic software updates](images/zentyal/software_automatic-updates.png "Automatic software updates")
+    ![Automatic software updates](images/zentyal/software_automatic-updates.png "Automatic software updates")
 
-Después, procederemos a instalar **únicamente** los módulos que vayamos a usar, para ello vamos a `Software Management -> Zentyal Components`.
+2. Después, desde el menú `Software Management -> Zentyal Components` procederemos a instalar **únicamente** los módulos que vamos a usar:
 
-![Modules installation](images/zentyal/software_installation.png "Modules installation")
+    ![Modules installation](images/zentyal/software_installation.png "Modules installation")
 
 ### Módulo de NTP
 
-El primero de los módulos que hemos instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente.
+El primero de los módulos recién instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente donde está ubicado el servidor.
 
 [NTP]: https://doc.zentyal.org/es/ntp.html
 
-1. Vamos a `System -> Date/Time` y establecemos la zona horaria.
+1. Vamos a `System -> Date/Time` y establecemos la zona horaria:
 
     ![NTP timezone](images/zentyal/ntp_timezone.png "NTP timezone")
 
-2. Habilitamos la opción que permite sincronizar la hora con servidores externos.
+2. Habilitamos la opción que permite sincronizar la hora con servidores externos:
 
     ![NTP sync option](images/zentyal/ntp_sync.png "NTP sync option")
 
-3. Modificamos los servidores NTP establecidos por defecto, por los oficiales que tenemos disponibles en [esta](https://www.pool.ntp.org/en) web.
+3. Modificamos los servidores NTP establecidos por defecto, por los oficiales que tenemos disponibles en [esta](https://www.pool.ntp.org/en) web:
 
     ![NTP servers](images/zentyal/ntp_servers.png "NTP servers")
 
-4. Finalmente, habilitamos el módulo de NTP desde `Modules Status`.
+4. Finalmente, habilitamos el módulo de NTP desde `Modules Status`:
 
     ![NTP enable](images/zentyal/modules_ntp.png "NTP enable")
 
@@ -484,11 +484,11 @@ El siguiente módulo que procederemos a configurar será el [DNS].
 
 [DNS]: https://doc.zentyal.org/es/dns.html
 
-1. Creamos el dominio, el cual deberá ser el mismo que el que configuramos inicialmente desde `System -> General`. Para ello, vamos desde el menú lateral derecha a `DNS`.
+1. Creamos el dominio, el cual deberá ser el mismo que el que configuramos inicialmente desde `System -> General`. Para ello, desde el menú lateral seleccionamos `DNS`:
 
     ![DNS new domain](images/zentyal/dns-new_domain.png "DNS new domain")
 
-2. Después, comprobaremos que la IP se haya creado con éxito al dominio, para ello vamos al campo `Domain IP Addresses` del dominio recién creado:
+2. Después, comprobaremos que la IP del servidor se haya creado con éxito al dominio, para ello vamos al campo `Domain IP Addresses` del dominio recién creado:
 
     ![DNS domain record](images/zentyal/dns-domain_record.png "DNS domain record")
 
@@ -496,153 +496,198 @@ El siguiente módulo que procederemos a configurar será el [DNS].
 
     ![DNS hostname record](images/zentyal/dns-hostname_record.png "DNS hostname record")
 
-4. A continuación, en mi caso concreto crearé un alias varios alias para el nombre del servidor, que serán: `mail`,  `webmail` y `ns01`. La ubicación para su creación es: `Hostnames -> Alias`.
+4. A continuación, crearemos los registros adicionales relativos al servidor y entorno que deseemos. En mi caso concreto, crearé varios alias para el nombre del servidor, dos de ello serán relativos al correo: `mail` y `webmail` y otro adicional para el DNS `ns01`. Estos registros los añadimos desde: `Hostnames -> Alias`.
 
-    ![DNS alias records](images/zentyal/dns-hostname_record.png "DNS alias records")
+    ![DNS alias records](images/zentyal/dns-alias.png "DNS alias records")
 
-5. En mi caso, como DNS forwarders estableceré los de Google.
+5. Los servidores DNS forwarders que estableceré en mi caso serán los de [OpenDNS]: **>>TODO<<**
 
-    ![DNS forwarders](images/zentyal/dns-hostname_record.png "DNS forwarders")
+    ![DNS forwarders](images/zentyal/dns-forwarders.png "DNS forwarders")
 
-6. Con todo lo anterior, el módulo quedaría configurado inicialmente, por lo que podemos habilitarlo.
+6. Una ves establecida la configuración del módulo, procederemos a habilitarlo desde `Modules Status`:
 
     ![DNS enable](images/zentyal/modules_dns.png "DNS enable")
 
-7. Lo siguiente que haremos será comprobar que podemos resolver los registros DNS configurados desde el propio servidor.
+7. Lo siguiente que haremos será comprobar que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
 
     ```sh
     ## Para el dominio
     dig icecrown.es
 
-        ## Ejemplo de resultado:
-        ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
-        ;; global options: +cmd
-        ;; Got answer:
-        ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38170
-        ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+    ## Para el hostname del servidor
+    dig arthas.icecrown.es
 
-        ;; OPT PSEUDOSECTION:
-        ; EDNS: version: 0, flags:; udp: 4096
-        ; COOKIE: 8e30e37c82f9261b01000000635d864ec4a39fbb0eda9559 (good)
-        ;; QUESTION SECTION:
-        ;icecrown.es.			IN	A
+    ## Para los alias
+    for domain in mail webmail ns01; do dig @127.0.0.1 $domain.icecrown.es; done
+    ```
 
-        ;; ANSWER SECTION:
-        icecrown.es.		259200	IN	A	10.0.1.200
+    A continuación, los resultados que he obtenido:
 
-        ;; Query time: 0 msec
-        ;; SERVER: 127.0.0.1#53(127.0.0.1)
-        ;; WHEN: Sat Oct 29 22:00:14 CEST 2022
-        ;; MSG SIZE  rcvd: 84
+    ```text
+    ## Para el dominio
+    ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38170
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 8e30e37c82f9261b01000000635d864ec4a39fbb0eda9559 (good)
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	A
+
+    ;; ANSWER SECTION:
+    icecrown.es.		259200	IN	A	10.0.1.200
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sat Oct 29 22:00:14 CEST 2022
+    ;; MSG SIZE  rcvd: 84
+
+
+    ## Para el hostname del servidor
+    ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38137
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 771f8d7c27361c9f01000000635d8666cd4a4f18e568f925 (good)
+    ;; QUESTION SECTION:
+    ;arthas.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    arthas.icecrown.es.	259200	IN	A	10.0.1.200
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sat Oct 29 22:00:38 CEST 2022
+    ;; MSG SIZE  rcvd: 91
+
+
+    ## Para los alias
+    ## Alias 1
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 mail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4824
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: bc091efa7b76142d01000000635d86ddaca37ee3537ce8c1 (good)
+    ;; QUESTION SECTION:
+    ;mail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    mail.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	259200	IN	A	10.0.1.200
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
+    ;; MSG SIZE  rcvd: 110
+
+    ## Alias 2
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 webmail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64018
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: ec57e8bf6ff0a2b201000000635d86dd3786d805fd489b98 (good)
+    ;; QUESTION SECTION:
+    ;webmail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    webmail.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	259200	IN	A	10.0.1.200
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
+    ;; MSG SIZE  rcvd: 113
+
+    ## Alias 3
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 ns01.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31130
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: a140667468c77ab801000000635d86dd5cab7a79b2a70aa0 (good)
+    ;; QUESTION SECTION:
+    ;ns01.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    ns01.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	259200	IN	A	10.0.1.200
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
+    ;; MSG SIZE  rcvd: 110
+    ```
+
+    **NOTA:** Como se puede apreciar, el `status` de todos es '**NOERROR**' y además, en todos ellos devuelve una respuesta en '**ANSWER SECTION**'.
+
+[OpenDNS]: https://www.opendns.com/
+
+Llegados a este punto, el módulo estaría configurado, no obstante, los registros sólo serán válidos en el propio servidor Zentyal, debido a que no hemos aplicado cambio alguno en el proveedor DNS donde tenemos alojado y gestionado nuestro dominio. En caso de que queramos que el módulo DNS del servidor Zentyal sea autoritativo, tendremos que modificar los registros `NS` del proveedor DNS para que apunten al servidor Zentyal, de esta forma, todo registro creado en Zentyal podrá ser resuelto públicamente.
+
+En mi caso concreto, voy a realizar esta tarea desde [AWS Route 53] - que es mi proveedor DNS -, y usaré los registros `arthas` y `ns01` creados como registros `NS`.
+
+1. Desde la consola de AWS, vamos a `Route53 -> Registered domains` y modificamos los registros `NS` mencionados:
+
+    ![DNS Route53 registered domain](images/zentyal/dns-route53_registered.png "DNS Route53 registered domain")
+
+2. Después, desde `Route53 -> Hosted zones` creamos en la zona del dominio los registros para el funcionamiento:
+
+    **NOTA:** Pueden tardar varios minutos en actualizarse los registros indicados en la '*información de la zona*'.
+
+    ![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
+
+3. Finalmente, comprobaremos que podemos resolver los registros desde el exterior: **>>TODO<<**
+
+    ```sh
+    ## Para el dominio
+    dig icecrown.es
 
     ## Para el hostname del servidor
     dig arthas.icecrown.es
 
-        ## Ejemplo de resultado:
-        ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
-        ;; global options: +cmd
-        ;; Got answer:
-        ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38137
-        ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
-
-        ;; OPT PSEUDOSECTION:
-        ; EDNS: version: 0, flags:; udp: 4096
-        ; COOKIE: 771f8d7c27361c9f01000000635d8666cd4a4f18e568f925 (good)
-        ;; QUESTION SECTION:
-        ;arthas.icecrown.es.		IN	A
-
-        ;; ANSWER SECTION:
-        arthas.icecrown.es.	259200	IN	A	10.0.1.200
-
-        ;; Query time: 0 msec
-        ;; SERVER: 127.0.0.1#53(127.0.0.1)
-        ;; WHEN: Sat Oct 29 22:00:38 CEST 2022
-        ;; MSG SIZE  rcvd: 91
-
     ## Para los alias
     for domain in mail webmail ns01; do dig @127.0.0.1 $domain.icecrown.es; done
-
-        ## Ejemplo de resultado:
-        ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 mail.icecrown.es
-        ; (1 server found)
-        ;; global options: +cmd
-        ;; Got answer:
-        ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4824
-        ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-
-        ;; OPT PSEUDOSECTION:
-        ; EDNS: version: 0, flags:; udp: 4096
-        ; COOKIE: bc091efa7b76142d01000000635d86ddaca37ee3537ce8c1 (good)
-        ;; QUESTION SECTION:
-        ;mail.icecrown.es.		IN	A
-
-        ;; ANSWER SECTION:
-        mail.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
-        arthas.icecrown.es.	259200	IN	A	10.0.1.200
-
-        ;; Query time: 0 msec
-        ;; SERVER: 127.0.0.1#53(127.0.0.1)
-        ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
-        ;; MSG SIZE  rcvd: 110
-
-
-        ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 webmail.icecrown.es
-        ; (1 server found)
-        ;; global options: +cmd
-        ;; Got answer:
-        ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64018
-        ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-
-        ;; OPT PSEUDOSECTION:
-        ; EDNS: version: 0, flags:; udp: 4096
-        ; COOKIE: ec57e8bf6ff0a2b201000000635d86dd3786d805fd489b98 (good)
-        ;; QUESTION SECTION:
-        ;webmail.icecrown.es.		IN	A
-
-        ;; ANSWER SECTION:
-        webmail.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
-        arthas.icecrown.es.	259200	IN	A	10.0.1.200
-
-        ;; Query time: 0 msec
-        ;; SERVER: 127.0.0.1#53(127.0.0.1)
-        ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
-        ;; MSG SIZE  rcvd: 113
-
-
-        ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 ns01.icecrown.es
-        ; (1 server found)
-        ;; global options: +cmd
-        ;; Got answer:
-        ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31130
-        ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-
-        ;; OPT PSEUDOSECTION:
-        ; EDNS: version: 0, flags:; udp: 4096
-        ; COOKIE: a140667468c77ab801000000635d86dd5cab7a79b2a70aa0 (good)
-        ;; QUESTION SECTION:
-        ;ns01.icecrown.es.		IN	A
-
-        ;; ANSWER SECTION:
-        ns01.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
-        arthas.icecrown.es.	259200	IN	A	10.0.1.200
-
-        ;; Query time: 0 msec
-        ;; SERVER: 127.0.0.1#53(127.0.0.1)
-        ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
-        ;; MSG SIZE  rcvd: 110
     ```
 
-8. Finalmente, en caso de que queramos que Zentyal sea el servidor DNS autoritarivo para el dominio, tendremos que establecer en el proveedor donde gestionemos nuestro dominio los registos `NS`, de lo contrario, tendremos que crear los registros DNS que queremos que sean públicos en dicho proveedor.
+    A continuación, los resultados que he obtenido:
 
-En mi caso, tengo el dominio contratado y gestionado por AWS Route 53. Además, he usado los siguientes registros: `arthas` y `ns01` como registros `NS`.
+    ```text
+    ## Para el dominio
 
-Desde `Registered domains` en AWS Route53 hay que establecer los registros `NS` mencionados.
 
-![DNS Route53 registered domain](images/zentyal/dns-route53_registered.png "DNS Route53 registered domain")
+    ## Para el hostname del servidor
 
-Y después, modificar los de la propia zona. **NOTA:** Pueden tardar varios minutos en actualizarse los registros indicados en la información de la zona.
 
-![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
+    ## Para los alias
+    ## Alias 1
+
+
+    ## Alias 2
+
+
+    ## Alias 3
+    ```
 
 ### Módulo de Controlador de dominio
 
@@ -702,7 +747,7 @@ Teniendo configurado el módulo de controlador de dominio, ya podremos configura
 
 6. Después, procederemos a crear el registro de tipo `MX` para el dominio.
 
-    **TODO**
+    **>>TODO<<**
 
 7. Crearé el usuario postmaster especificado en el paso 2 desde `Users and Computers -> Manage`.
 

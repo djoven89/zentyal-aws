@@ -691,19 +691,25 @@ En mi caso concreto, voy a realizar esta tarea desde [AWS Route 53] - que es mi 
 
 ### Módulo de Controlador de dominio
 
-Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [controlador de dominio]. En mi caso concreto, haré las siguientes ajustes, aunque son totalmente opciones y se puede directamente habilitar el módulo (paso 4).
+Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [controlador de dominio]. En mi caso concreto, estableceré las configuraciones opcionales:
+
+* Añadiré una descripción a la configuración y confirmaré que los perfiles móviles están deshabilitados.
+* Estableceré una quota por defecto de 1GB para los usuarios del dominio (únicamente afectará a sus directorios personales).
+* Confirmaré que el PAM está deshabilitado, ya que no quiero que ningún usuario del dominio pueda logearse mediante SSH o FTP.
 
 [controlador de dominio]: https://doc.zentyal.org/es/directory.html
 
-1. Modificaré la descripción del servidor desde `Domain -> Server description`.
+A continuación las acciones a realizar para configurar el módulo:
+
+1. Modificamos la descripción del servidor desde `Domain -> Server description`.
 
     ![DC description](images/zentyal/dc-description.png "DC description")
 
-2. Después, estableceré como quota por defecto para los directorios personales de los usuarios 1GB.
+2. Establecemos el valor que tendrá la quota por defecto para los nuevos usuarios del dominio:
 
     ![DC quotas](images/zentyal/dc-quotas.png "DC quotas")
 
-3. Me aseguraré de que la opción que permite a los usuarios acceder a través de SSH usando PAM está deshabilitada.
+3. Revisamos que el PAM está deshabilitado:
 
     ![DC pam](images/zentyal/dc-pam.png "DC pam")
 
@@ -711,73 +717,91 @@ Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [con
 
     ![DC enable](images/zentyal/modules_dc.png "DC enable")
 
-5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio provisionado, comprobaremos que la estructura por defecto se nos ha creado con éxito. Para ello, vamos a `Users and Computers -> Manage`
+5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio provisionado, comprobaremos que la estructura por defecto se creó con éxito. Para ello, vamos a `Users and Computers -> Manage`
 
     ![DC default structure](images/zentyal/dc-default_structure.png "DC default structure")
 
-6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y será miembro del grupo de administradores `Domain Admins`.
+6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y será miembro del grupo de administradores `Domain Admins`:
 
     ![DC administrator](images/zentyal/dc-administrator.png "DC administrator")
 
 ### Módulo de Correo
 
-Teniendo configurado el módulo de controlador de dominio, ya podremos configurar el módulo de [correo], ya que por dependencia requiere que el anterior esté habilitado previamente.
+Teniendo configurado el módulo de controlador de dominio, ya podremos configurar el módulo de [correo], ya que por dependencia requiere que el anterior esté habilitado previamente. En mi caso concreto, estableceré las siguientes configuraciones opcionales:
+
+* El usuario postmaster será 'postmaster@icecrown.es'.
+* Estableceré 1GB como quota por defecto para los buzones de correo.
+* El tamaño máximo de un mensaje aceptado será de 25MB.
+* Los emails eliminados en los buzones será purgados automáticamente pasados 90 días.
+* Los correos en la carpeta de spam será borrados automáticamente pasados 90 días.
+* La sincronización de cuentas de correo external mediante Fetchmail se harán cada 5 minutos.
+* Únicamente se permitirá los protocolos IMAPS y POP3S.
+* Fetchmail y Sieve estarán deshabilitados.
+* Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvio de los emails y 30 días como periodo de borrado de borrado de entradas.
 
 [correo]: https://doc.zentyal.org/es/mail.html
 
-1. Lo primero que haremos será crear el dominio virtual de correo, que será el mismo que el dominio. Desde el menú lateral izquierdo iremos a `Mail -> Virtual Mail Domains`.
+A continuación las acciones a realizar para configurar el módulo:
+
+1. Creamos el dominio virtual de correo, que será el mismo que el dominio configurado en el módulo de DNS. Desde el menú lateral izquierdo iremos a `Mail -> Virtual Mail Domains`:
 
     ![Mail new virtual domain](images/zentyal/mail-new_domain.png "Mail new virtual domain")
 
-2. Después, desde `Mail -> General`  estableceré una serie de configuraciones restrictivas que afectarán a los usuarios, aunque son opciones.
+2. Establecemos las configuraciones restrictivas opcionales mencionadas desde `Mail -> General`: **>>TODO<<**
 
     ![Mail additional configuration](images/zentyal/mail-additional_conf.png "Mail additional configuration")
 
-3. Opcionalmente, también estableceré que sólo pueda POP3 e IMAP con TLS y deshabilitaré los scripts de Sieve.
+3. Habilitados los protocolos seguros de recepción de emails y deshabilitaremos el resto tal y como se mencionó: **>>TODO<<**
 
     ![Mail services](images/zentyal/mail-services.png "Mail services")
 
-4. Nuevamente, de forma opcional, incrementaré la seguridad del servicio, habilitaré la lista gris. Para ello, iremos a `Mail -> Greylist`.
+4. También habilitamos la lista gris desde `Mail -> Greylist`: **>>TODO<<**
 
     ![Mail greylist](images/zentyal/mail-greylist.png "Mail greylist")
 
-5. Lo siguiente que haremos será habilitar el módulo.
+5. Habilitamos el módulo:
 
     ![Mail enable](images/zentyal/modules_mail.png "Mail enable")
 
-6. Después, procederemos a crear el registro de tipo `MX` para el dominio.
+6. Creamos el registro de tipo `MX` en el dominio: **>>TODO<<**
 
-    **>>TODO<<**
+    IMG
 
-7. Crearé el usuario postmaster especificado en el paso 2 desde `Users and Computers -> Manage`.
+7. Creamos el usuario `postmaster@icecrown.es` especificado en el paso 2 desde `Users and Computers -> Manage`:
 
     ![Mail postmaster user](images/zentyal/mail-user_postmaster.png "Mail postmaster user")
 
-Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que podemos configurar la cuenta del usuario `postmaster`, no obstante, hasta que no tengamos el servicio de correo totalmente securizado, omitiremos la creación del resto de usuarios así como las pruebas de envio y recepción de emails tanto desde cuentas internas como externas.
+Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que podemos configurar la cuenta del usuario `postmaster`:
 
 1. Configuramos una nueva cuenta en Thunderbird:
 
     ![Thunderbird setup new account](images/zentyal/mail-thunderbird_new-account.png "Thunderbird setup new account")
 
-2. Establecemos los datos de conexión con el servicio SMTP e IMAP:
+2. Establecemos los datos de conexión con el servicio SMTP e IMAP (DEBERÍA SER IMAPS): **>>TODO<<**
 
     ![Thunderbird setup server](images/zentyal/mail-thunderbird_server.png "Thunderbird setup server")
 
-3. Tras confirmar la configuración, nos saldrá un mensaje de advertencia por el certificado, el cual es normal, ya que es un certificado auto-firmado por Zentyal.
+3. Tras confirmar la configuración, nos saldrá el siguiente mensaje de advertencia por el certificado, el cual es normal, ya que es un certificado auto-firmado por Zentyal:
 
     ![Thunderbird setup certificate warning](images/zentyal/mail-thunderbird_certificate_warning.png "Thunderbird setup certificate warning")
 
-4. Finalmente, tras confirmar la excepción de seguridad, debería de cargarnos nuestra cuenta.
+4. Una vez confirmada la excepción de seguridad, deberíamos de poder ver la cuenta de correo:
 
     ![Thunderbird login](images/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
+5. Finalmente, enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo.
+
+Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, habrá otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
+
+Mencionar también que si el servidor lo instalastéis en el proveedor cloud AWS, recordad que por defecto Amazon no permite enviar emails (revisar la última sección del apartado 'AWS').
+
 ### Módulo de Webmail
 
-El siguiente módulo a configurar será el [Webmail] (Sogo). Este módulo es muy sencillo de configurar.
+El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permitirá gestionar nuestra cuenta de correo y el cambio de contraseña del usuario en cuestión, desde un navegador web sin necesidad de usar un cliente de correo.
 
 [Webmail]: https://doc.zentyal.org/es/mail.html#cliente-de-webmail
 
-1. Opcionalmente, habilitamos [ActiveSync]. Para ello iremos a `Mail -> ActiveSync`.
+1. Habilitamos el protocolo [ActiveSync] desde `Mail -> ActiveSync`:
 
     ![Webmail ActiveSync](images/zentyal/webmail-activesync.png "Webmail ActiveSync")
 
@@ -785,27 +809,38 @@ El siguiente módulo a configurar será el [Webmail] (Sogo). Este módulo es muy
 
     ![Webmail enable](images/zentyal/modules_webmail.png "Webmail enable")
 
-3. Comprobamos que tenemos acceso a la página de login. **Importante**, al usar el protocolo HTTPS y tener configurado por defecto un certificado auto-firmado, nos mostrará un mensaje de advertencia.
+3. Comprobamos que podemos acceder a la página de login desde un navegador web con la URL: <https://arthas.icecrown.es/SOGo>:
+
+    **NOTA:** Nos mostrará un mensaje de advertencia por el certificado que usa el servicio, el cual eso auto-firmado:
 
     ![Webmail unsafe message](images/zentyal/webmail-access_unsafe.png "Webmail unsafe message")
 
+4. Una vez permitido el acceso a pesar del mensaje de advertencia, deberíamos de ver el login del Webmail:
+
     ![Webmail login webpage](images/zentyal/webmail-access_login.png "Webmail login webpage")
 
-4. Finalmente, nos logeamos con el usuario `postmaster` para confirmar que la conexión es estable.
+5. Nos logearemos con el usuario `postmaster` para confirmar que la autenticación funciona correctamente: **>>TODO<<** DEBERÍA DE VERSE LOS EMAILS DE PRUEBA
 
     ![Webmail user login](images/zentyal/webmail-access_user.png "Webmail user login")
 
+6. Finalmente, tratamos de enviar un email a nosotros mismos para verificar la integración con el módulo de correo: **>>TODO<<**
+
 [ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
 
-Opcionalmente, habilitaré la configuración de los mensajes automáticos de las vacaciones, ya que por defecto está deshabilitado.
+Llegados a este punto, el módulo es totalmente funcional, no obstante, estableceré las siguientes configuraciones opcionales:
 
-1. Creamos el diretorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes:
+* Habilitaré la opción de mensajes automáticos para las vacaciones, ya que por defecto está deshabilitado.
+* Estableceré inicialmente a 8 el número de workers (procesos) que usará el módulo.
+
+A continuación las acciones a realizar para aplicar las configuraciones opcionales:
+
+1. Creamos el diretorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes para el módulo:
 
     ```sh
     sudo mkdir -vp /etc/zentyal/stubs/sogo
     ```
 
-2. Copiamos la plantilla de configuración:
+2. Copiamos la plantilla de configuración de Sogo `sogo.conf.mas`:
 
     ```sh
     sudo cp -v /usr/share/zentyal/stubs/sogo/sogo.conf.mas /etc/zentyal/stubs/sogo/
@@ -823,38 +858,47 @@ Opcionalmente, habilitaré la configuración de los mensajes automáticos de las
     sudo zs sogo restart
     ```
 
-5. Finalmente, nos logeamos con el usuario nuevamente en el Webmail y comprobamos como desde `Preferences -> Mail` ya tenemos disponible la opción.
+5. Nos logeamos en el Webadmin nuevamente y verificamos que desde `Preferences -> Mail` ya tenemos la opción disponible:
 
-    ![Webmail vacations](images/zentyal/webmail-access_user.png "Webmail vacations")
+    ![Webmail vacations](images/zentyal/webmail-vacactions.png "Webmail vacations")
 
-También, de forma opcional, estableceré 8 workers en lugar de 15 en Sogo, así reduciré el uso de recursos. No obstante, dependiendo del número de usuarios recurrentes que usen el Webmail será necesario incrementar dicho valor, por lo que si preferís dejarlo por defecto por el momento también está bien.
-
-1. Establecemos el valor, que en mi caso será `8` en el archivo de configuración `/etc/zentyal/sogo.conf`:
+6. Establecemos el valor del prefork en el archivo de configuración `/etc/zentyal/sogo.conf`:
 
     ```sh
     sed -i 's/#sogod_prefork.*/sogod_prefork=8/' /etc/zentyal/sogo.conf
     ```
 
-2. Reiniciamos el módulo de Webmail para aplicar el cambio:
+    Si tenemos muchos usuarios concurrentes usando el módulo, es posible que Sogo no pueda gestionar bien todas las peticiones, por lo que será necesario incrementar este valor. Para detectar esta casuística, simplemente habrá que buscar registros en el log de Sogo ubicado en `/var/log/sogo/sogo.log` similares a la siguiente:
+
+    ```sh
+    sogod [3252]: [ERROR] <0x0x55c9db827250[WOWatchDog]> No child available to handle incoming request!
+    ```
+
+7. Reiniciamos el módulo de Webmail para aplicar el cambio:
 
     ```sh
     sudo zs sogo restart
     ```
 
-3. Finalmente, comprobamos que únicamente se hayan creado 8 procesos para Sogo:
+8. Finalmente, comprobamos que el servicio se levanto con el nuevo valor aplicado:
 
     ```sh
     ps -ef | grep sogod | head -1
-        sogo       24430       1  0 00:40 ?        00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
+    ```
+
+    En mi caso, el resultado obtenido del comando ha sido:
+
+    ```sh
+    sogo 24430 1 0 00:40 ? 00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
     ```
 
 ### Módulo de Antivirus
 
-El siguiente módulo que configuraremos será el [Antivirus], este es especialmente importante - aunque consume mucha RAM - para analizar los emails que nos llegan desde el exterior.
+El siguiente módulo que configuraremos será el [Antivirus]. Si bien es cierto que este módulo consume mucha RAM, es necesario para el análisis de los emails que gestiona el módulo de correo.
 
 [Antivirus]: https://doc.zentyal.org/es/antivirus.html
 
-La configuración de este módulo para la versión Development es muy limitada, por lo que las acciones a realizar son muy breves.
+La configuración que podemos definir a este módulo desde el panel de administración de Zentyal en la versión Development es inexistente, por lo que sólo podremos habilitar el módulo y comprobar que la base de datos de firma está actualizada.
 
 1. Habilitamos el módulo:
 
@@ -865,6 +909,19 @@ La configuración de este módulo para la versión Development es muy limitada, 
     ```sh
     sudo freshclam -v
     ```
+
+3. Confirmamos que el módulo esté activo:
+
+    ```sh
+    sudo zs antivirus status
+    ```
+
+En caso de usar una versión comercial, tendremos las siguientes funcionalidades adicionales descritas [aquí]:
+
+* Análisis del sistema.
+* Monitorización en directo de directorios.
+
+[aquí]: https://doc.zentyal.org/es/antivirus.html#configuracion-del-modulo-antivirus
 
 ### Módulo de Mailfilter
 
@@ -919,6 +976,10 @@ Las configuraciones que estableceremos son:
     ```
 
     Como se puede ver, el mensaje llegó desde una cuenta de Gmail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
+
+### Módulo de CA
+
+**>>TODO<<**
 
 ### Módulo de OpenVPN
 

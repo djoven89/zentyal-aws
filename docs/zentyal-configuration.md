@@ -344,7 +344,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     df -h
     ```
 
-    En mi caso concreto, me muestra el siguiente resultado: **>>TODO<<**
+    En mi caso concreto, me muestra el siguiente resultado:
 
     ```sh
     ## Comando 'mount'
@@ -352,6 +352,16 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
 
     ## Comando 'df'
+    Filesystem       Size  Used Avail Use% Mounted on
+    /dev/root         29G  7.9G   21G  28% /
+    devtmpfs         1.9G     0  1.9G   0% /dev
+    tmpfs            1.9G  4.0K  1.9G   1% /dev/shm
+    tmpfs            388M  2.6M  386M   1% /run
+    tmpfs            5.0M     0  5.0M   0% /run/lock
+    tmpfs            1.9G     0  1.9G   0% /sys/fs/cgroup
+    /dev/nvme2n1p1   9.8G   17M  9.3G   1% /var/vmail
+    /dev/nvme1n1p1   9.8G  228K  9.3G   1% /home
+    /dev/nvme0n1p15  105M  5.2M  100M   5% /boot/efi
     ```
 
 ### Quota
@@ -394,11 +404,11 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
     sudo quotacheck -vug /home/
     ```
 
-    **>>TODO<<**
     En mi caso concreto, me muestra el siguiente resultado:
 
     ```sh
-
+    quotacheck: Scanning /dev/nvme1n1p1 [/home] done
+    quotacheck: Checked 18 directories and 33 files
     ```
 
 ## Configuración de los módulos
@@ -657,7 +667,7 @@ En mi caso concreto, voy a realizar esta tarea desde [AWS Route 53] - que es mi 
 
     ![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
 
-3. Finalmente, comprobaremos que podemos resolver los registros desde el exterior: **>>TODO<<**
+3. Finalmente, comprobaremos que podemos resolver los registros desde el exterior:
 
     ```sh
     ## Para el dominio
@@ -674,19 +684,123 @@ En mi caso concreto, voy a realizar esta tarea desde [AWS Route 53] - que es mi 
 
     ```text
     ## Para el dominio
+    ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45120
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 65494
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	A
+
+    ;; ANSWER SECTION:
+    icecrown.es.		21600	IN	A	10.0.1.200
+    icecrown.es.		21600	IN	A	15.237.168.75
+
+    ;; Query time: 35 msec
+    ;; SERVER: 127.0.0.53#53(127.0.0.53)
+    ;; WHEN: dom feb 12 16:27:16 CET 2023
+    ;; MSG SIZE  rcvd: 72
 
 
     ## Para el hostname del servidor
+    ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48798
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 65494
+    ;; QUESTION SECTION:
+    ;arthas.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    arthas.icecrown.es.	21344	IN	A	10.0.1.200
+    arthas.icecrown.es.	21344	IN	A	15.237.168.75
+
+    ;; Query time: 0 msec
+    ;; SERVER: 127.0.0.53#53(127.0.0.53)
+    ;; WHEN: dom feb 12 16:28:00 CET 2023
+    ;; MSG SIZE  rcvd: 79
 
 
     ## Para los alias
     ## Alias 1
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 mail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21571
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: b8ed6e85559044b30100000063e9059adadee2c519ea0e09 (good)
+    ;; QUESTION SECTION:
+    ;mail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    mail.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	21318	IN	A	10.0.1.200
+    arthas.icecrown.es.	21318	IN	A	15.237.168.75
+
+    ;; Query time: 51 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: dom feb 12 16:28:26 CET 2023
+    ;; MSG SIZE  rcvd: 126
 
 
     ## Alias 2
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 webmail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23686
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 4aa92f2de94d09010100000063e9059a8f53de53ddbcbda7 (good)
+    ;; QUESTION SECTION:
+    ;webmail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    webmail.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	21318	IN	A	10.0.1.200
+    arthas.icecrown.es.	21318	IN	A	15.237.168.75
+
+    ;; Query time: 39 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: dom feb 12 16:28:26 CET 2023
+    ;; MSG SIZE  rcvd: 129
 
 
     ## Alias 3
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 ns01.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22370
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 383f9a085baef07a0100000063e9059a895e1947819ec7b4 (good)
+    ;; QUESTION SECTION:
+    ;ns01.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    ns01.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	21318	IN	A	10.0.1.200
+    arthas.icecrown.es.	21318	IN	A	15.237.168.75
+
+    ;; Query time: 31 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: dom feb 12 16:28:26 CET 2023
+    ;; MSG SIZE  rcvd: 126
     ```
 
 ### Módulo de Controlador de dominio
@@ -736,7 +850,7 @@ Teniendo configurado el módulo de controlador de dominio, ya podremos configura
 * Los correos en la carpeta de spam será borrados automáticamente pasados 90 días.
 * La sincronización de cuentas de correo external mediante Fetchmail se harán cada 5 minutos.
 * Únicamente se permitirá los protocolos IMAPS y POP3S.
-* Fetchmail y Sieve estarán deshabilitados.
+* Fetchmail y Sieve estarán deshabilitados, ya que inicialmente no los usaré.
 * Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvío de los emails y 30 días como periodo de borrado de borrado de entradas.
 
 [correo]: https://doc.zentyal.org/es/mail.html
@@ -747,15 +861,15 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mail new virtual domain](images/zentyal/mail-new_domain.png "Mail new virtual domain")
 
-2. Establecemos las configuraciones restrictivas opcionales mencionadas desde `Mail -> General`: **>>TODO<<**
+2. Establecemos las configuraciones restrictivas opcionales mencionadas desde `Mail -> General`:
 
     ![Mail additional configuration](images/zentyal/mail-additional_conf.png "Mail additional configuration")
 
-3. Habilitados los protocolos seguros de recepción de emails y deshabilitaremos el resto tal y como se mencionó: **>>TODO<<**
+3. Deshabilitamos Fetchmail y Sieve:
 
     ![Mail services](images/zentyal/mail-services.png "Mail services")
 
-4. También habilitamos la lista gris desde `Mail -> Greylist`: **>>TODO<<**
+4. También habilitamos la lista gris desde `Mail -> Greylist`:
 
     ![Mail greylist](images/zentyal/mail-greylist.png "Mail greylist")
 
@@ -765,9 +879,42 @@ A continuación las acciones a realizar para configurar el módulo:
 
 6. Creamos el registro de tipo `MX` en el dominio: **>>TODO<<**
 
-    IMG
+    ```sh
+    sudo samba-tool dns add 127.0.0.1 icecrown.es icecrown.es MX "mail.icecrown.es 10" -U zenadmin
+    ```
 
-7. Creamos el usuario `postmaster@icecrown.es` especificado en el paso 2 desde `Users and Computers -> Manage`:
+7. Comprobamos que la consulta sea accesible desde el exterior: **>>TODO<<**
+
+    ```sh
+    dig MX icecrown.es
+    ```
+
+    En resultado que obtengo: **>>TODO<<**
+
+    ```sh
+    ; <<>> DiG 9.16.1-Ubuntu <<>> MX icecrown.es @15.237.168.75
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 10566
+    ;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+    ;; WARNING: recursion requested but not available
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 1fb1e2e7f1e3cb540100000063e90b4b145c1242ca992586 (good)
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	MX
+
+    ;; ANSWER SECTION:
+    icecrown.es.		900	IN	MX	10 mail.icecrown.es.
+
+    ;; Query time: 32 msec
+    ;; SERVER: 15.237.168.75#53(15.237.168.75)
+    ;; WHEN: dom feb 12 16:52:43 CET 2023
+    ;; MSG SIZE  rcvd: 89
+    ```
+
+8. Creamos el usuario `postmaster@icecrown.es` especificado en el paso 2 desde `Users and Computers -> Manage`:
 
     ![Mail postmaster user](images/zentyal/mail-user_postmaster.png "Mail postmaster user")
 
@@ -777,9 +924,11 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird setup new account](images/zentyal/mail-thunderbird_new-account.png "Thunderbird setup new account")
 
-2. Establecemos los datos de conexión con el servicio SMTP e IMAP (DEBERÍA SER IMAPS): **>>TODO<<**
+2. Establecemos los datos de conexión con el servicio SMTPS e IMAPS:
 
     ![Thunderbird setup server](images/zentyal/mail-thunderbird_server.png "Thunderbird setup server")
+
+    **NOTA:** Hay que cambiar el tipo de autenticación a '**Normal password**', de lo contrario fallará la autenticación.
 
 3. Tras confirmar la configuración, nos saldrá el siguiente mensaje de advertencia por el certificado, el cual es normal, ya que es un certificado auto-firmado por Zentyal:
 
@@ -789,7 +938,9 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird login](images/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
-5. Finalmente, enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo.
+5. Finalmente, enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo: **>>TODO<<**
+
+    IMG
 
 Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, habrá otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
 

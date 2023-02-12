@@ -695,7 +695,7 @@ Una vez tenemos el módulo de DNS configurado, es el turno de configurar el [con
 
 * Añadiré una descripción a la configuración y confirmaré que los perfiles móviles están deshabilitados.
 * Estableceré una quota por defecto de 1GB para los usuarios del dominio (únicamente afectará a sus directorios personales).
-* Confirmaré que el PAM está deshabilitado, ya que no quiero que ningún usuario del dominio pueda logearse mediante SSH o FTP.
+* Confirmaré que el PAM está deshabilitado, ya que no quiero que ningún usuario del dominio pueda hacer login mediante SSH o FTP.
 
 [controlador de dominio]: https://doc.zentyal.org/es/directory.html
 
@@ -737,7 +737,7 @@ Teniendo configurado el módulo de controlador de dominio, ya podremos configura
 * La sincronización de cuentas de correo external mediante Fetchmail se harán cada 5 minutos.
 * Únicamente se permitirá los protocolos IMAPS y POP3S.
 * Fetchmail y Sieve estarán deshabilitados.
-* Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvio de los emails y 30 días como periodo de borrado de borrado de entradas.
+* Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvío de los emails y 30 días como periodo de borrado de borrado de entradas.
 
 [correo]: https://doc.zentyal.org/es/mail.html
 
@@ -793,7 +793,7 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
 Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, habrá otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
 
-Mencionar también que si el servidor lo instalastéis en el proveedor cloud AWS, recordad que por defecto Amazon no permite enviar emails (revisar la última sección del apartado 'AWS').
+Mencionar también que si el servidor lo instalasteis en el proveedor cloud AWS, recordad que por defecto Amazon no permite enviar emails (revisar la última sección del apartado 'AWS').
 
 ### Módulo de Webmail
 
@@ -819,7 +819,7 @@ El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permiti
 
     ![Webmail login webpage](images/zentyal/webmail-access_login.png "Webmail login webpage")
 
-5. Nos logearemos con el usuario `postmaster` para confirmar que la autenticación funciona correctamente: **>>TODO<<** DEBERÍA DE VERSE LOS EMAILS DE PRUEBA
+5. Nos logeamos con el usuario `postmaster` para confirmar que la autenticación funciona correctamente: **>>TODO<<** DEBERÍA DE VERSE LOS EMAILS DE PRUEBA
 
     ![Webmail user login](images/zentyal/webmail-access_user.png "Webmail user login")
 
@@ -834,7 +834,7 @@ Llegados a este punto, el módulo es totalmente funcional, no obstante, establec
 
 A continuación las acciones a realizar para aplicar las configuraciones opcionales:
 
-1. Creamos el diretorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes para el módulo:
+1. Creamos el directorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes para el módulo:
 
     ```sh
     sudo mkdir -vp /etc/zentyal/stubs/sogo
@@ -925,25 +925,34 @@ En caso de usar una versión comercial, tendremos las siguientes funcionalidades
 
 ### Módulo de Mailfilter
 
-Tras tener habilitado el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre los emails que recibimos.
+Tras tener habilitado el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre el servicio de correo de la organización.
+
+La configuración que aplicaré será:
+
+* Usaré la cuenta de correo 'issues@icecrown.es' para las notificaciones de correos problemáticos.
+* Estableceré en 5 el umbral de emails considerados SPAM.
+* También estaré a 5 el umbral de auto-learn.
+* El dominio lo añadiré a la lista gris.
+* Salvo la política de cabeceras incorrectas, el resto serán denegadas.
+* Deshabilitaremos ciertas extensiones que pueden ocasionar distintos vectores de ataque.
 
 [Mailfilter]: https://doc.zentyal.org/es/mailfilter.html
 
-Las configuraciones que estableceremos son:
+A continuación las acciones a realizar para configurar el módulo:
 
-1. Habilitaremos los servicios de este módulo y estableceremos un correo electrónico para emails problemáticos que no sean spam:
+1. Habilitamos los servicios de este módulo y estableceremos un correo electrónico para emails problemáticos que no sean spam:
 
     ![Mailfilter services](images/zentyal/mailfilter-general.png "Mailfilter services")
 
-2. Estableceremos las políticas antispam:
+2. Establecemos las políticas antispam:
 
     ![Mailfilter Antispam configuration](images/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
 
-3. Opcionalmente, también podemos añadir a nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
+3. Añadimos nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
 
     ![Mailfilter whitelist](images/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
 
-4. Estableceremos las políticas por defecto relativas al comportamiento del módulo ante ciertos eventos:
+4. Establecemos las políticas por defecto relativas al comportamiento del módulo ante ciertos eventos:
 
     ![Mailfilter event policies](images/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
 
@@ -963,9 +972,13 @@ Las configuraciones que estableceremos son:
 
 6. Habilitamos el módulo:
 
-    ![Mailtiler enable](images/zentyal/modules_mailfilter.png "Mailfilter enable")
+    ![Mailfilter enable](images/zentyal/modules_mailfilter.png "Mailfilter enable")
 
-7. Finalmente, nos enviamos un email desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
+7. Creamos la cuenta de correo que hemos establecido en el paso 1 desde `Users and Computers -> Manage`: **>>TODO<<**
+
+    IMG
+
+8. Nos enviamos un email sencillo desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
 
     ```sh
     Nov  5 10:39:31 arthas amavis[9409]: (09409-01) 9Vx6OoIz2Q4W FWD from <someuser@gmail.com> -> <postmaster@icecrown.es>, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF
@@ -975,76 +988,102 @@ Las configuraciones que estableceremos son:
     Nov  5 10:39:31 arthas postfix/smtp[9512]: 1245B43D97: to=<postmaster@icecrown.es>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.5, delays=0.02/0/0.49/3, dsn=2.0.0, status=sent (250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF)
     ```
 
-    Como se puede ver, el mensaje llegó desde una cuenta de Gmail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
+    Como se puede ver, el mensaje llegó desde una cuenta de GMail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
+
+9. Finalmente, enviamos otro email desde un dominio externo, aunque esta vez, usaremos palabras que sean consideras SPAM así como un archivo con extension 'sh' y revisamos el archivo de log  `/var/log/mail.log` nuevamente: **>>TODO<<**
+
+    ```sh
+    >>TODO<<
+    ```
+
+Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratarán en el documento llamado 'Hardening'.
+
+Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra parte del proyecto, concretamente en el documento 'Certificados'.
 
 ### Módulo de CA
 
-**>>TODO<<**
+Para poder hacer uso del módulo de OpenVPN, necesitaremos configurar previamente el módulo de [CA], el cual es extremadamente sencillo de configurar.
 
-### Módulo de OpenVPN
-
-El último módulo que configuraremos será el de OpenVPN. La finalidad es que cualquier usuario puede hacer uso de los recursos compartidos configurados en el módulo de controlador de dominio de forma segura.
-
-1. Configuraremos el módulo de CA para crear una entidad certificadora con la que poder expedir los certificados de los usuarios que usarán la VPN. Para ello vamos a `Certificate Authority -> General`:
+1. Creamos nuestra entidad de certificación desde `Certificate Authority -> General`:
 
     ![CA creation](images/zentyal/ca-creation.png "CA Creation")
 
-2. Guardamos cambios.
+2. Finalmente, guardamos cambios para que se cree nuestra CA.
 
-3. Creamos un certificado cuyo nombre tendrá un prefijo concreto, de esta forma, sólo permitiremos en las conexiones VPN certificados que empiecen por este patrón. De esta forma podremos distinguir los certificados emitidos.
+    **NOTA** Este módulo no tiene posibilidad de '*habilitarse*' como el resto.
+
+Adicionalmente, es posible emitir certificados para los módulos que estamos usando con el CommonName correctos, no obstante, como vamos a emitir certificados reconocidos a través de Let's Encrypt, no haremos uso de tal funcionalidad. De querer usarse, habría que ir a `Certificate Authority -> Services`.
+
+[CA]: https://doc.zentyal.org/es/ca.html
+
+### Módulo de OpenVPN
+
+El último módulo que configuraremos será el de [OpenVPN]. La finalidad de usar este módulo es permitir que los usuarios del dominio puedan hacer uso de los recursos compartidos configurados en el módulo de controlador de dominio de forma segura estando en cualquier ubicación.
+
+[OpenVPN]: https://doc.zentyal.org/es/vpn.html
+
+Las configuraciones que estableceré serán:
+
+* Como medida de seguridad adicional, únicamente se permitirá el acceso usando certificados cuyo CommonName tengan el prefijo: `Icecrown-RC-`.
+* El certificado usado como prefijo para la conexión VPN, tendrá una validez de 120 días. **NOTA:** Definiendo ese valor nos forzará a tener que realizar tareas de mantenimiento cada 4 meses.
+* Se usará un puerto y dirección VPN distintas al por defecto.
+
+A continuación las acciones a realizar para configurar el módulo:
+
+1. Creamos el certificado cuyo nombre tendrá un prefijo concreto, de esta forma, sólo permitiremos en las conexiones VPN certificados que empiecen por este patrón. Además, nos facilitará las tareas de mantenimiento y troubleshooting relativas a los certificados. Para ello, vamos a `Certificate Authority -> General`:
 
     ![CA prefix certificate](images/zentyal/ca-prefix-certificate.png "CA prefix certificate")
 
-4. Con la entidad certificadora creada, procedemos a crear una conexión VPN desde `VPN -> Servers`:
+2. Creamos la conexión VPN desde `VPN -> Servers`:
 
     ![OpenVPN server](images/zentyal/vpn-server.png "OpenVPN server")
 
-5. A continuación, procedemos a configurar la conexión:
+3. Procedemos a configurar la conexión con los datos mencionados al inicio de la sección:
 
     ![OpenVPN configuration 1](images/zentyal/vpn-configuration-1.png "OpenVPN configuration 1")
-    ![OpenVPN configuration 1](images/zentyal/vpn-configuration-2.png "OpenVPN configuration 1")
+    ![OpenVPN configuration 2](images/zentyal/vpn-configuration-2.png "OpenVPN configuration 2")
 
-    Como se puede apreciar, se ha modificado el puerto por defecto tanto de OpenVPN como de la red. Además, también se ha establecido como política de seguridad que los certificados válidos deberán comenzar por: '**Icecrown-RC-**'.
-
-6. Después, nos aseguramos de estar publicando la red interna del servidor. Para ello vamos a `VPN -> Servers -> Advertised networks`.
+4. Confirmamos que la red internal de servidor está configurada en la conexión VPN, para ello vamos a `VPN -> Servers -> Advertised networks`:
 
     ![OpenVPN network configuration](images/zentyal/vpn-network-configuration.png "OpenVPN network configuration")
 
-7. Habilitamos el módulo:
+5. Habilitamos el módulo:
 
     ![OpenVPN enable](images/zentyal/modules_openvpn.png "OpenVPN enable")
 
-8. Creamos un servicio de red, el cual contendrá el puerto establecido en el paso 5:
+6. Creamos un servicio de red con el puerto de la conexión VPN definida:
 
     ![OpenVPN network service](images/zentyal/vpn-service-1.png "OpenVPN network service")
     ![OpenVPN network service port](images/zentyal/vpn-service-2.png "OpenVPN network service port")
 
-9. Creamos una regla en el firewall de Zentyal que permita la conexión:
+    **NOTA:** Recordad que el protocolo es **UDP**.
+
+7. Finalmente, creamos una regla en el firewall de Zentyal que permita la conexión y guardamos cambios:
 
     ![OpenVPN firewall rule](images/zentyal/vpn-firewall.png "OpenVPN firewall rule")
 
-Para probar el funcionamiento del módulo, realizaremos las siguientes acciones:
+Con el módulo ya configurado, creamos un certificado, usuario y recurso compartido para confirmar el funcionamiento de este módulo por completo. Para ello, realizamos las siguientes acciones:
 
-1. Creamos un certificado llamado `Icecrown-RC-Maria`:
+1. Creamos un certificado:
 
     ![OpenVPN test certificate](images/zentyal/vpn-test-certificate.png "OpenVPN test certificate")
 
-2. Creamos un usuario del dominio llamado `maria`:
+2. Creamos un usuario del dominio:
 
     ![OpenVPN test user](images/zentyal/vpn-test-user.png "OpenVPN test user")
 
-3. Creamos una carpeta compartida llamada `rrhh` con permisos de lectura y escritura para el usuario creado.
+3. Creamos una carpeta compartida con permisos de lectura y escritura para el usuario de pruebas creado:
 
     ![OpenVPN test share](images/zentyal/vpn-test-share-1.png "OpenVPN test share")
-    ![OpenVPN test share permissons](images/zentyal/vpn-test-share-2.png "OpenVPN test share permissons")
+    ![OpenVPN test share permissions](images/zentyal/vpn-test-share-2.png "OpenVPN test share permissions")
 
-4. Guardamos los cambios para que se apliquen los cambios anteriores.
+4. Guardamos los cambios.
 
-5. Descargamos un bundle con la configuración de la conexión VPN para el cliente, para ello vamos a `VPN -> Servers -> Download client bundle`.
+5. Descargamos un bundle con la configuración de la conexión VPN para el cliente, para ello vamos a `VPN -> Servers -> Download client bundle`:
+
+    **NOTA:** Para este ejemplo concreto, para la máquina del cliente usaré un Windows 10 con OpenVPN ya instalado.
 
     ![OpenVPN test bundle](images/zentyal/vpn-test-bundle.png "OpenVPN test bundle")
-
-    **NOTA:** Para este ejemplo concreto, usaré una máquina Ubuntu Desktop 20.04 para establecer la conexión VPN y realizar las pruebas.
 
 6. Copiamos el bundle al cliente desde donde queramos establecer la conexión VPN y configuramos el cliente de OpenVPN:
 
@@ -1084,15 +1123,15 @@ Para probar el funcionamiento del módulo, realizaremos las siguientes acciones:
     Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 MULTI: Learn: 00:ff:83:a2:23:96 -> Icecrown-RC-Maria/88.6.127.36:35754
     ```
 
-8. Una vez que hayamos establecido la conexión, desde el navegador de archivos, estableceremos la URL del servidor, en este caso sería: `\\arthas.icecrown.es`. Tras lo cual, nos pedirá las credenciales del usuario.
+8. Una vez la conexión ha sido establecida, desde el navegador de archivos, estableceremos la URL del servidor, que en mi caso es: `\\arthas.icecrown.es`. Tras lo cual, nos pedirá las credenciales del usuario.
 
     ![OpenVPN client log in credentials](images/zentyal/vpn-client-credentials.png "OpenVPN client log in credentials")
 
-9. Tras logearnos, deberíamos de ver el directorio personal del usuario y los recursos compartidos. Además, que también deberíamos de poder añadir archivos a dichos recursos.
+9. Tras logearnos, deberíamos de ver el directorio personal del usuario y los recursos compartidos.
 
     ![OpenVPN client view](images/zentyal/vpn-client-shares.png "OpenVPN client view")
 
-10. Finalmente, verificaremos desde el propio servidor Zentyal como los archivos fueron correctamente creados:
+10. Añadimos un archivo a los recursos `Maria` y `rrhh` y verificamos su creación desde la CLI del servidor Zentyal:
 
     ```sh
     ls -l /home/maria/test-file-1.txt
@@ -1101,3 +1140,14 @@ Para probar el funcionamiento del módulo, realizaremos las siguientes acciones:
     ls -l /home/samba/shares/rrhh/test-file-2.txt
         -rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 0 Feb  4 20:56 /home/samba/shares/rrhh/test-file-2.txt
     ```
+
+Llegados a este punto, el servidor estaría listo para usarse en producción, no obstante, tal y como se ha mencionado en varias ocasiones, es altamente recomendable realizar ciertas tareas adicionales como:
+
+* Usar certificados expedidos por entidades de certificación reconocidas.
+* Securizar el servicio de correo con SPF, DKIM y DMARC.
+* Establecer restricciones relativas a las contraseñas de los usuarios de dominio.
+* Crear una política de copias de seguridad.
+* Monitorizar el servidor.
+* Conocer y programar tareas de mantenimiento.
+
+Todos estas configuraciones serán explicadas en otros documentos del proyecto (ver menú superior).

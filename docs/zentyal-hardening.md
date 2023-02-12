@@ -6,7 +6,55 @@ Las últimas implementaciones que realizaremos sobre el servicio de correo será
 [DKIM]: https://www.dmarcanalyzer.com/es/dkim-3/
 [DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
 
-## SPF
+## Módulo de controlador de dominio
+
+TODO
+
+* [link](https://wiki.samba.org/index.php/Password_Settings_Objects)
+
+usar 'pso' tiene cierto impacto a nivel de recursos como menciona la documentación.
+
+```sh
+sudo samba-tool domain passwordsettings show
+```
+
+```sh
+Password complexity: off
+Store plaintext passwords: off
+Password history length: 24
+Minimum password length: 0
+Minimum password age (days): 0
+Maximum password age (days): 365
+Account lockout duration (mins): 30
+Account lockout threshold (attempts): 0
+Reset account lockout after (mins): 30
+```
+
+```sh
+sudo samba-tool domain passwordsettings set \
+    --complexity=on \
+    --min-pwd-length=8 \
+```
+
+**NOTA:** history-length sólo puede establecerte un máximo de 24.
+
+```sh
+Password complexity: on
+Store plaintext passwords: off
+Password history length: 24
+Minimum password length: 8
+Minimum password age (days): 0
+Maximum password age (days): 365
+Account lockout duration (mins): 30
+Account lockout threshold (attempts): 0
+Reset account lockout after (mins): 30
+```
+
+Podríamos establecer un tiempo máximo de duración de contraseña, aunque tiene la contra de que se requerirá de que el administrador de sistemas les recuerde el cambio de contraseña, sino tendrá que establecer la contraseña y que luego el usuario, se encargue de cambiarla por una que él mismo decida (a través de Sogo).
+
+## Módulo de correo
+
+### SPF
 
 SPF será lo primero que implementaron, para ello, realizaremos las siguientes acciones:
 
@@ -31,7 +79,7 @@ SPF será lo primero que implementaron, para ello, realizaremos las siguientes a
 
     ![SPF check](images/zentyal/mail-spf_mxtoolbox.png "SPF check")
 
-## DKIM
+### DKIM
 
 DKIM será el próximo elemento a implementar, las acciones que realizaremos serán las mismas que se describen [aquí](https://doc.zentyal.org/es/mail.html#securizacion-del-servidor-de-correo).
 
@@ -166,6 +214,6 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
 
     ![DKIM headers](images/zentyal/mail-dkim_mxtoolbox.png "DKIM headers")
 
-## DMARC
+### DMARC
 
 TODO

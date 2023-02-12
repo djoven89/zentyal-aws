@@ -1,4 +1,4 @@
-# Zentyal
+# Instalación de Zentyal
 
 En este documento se explicará como instalar Zentyal 7.0 sobre un Ubuntu Server 20.04 en una instancia EC2 del proveedor cloud AWS. El objetivo es simplemente instalar Zentyal 7.0 con sólo los módulos esenciales y confirmar que no hay incidencias a nivel de red ante un reinicio.
 

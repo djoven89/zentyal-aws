@@ -490,11 +490,13 @@ El primero de los módulos recién instalado que vamos a configurar es [NTP], en
 
 ### Módulo de DNS
 
-El siguiente módulo que procederemos a configurar será el [DNS].
+El siguiente módulo que procederemos a configurar será el [DNS], el cual es crítico para el funcionamiento del módulo de controlador de dominio y por dependencia, el de correo también.
 
 [DNS]: https://doc.zentyal.org/es/dns.html
 
-1. Creamos el dominio, el cual deberá ser el mismo que el que configuramos inicialmente desde `System -> General`. Para ello, desde el menú lateral seleccionamos `DNS`:
+La configuración que estableceremos será mínima, ya que la gestión de los registros DNS la gestionaremos desde el panel de administración donde tenemos contratado el dominio - Route 53 en mi caso -.
+
+1. Creamos el dominio, el cual debe ser el mismo que el que configuramos inicialmente desde `System -> General`. Para ello, desde el menú lateral seleccionamos `DNS`:
 
     ![DNS new domain](images/zentyal/dns-new_domain.png "DNS new domain")
 
@@ -506,11 +508,11 @@ El siguiente módulo que procederemos a configurar será el [DNS].
 
     ![DNS hostname record](images/zentyal/dns-hostname_record.png "DNS hostname record")
 
-4. A continuación, crearemos los registros adicionales relativos al servidor y entorno que deseemos. En mi caso concreto, crearé varios alias para el nombre del servidor, dos de ello serán relativos al correo: `mail` y `webmail` y otro adicional para el DNS `ns01`. Estos registros los añadimos desde: `Hostnames -> Alias`.
+4. A continuación, crearemos los registros adicionales de tipo alias desde `Hostnames -> Alias`. En mi caso, crearé dos registros relativos al correo: `mail` y `webmail`. **>>TODO<<** Eliminar registro ns01
 
     ![DNS alias records](images/zentyal/dns-alias.png "DNS alias records")
 
-5. Los servidores DNS forwarders que estableceré en mi caso serán los de [OpenDNS]: **>>TODO<<**
+5. Los servidores DNS forwarders que estableceré en mi caso serán los de [Cloudflare] y [Quad9]:
 
     ![DNS forwarders](images/zentyal/dns-forwarders.png "DNS forwarders")
 
@@ -518,20 +520,21 @@ El siguiente módulo que procederemos a configurar será el [DNS].
 
     ![DNS enable](images/zentyal/modules_dns.png "DNS enable")
 
-7. Lo siguiente que haremos será comprobar que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
+7. Finalmente, comprobaremos que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
 
     ```sh
     ## Para el dominio
     dig icecrown.es
 
-    ## Para el hostname del servidor
+    ## Para el nombre del servidor
     dig arthas.icecrown.es
 
     ## Para los alias
-    for domain in mail webmail ns01; do dig @127.0.0.1 $domain.icecrown.es; done
+    dig mail.icecrown.es
+    dig webmail.icecrown.es
     ```
 
-    A continuación, los resultados que he obtenido:
+    A continuación, los resultados que he obtenido: **>>TODO<<** Volver a añadir los resultados.
 
     ```text
     ## Para el dominio
@@ -556,7 +559,7 @@ El siguiente módulo que procederemos a configurar será el [DNS].
     ;; MSG SIZE  rcvd: 84
 
 
-    ## Para el hostname del servidor
+    ## Para el nombre del servidor
     ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
     ;; global options: +cmd
     ;; Got answer:
@@ -624,184 +627,55 @@ El siguiente módulo que procederemos a configurar será el [DNS].
     ;; SERVER: 127.0.0.1#53(127.0.0.1)
     ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
     ;; MSG SIZE  rcvd: 113
-
-    ## Alias 3
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 ns01.icecrown.es
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 31130
-    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: a140667468c77ab801000000635d86dd5cab7a79b2a70aa0 (good)
-    ;; QUESTION SECTION:
-    ;ns01.icecrown.es.		IN	A
-
-    ;; ANSWER SECTION:
-    ns01.icecrown.es.	259200	IN	CNAME	arthas.icecrown.es.
-    arthas.icecrown.es.	259200	IN	A	10.0.1.200
-
-    ;; Query time: 0 msec
-    ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
-    ;; MSG SIZE  rcvd: 110
     ```
 
-    **NOTA:** Como se puede apreciar, el `status` de todos es '**NOERROR**' y además, en todos ellos devuelve una respuesta en '**ANSWER SECTION**'.
+    Como se puede apreciar, el `status` de todos es '**NOERROR**' y en '**ANSWER SECTION**' muestra los registros DNS en cuestión.
 
-[OpenDNS]: https://www.opendns.com/
+[Cloudflare]: https://www.cloudflare.com/es-es/
+[Quad9]: https://www.quad9.net/es/
 
-Llegados a este punto, el módulo estaría configurado, no obstante, los registros sólo serán válidos en el propio servidor Zentyal, debido a que no hemos aplicado cambio alguno en el proveedor DNS donde tenemos alojado y gestionado nuestro dominio. En caso de que queramos que el módulo DNS del servidor Zentyal sea autoritativo, tendremos que modificar los registros `NS` del proveedor DNS para que apunten al servidor Zentyal, de esta forma, todo registro creado en Zentyal podrá ser resuelto públicamente.
+Llegados a este punto, el módulo estaría configurado en Zentyal, no obstante, todavía queda crear los registros con la IP pública del servidor en el proveedor DNS para que estos sean visibles externamente. A continuación los pasos a realizar para AWS Route53:
 
-En mi caso concreto, voy a realizar esta tarea desde [AWS Route 53] - que es mi proveedor DNS -, y usaré los registros `arthas` y `ns01` creados como registros `NS`.
-
-1. Desde la consola de AWS, vamos a `Route53 -> Registered domains` y modificamos los registros `NS` mencionados:
-
-    ![DNS Route53 registered domain](images/zentyal/dns-route53_registered.png "DNS Route53 registered domain")
-
-2. Después, desde `Route53 -> Hosted zones` creamos en la zona del dominio los registros para el funcionamiento:
-
-    **NOTA:** Pueden tardar varios minutos en actualizarse los registros indicados en la '*información de la zona*'.
+1. Vamos a `Route 53 -> Hosted zones -> dominio` y creamos los mismos registros que en Zentyal pero con la IP pública:
 
     ![DNS Route53 domain records](images/zentyal/dns-route53_records.png "DNS Route53 domain records")
 
-3. Finalmente, comprobaremos que podemos resolver los registros desde el exterior:
+2. Esperamos unos minutos para que puedan replicarse globalmente.
+
+3. Finalmente, comprobamos la resolución de los registros:
 
     ```sh
     ## Para el dominio
-    dig icecrown.es
+    dig @8.8.8.8 icecrown.es
 
-    ## Para el hostname del servidor
-    dig arthas.icecrown.es
+    ## Para el nombre del servidor
+    dig @8.8.8.8 arthas.icecrown.es
 
     ## Para los alias
-    for domain in mail webmail ns01; do dig @127.0.0.1 $domain.icecrown.es; done
+    dig @8.8.8.8 mail.icecrown.es
+    dig @8.8.8.8 webmail.icecrown.es
     ```
 
-    A continuación, los resultados que he obtenido:
+    A continuación, los resultados que he obtenido: **>>TODO<<** Volver a añadir los resultados.
 
     ```text
     ## Para el dominio
-    ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 45120
-    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
-
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 65494
-    ;; QUESTION SECTION:
-    ;icecrown.es.			IN	A
-
-    ;; ANSWER SECTION:
-    icecrown.es.		21600	IN	A	10.0.1.200
-    icecrown.es.		21600	IN	A	15.237.168.75
-
-    ;; Query time: 35 msec
-    ;; SERVER: 127.0.0.53#53(127.0.0.53)
-    ;; WHEN: dom feb 12 16:27:16 CET 2023
-    ;; MSG SIZE  rcvd: 72
 
 
-    ## Para el hostname del servidor
-    ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 48798
-    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 65494
-    ;; QUESTION SECTION:
-    ;arthas.icecrown.es.		IN	A
+    ## Para el nombre del servidor
 
-    ;; ANSWER SECTION:
-    arthas.icecrown.es.	21344	IN	A	10.0.1.200
-    arthas.icecrown.es.	21344	IN	A	15.237.168.75
-
-    ;; Query time: 0 msec
-    ;; SERVER: 127.0.0.53#53(127.0.0.53)
-    ;; WHEN: dom feb 12 16:28:00 CET 2023
-    ;; MSG SIZE  rcvd: 79
 
 
     ## Para los alias
     ## Alias 1
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 mail.icecrown.es
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 21571
-    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
 
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: b8ed6e85559044b30100000063e9059adadee2c519ea0e09 (good)
-    ;; QUESTION SECTION:
-    ;mail.icecrown.es.		IN	A
-
-    ;; ANSWER SECTION:
-    mail.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
-    arthas.icecrown.es.	21318	IN	A	10.0.1.200
-    arthas.icecrown.es.	21318	IN	A	15.237.168.75
-
-    ;; Query time: 51 msec
-    ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: dom feb 12 16:28:26 CET 2023
-    ;; MSG SIZE  rcvd: 126
 
 
     ## Alias 2
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 webmail.icecrown.es
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23686
-    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
-
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: 4aa92f2de94d09010100000063e9059a8f53de53ddbcbda7 (good)
-    ;; QUESTION SECTION:
-    ;webmail.icecrown.es.		IN	A
-
-    ;; ANSWER SECTION:
-    webmail.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
-    arthas.icecrown.es.	21318	IN	A	10.0.1.200
-    arthas.icecrown.es.	21318	IN	A	15.237.168.75
-
-    ;; Query time: 39 msec
-    ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: dom feb 12 16:28:26 CET 2023
-    ;; MSG SIZE  rcvd: 129
-
-
-    ## Alias 3
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 ns01.icecrown.es
-    ; (1 server found)
-    ;; global options: +cmd
-    ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 22370
-    ;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
-
-    ;; OPT PSEUDOSECTION:
-    ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: 383f9a085baef07a0100000063e9059a895e1947819ec7b4 (good)
-    ;; QUESTION SECTION:
-    ;ns01.icecrown.es.		IN	A
-
-    ;; ANSWER SECTION:
-    ns01.icecrown.es.	21600	IN	CNAME	arthas.icecrown.es.
-    arthas.icecrown.es.	21318	IN	A	10.0.1.200
-    arthas.icecrown.es.	21318	IN	A	15.237.168.75
-
-    ;; Query time: 31 msec
-    ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: dom feb 12 16:28:26 CET 2023
-    ;; MSG SIZE  rcvd: 126
     ```
+
+Tras confirmar el funcionamiento del dominio tanto internamente (desde Zentyal) como externamente, el módulo de DNS estará correctamente configurado y podremos proseguir con el siguiente módulo.
 
 ### Módulo de Controlador de dominio
 

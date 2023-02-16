@@ -45,7 +45,7 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 2. Eliminamos el paquete:
 
     ```sh
-    sudo apt remove --purge snapd
+    sudo apt remove --purge -y snapd
     ```
 
 3. Eliminamos los directorios que quedan en el sistema de archivos:
@@ -58,56 +58,32 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 
 Para mejorar la experiencia de usuario cuando realizamos tareas desde la CLI, procederemos a habilitar el color del prompt para los usuarios locales existentes y futuros.
 
-1. Para habilitar el color en los usuarios existentes - en mi caso, `root`, `ubuntu` y `djoven`, usaremos el siguiente bucle:
-
-    ```sh
-    for user in /root /home/ubuntu /home/djoven; do sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc; done
-    ```
-
-2. Para habilitar el color para futuros usuarios que creemos:
-
-    ```sh
-    sudo sed -i 's/#force_color_prompt/force_color_prompt/' /etc/skel/.bashrc
-    ```
+```sh
+for user in /root /home/ubuntu /home/djoven /etc/skel/; do
+    sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc
+done
+```
 
 ### Historial
 
 Con la finalidad de almacenar más información en el historial personal de los usuarios y que además, haya un timestamp que indique la fecha y hora en la que fue ejecutado determinado comando, añadiremos una serie de opciones adicionales a los usuarios locales tanto existentes como futuros.
 
-1. Añadimos las opciones a los usuarios locales existentes -  en mi caso, `root`, `ubuntu` y `djoven` -:
+```sh
+for user in /root /home/ubuntu /home/djoven /etc/skel/.bashrc; do
 
-    ```sh
-    for user in /root /home/ubuntu /home/djoven; do
+sudo tee -a $user/.bashrc &>/dev/null <<EOF
+## Custom options
+HISTTIMEFORMAT="%F %T  "
+PROMPT_COMMAND='history -a'
+HISTIGNORE='clear:history'
+EOF
 
-    sudo cat <<EOF >> $user/.bashrc
-    ## Custom options
-    HISTTIMEFORMAT="%F %T  "
-    PROMPT_COMMAND='history -a'
-    HISTIGNORE='clear:history'
-    EOF
-
-    sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
-                -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
-                -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
-            $user/.bashrc
-    done
-    ```
-
-2. Realizamos las mismas acciones pero para los futuros usuarios:
-
-    ```sh
-    sudo cat <<EOF >> /etc/skel/.bashrc
-    ## Custom options
-    HISTTIMEFORMAT="%F %T  "
-    PROMPT_COMMAND='history -a'
-    HISTIGNORE='clear:history'
-    EOF
-
-    sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
-                    -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
-                    -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
-                /etc/skel/.bashrc
-    ```
+sudo sed -i -e 's/HISTCONTROL=.*/HISTCONTROL=ignoreboth/' \
+            -e 's/HISTSIZE=.*/HISTSIZE=1000/' \
+            -e 's/HISTFILESIZE=.*/HISTFILESIZE=2000/' \
+        $user/.bashrc
+done
+```
 
 ### Vim
 
@@ -124,7 +100,7 @@ Para establecer la configuración, simplemente habrá que crear un archivo llama
 ```sh
 for user in /root /home/ubuntu /home/djoven /etc/skel; do
 
-sudo cat <<EOF > $user/.vimrc
+sudo tee -a $user/.vimrc &>/dev/null <<EOF
 set tabstop=2
 syntax on
 set number
@@ -191,7 +167,7 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 6. Establecemos la partición en el archivo de configuración `/etc/fstab` para que persista ante el reinicio del servidor:
 
     ```sh
-    echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' >> | sudo tee -a /etc/fstab
+    echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' | sudo tee -a /etc/fstab
     ```
 
 7. Finalmente, comprobamos que la nueva entrada en el archivo no contenga errores de sintaxis:
@@ -301,10 +277,12 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
 
+    **NOTA:** Recordad que el volumen para los mailboxes fue montado primero, por lo que su punto de montaje es `/dev/nvme1n1p1`.
+
 8. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
 
     ```sh
-    sudo mount /dev/nvme1n1p1 /mnt
+    sudo mount /dev/nvme2n1p1 /mnt
     ```
 
 9. Copiamos el contenido del directorio `/home/` al directorio temporal donde hemos montado el volumen EBS:
@@ -322,11 +300,11 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 11. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
 
     ```sh
-    ## AWS EBS - Shares
-    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /home ext4 defaults,noexec,nodev,nosuid 0 2
-
     ## AWS EBS - Mailboxes
-    UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
+    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
+
+    ## AWS EBS - Shares
+    UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /home ext4 defaults,noexec,nodev,nosuid 0 2
     ```
 
     **NOTA:** Tendréis que cambiar el valor del parámetro `UUID` por vuestro valor obtenido en el paso 7.
@@ -373,42 +351,79 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
 
     ```sh
     sudo apt update
-    sudo apt install quota quotatool linux-modules-extra-aws
+    sudo apt install -y quota quotatool linux-modules-extra-aws
     ```
 
-2. Creamos los archivos requeridos:
+2. Añadimos el módulo de Quota al kernel:
 
     ```sh
-    sudo touch /home/quota.user
-    sudo touch /home/quota.group
+    sudo modprobe quota_v2
     ```
 
-3. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
+3. Persistimos el cambio anterior:
+
+    ```sh
+    echo echo 'quota_v2' | sudo tee -a /etc/modules
+    ```
+
+4. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
 
     ```sh
     ## AWS EBS - Shares
-    UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
+    UUID=28e5471e-8fc1-48b5-8729-778c56a19b90	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
 
     **NOTA:** Las opciones añadidas son: `usrjquota`, `grpjquota` y `jqfmt`.
 
-4. Volvemos a montar la partición `/home/`:
+5. Volvemos a montar la partición `/home/`:
 
     ```sh
     sudo mount -o remount /home/
     ```
 
-5. Finalmente, verificamos que la Quota está correctamente habilitada para el volumen EBS:
+6. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
 
     ```sh
-    sudo quotacheck -vug /home/
+    sudo quotacheck -avugm
     ```
 
-    En mi caso concreto, me muestra el siguiente resultado:
+    El resultado que he obtenido en mi caso ha sido:
 
     ```sh
-    quotacheck: Scanning /dev/nvme1n1p1 [/home] done
-    quotacheck: Checked 18 directories and 33 files
+    quotacheck: Scanning /dev/nvme2n1p1 [/home] done
+    quotacheck: Cannot stat old user quota file /home/quota.user: No such file or directory. Usage will not be subtracted.
+    quotacheck: Cannot stat old group quota file /home/quota.group: No such file or directory. Usage will not be subtracted.
+    quotacheck: Cannot stat old user quota file /home/quota.user: No such file or directory. Usage will not be subtracted.
+    quotacheck: Cannot stat old group quota file /home/quota.group: No such file or directory. Usage will not be subtracted.
+    quotacheck: Checked 9 directories and 18 files
+    quotacheck: Old file not found.
+    quotacheck: Old file not found
+    ```
+
+7. Habilitamos las quotas:
+
+    ```sh
+    sudo quotaon -avug
+    ```
+
+    El resultado que he obtenido en mi caso ha sido:
+
+    ```sh
+    /dev/nvme2n1p1 [/home]: group quotas turned on
+    /dev/nvme2n1p1 [/home]: user quotas turned on
+    ```
+
+8. Finalmente, volvemos a revisar el estado de las quotas:
+
+    ```sh
+    sudo quotacheck -avugmf
+    ```
+
+    El resultado que he obtenido en mi caso ha sido:
+
+    ```sh
+    quotacheck: Scanning /dev/nvme2n1p1 [/home] done
+    quotacheck: Checked 9 directories and 20 files
     ```
 
 ## Configuración de los módulos

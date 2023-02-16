@@ -40,45 +40,59 @@ Las acciones que procederemos a realizar son:
     ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
     ```
 
-2. Actualizamos los paquetes del servidor:
+2. Establecemos una contraseña para el usuario `root`:
+
+    ```bash
+    sudo passwd root
+    ```
+
+3. Actualizamos los paquetes del servidor:
 
     ```bash
     sudo apt update
     sudo apt dist-upgrade -y
     ```
 
-3. Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal desde la interfaz de administración:
+4. Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal desde la interfaz de administración:
 
     ```bash
-    sudo useradd -m -d /home/djoven -G sudo -s /bin/bash djoven
+    sudo useradd -m -d /home/djoven -G sudo -s /bin/bash -c 'Sysadmin' djoven
     sudo passwd djoven
     ```
 
     **NOTA:** Es importante que el usuario pertenezca al grupo `sudo`, de lo contrario no podremos usarlo para acceder a la interfaz de administración.
 
-4. Nos logeamos con el usuario recién creado, creamos el directorio y archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH y finalmente, añadimos el contenido de nuestra clave pública:
+5. Nos logeamos con el usuario recién creado:
 
     ```bash
     su - djoven
-    mkdir -v .ssh
-    touch .ssh/authorized_keys
-    vim .ssh/authorized_keys  ## Añadiremos el contenido de nuestra clave pública
     ```
 
-5. Creamos un directorio donde almacenaremos el script de instalación de Zentyal:
+6. Creamos el directorio y archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH:
+
+    ```bash
+    mkdir -v .ssh
+    touch .ssh/authorized_keys
+    ```
+
+7. Finalmente, añadimos el contenido de nuestra clave pública al archivo recién creado `.ssh/authorized_keys`:
+
+A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A continuación las acciones a realizar para su instalación:
+
+1. Creamos un directorio donde almacenaremos el script de instalación de Zentyal:
 
     ```bash
     sudo mkdir /opt/zentyal-install
     ```
 
-6. Nos descargamos el script y le damos los permisos adecuados:
+2. Nos descargamos el script y le damos los permisos adecuados:
 
     ```bash
     sudo wget -O /opt/zentyal-install/zentyal_installer.sh https://zentyal.com/zentyal_installer.sh
     sudo chmod 0750 /opt/zentyal-install/zentyal_installer.sh
     ```
 
-7. Instalamos Zentyal a través del script:, contestando `n` a la pregunta sobre la instalación del entorno gráfico:
+3. Instalamos Zentyal a través del script:, contestando `n` a la pregunta sobre la instalación del entorno gráfico:
 
     ```bash
     sudo bash /opt/zentyal-install/zentyal_installer.sh
@@ -94,28 +108,28 @@ Las acciones que procederemos a realizar son:
 
     **NOTA:** Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos su acceso.
 
-8. Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
+4. Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
 
     **NOTA:** En caso de que no hayamos creado el registro `A` en el DNS, usaremos la dirección IP pública de la instancia.
 
-9. Nos logeamos con el usuario administrador que hemos creado previamente, que en mi caso es `djoven`.
+5. Nos logeamos con el usuario administrador que hemos creado previamente, que en mi caso es `djoven`.
 
-10. En el wizard de configuración inicial, únicamente instalaremos el módulo de [firewall], de esta forma se nos instalará como dependencia el módulo de [network] a su vez.
+6. En el wizard de configuración inicial, únicamente instalaremos el módulo de [firewall], de esta forma se nos instalará como dependencia el módulo de [network] a su vez.
 
     ![Initial wizard - Packages](images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
 
-11. Configuramos la tarjeta de red como `estática` e `internal`:
+7. Configuramos la tarjeta de red como `estática` e `internal`:
 
     ![Initial wizard - Network 1](images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
     ![Initial wizard - Network 2](images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
     **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
 
-12. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
+8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 
     ![Zentyal initial dashboard](images/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
 
-13. Finalmente, antes de procedes a configurar el servidor, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor:
+9. Finalmente, antes de procedes a configurar el servidor, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor:
 
     1. Nos aseguramos que todos los módulos estén habilitados (`Modules Status`).
     2. Que la máquina tenga acceso a Internet.
@@ -140,8 +154,8 @@ Las acciones que procederemos a realizar son:
         2022/10/23 08:20:49 INFO> install-packages:121 main:: - Package installation process finished
         2022/10/23 08:23:15 INFO> Network.pm:89 EBox::Network::CGI::Wizard::Network::_processWizard - Configuring ens5 as 10.0.1.200/255.255.255.0
         2022/10/23 08:23:15 INFO> Network.pm:93 EBox::Network::CGI::Wizard::Network::_processWizard - Adding gateway 10.0.1.1 for iface ens5
-        2022/10/23 08:23:15 INFO> Network.pm:108 EBox::Network::CGI::Wizard::Network::_processWizard - Adding nameserver 8.8.8.8
-        2022/10/23 08:23:15 INFO> Network.pm:114 EBox::Network::CGI::Wizard::Network::_processWizard - Adding nameserver 8.8.4.4
+        2022/10/23 08:23:15 INFO> Network.pm:108 EBox::Network::CGI::Wizard::Network::_processWizard - Adding nameserver 1.1.1.1
+        2022/10/23 08:23:15 INFO> Network.pm:114 EBox::Network::CGI::Wizard::Network::_processWizard - Adding nameserver 9.9.9.9
         2022/10/23 08:23:17 INFO> GlobalImpl.pm:571 EBox::GlobalImpl::saveAllModules - First installation, enabling modules: network firewall webadmin logs audit firewall
         2022/10/23 08:23:17 INFO> GlobalImpl.pm:574 EBox::GlobalImpl::saveAllModules - Enabling module network
         2022/10/23 08:23:17 INFO> GlobalImpl.pm:574 EBox::GlobalImpl::saveAllModules - Enabling module firewall
@@ -163,10 +177,11 @@ Las acciones que procederemos a realizar son:
     4. Reiniciamos el servidor para asegurarnos de que es capaz de iniciar sin ningún tipo de problema de red.
 
         ```bash
-        reboot
+        sudo reboot
         ```
 
     5. Verificamos que podemos conectarnos a través de SSH y a la interfaz de administración de Zentyal.
 
 [firewall]: https://doc.zentyal.org/es/firewall.html
 [network]: https://doc.zentyal.org/es/firststeps.html#configuracion-basica-de-red-en-zentyal
+[aquí]: https://github.com/zentyal/zentyal/issues/2100

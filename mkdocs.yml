@@ -25,13 +25,16 @@ markdown_extensions:
 site_name: Implementación de Zentyal
 nav:
   - Home: 'index.md'
-  - AWS: 'aws.md'
+  - AWS: 'aws-configuration.md'
   - Instalación: 'zentyal-installation.md'
   - Configuración: 'zentyal-configuration.md'
   - Certificados: 'zentyal-certificates.md'
-  - Securización: 'zentyal-hardening.md'
+  - Hardening: 'zentyal-hardening.md'
+  - Backup: 'backup.md'
   - Monitorización: 'monitoring.md'
   - Mantenimiento: 'maintenance.md'
+  - Recovery: 'recovery.md'
+  - Bug fixing: 'bug-fixing.md'
   - Sobre mi: 'about.md'
 
 ...

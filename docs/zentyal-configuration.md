@@ -51,7 +51,7 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 3. Eliminamos los directorios que quedan en el sistema de archivos:
 
     ```sh
-    sudo rm -vf /root/snap/
+    sudo rm -rf /root/snap/
     ```
 
 ### Prompt
@@ -69,7 +69,7 @@ done
 Con la finalidad de almacenar más información en el historial personal de los usuarios y que además, haya un timestamp que indique la fecha y hora en la que fue ejecutado determinado comando, añadiremos una serie de opciones adicionales a los usuarios locales tanto existentes como futuros.
 
 ```sh
-for user in /root /home/ubuntu /home/djoven /etc/skel/.bashrc; do
+for user in /root /home/ubuntu /home/djoven /etc/skel/; do
 
 sudo tee -a $user/.bashrc &>/dev/null <<EOF
 ## Custom options
@@ -354,19 +354,7 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
     sudo apt install -y quota quotatool linux-modules-extra-aws
     ```
 
-2. Añadimos el módulo de Quota al kernel:
-
-    ```sh
-    sudo modprobe quota_v2
-    ```
-
-3. Persistimos el cambio anterior:
-
-    ```sh
-    echo echo 'quota_v2' | sudo tee -a /etc/modules
-    ```
-
-4. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
+2. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
 
     ```sh
     ## AWS EBS - Shares
@@ -375,55 +363,35 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
 
     **NOTA:** Las opciones añadidas son: `usrjquota`, `grpjquota` y `jqfmt`.
 
-5. Volvemos a montar la partición `/home/`:
+3. Reiniciamos el servidor para que nos cargue el último kernel y podamos habilitar de forma seguridad las quotas:
 
     ```sh
-    sudo mount -o remount /home/
+    sudo reboot
     ```
 
-6. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
+4. Añadimos el módulo de Quota al kernel:
 
     ```sh
-    sudo quotacheck -avugm
+    sudo modprobe quota_v2
     ```
 
-    El resultado que he obtenido en mi caso ha sido:
+5. Persistimos el cambio anterior:
 
     ```sh
-    quotacheck: Scanning /dev/nvme2n1p1 [/home] done
-    quotacheck: Cannot stat old user quota file /home/quota.user: No such file or directory. Usage will not be subtracted.
-    quotacheck: Cannot stat old group quota file /home/quota.group: No such file or directory. Usage will not be subtracted.
-    quotacheck: Cannot stat old user quota file /home/quota.user: No such file or directory. Usage will not be subtracted.
-    quotacheck: Cannot stat old group quota file /home/quota.group: No such file or directory. Usage will not be subtracted.
-    quotacheck: Checked 9 directories and 18 files
-    quotacheck: Old file not found.
-    quotacheck: Old file not found
+    echo 'quota_v2' | sudo tee -a /etc/modules
     ```
 
-7. Habilitamos las quotas:
+7. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
 
     ```sh
-    sudo quotaon -avug
+    sudo quotacheck -vugmf /home
     ```
 
     El resultado que he obtenido en mi caso ha sido:
 
     ```sh
-    /dev/nvme2n1p1 [/home]: group quotas turned on
-    /dev/nvme2n1p1 [/home]: user quotas turned on
-    ```
-
-8. Finalmente, volvemos a revisar el estado de las quotas:
-
-    ```sh
-    sudo quotacheck -avugmf
-    ```
-
-    El resultado que he obtenido en mi caso ha sido:
-
-    ```sh
-    quotacheck: Scanning /dev/nvme2n1p1 [/home] done
-    quotacheck: Checked 9 directories and 20 files
+    quotacheck: Scanning /dev/nvme1n1p1 [/home] done
+    quotacheck: Checked 8 directories and 18 files
     ```
 
 ## Configuración de los módulos
@@ -460,6 +428,9 @@ Para la configuración de red que tenemos (interna) y los módulos que usaremos,
 Las políticas definidas por defecto en ambas secciones del firewall son seguras, no obstante, procederemos a añadir una regla de tipo `LOG` para las conexiones por SSH, ya que siempre es buena idea tener la mayor información posible sobre este servicio tan crítico. Para ello, iremos a `Firewall -> Packet Filter -> Filtering rules from internal networks to Zentyal` y añadiremos la siguiente regla:
 
 ![Firewall SSH rule 1](images/zentyal/firewall_initial-ssh-1.png "Firewall SSH rule 1")
+
+Quedando como resultado las siguientes reglas:
+
 ![Firewall SSH rule 2](images/zentyal/firewall_initial-ssh-2.png "Firewall SSH rule 2")
 
 **Consideraciones:**
@@ -523,7 +494,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ![DNS hostname record](images/zentyal/dns-hostname_record.png "DNS hostname record")
 
-4. A continuación, crearemos los registros adicionales de tipo alias desde `Hostnames -> Alias`. En mi caso, crearé dos registros relativos al correo: `mail` y `webmail`. **>>TODO<<** Eliminar registro ns01
+4. A continuación, crearemos los registros adicionales de tipo alias desde `Hostnames -> Alias`. En mi caso, crearé dos registros relativos al correo: `mail` y `webmail`.
 
     ![DNS alias records](images/zentyal/dns-alias.png "DNS alias records")
 
@@ -549,19 +520,19 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
     dig webmail.icecrown.es
     ```
 
-    A continuación, los resultados que he obtenido: **>>TODO<<** Volver a añadir los resultados.
+    A continuación, los resultados que he obtenido:
 
     ```text
     ## Para el dominio
     ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
     ;; global options: +cmd
     ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38170
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 11829
     ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: 8e30e37c82f9261b01000000635d864ec4a39fbb0eda9559 (good)
+    ; COOKIE: 517f093b1a488a630100000063ef1e5f33c655878c47e480 (good)
     ;; QUESTION SECTION:
     ;icecrown.es.			IN	A
 
@@ -570,7 +541,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ;; Query time: 0 msec
     ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: Sat Oct 29 22:00:14 CEST 2022
+    ;; WHEN: Fri Feb 17 07:27:43 CET 2023
     ;; MSG SIZE  rcvd: 84
 
 
@@ -578,12 +549,12 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
     ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es
     ;; global options: +cmd
     ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 38137
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 53740
     ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: 771f8d7c27361c9f01000000635d8666cd4a4f18e568f925 (good)
+    ; COOKIE: 0a10fe5bc110fbe20100000063ef1e79cd9a2652e62e1cba (good)
     ;; QUESTION SECTION:
     ;arthas.icecrown.es.		IN	A
 
@@ -592,22 +563,20 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ;; Query time: 0 msec
     ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: Sat Oct 29 22:00:38 CEST 2022
+    ;; WHEN: Fri Feb 17 07:28:09 CET 2023
     ;; MSG SIZE  rcvd: 91
 
 
-    ## Para los alias
-    ## Alias 1
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 mail.icecrown.es
-    ; (1 server found)
+    ## Para el alias 'mail'
+    ; <<>> DiG 9.16.1-Ubuntu <<>> mail.icecrown.es
     ;; global options: +cmd
     ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 4824
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 62966
     ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: bc091efa7b76142d01000000635d86ddaca37ee3537ce8c1 (good)
+    ; COOKIE: c5ac7f415fe066aa0100000063ef1e9c7e18da9abf7650f1 (good)
     ;; QUESTION SECTION:
     ;mail.icecrown.es.		IN	A
 
@@ -617,20 +586,20 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ;; Query time: 0 msec
     ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
+    ;; WHEN: Fri Feb 17 07:28:44 CET 2023
     ;; MSG SIZE  rcvd: 110
 
-    ## Alias 2
-    ; <<>> DiG 9.16.1-Ubuntu <<>> @127.0.0.1 webmail.icecrown.es
-    ; (1 server found)
+
+    ## Para el alias 'webmail'
+    ; <<>> DiG 9.16.1-Ubuntu <<>> webmail.icecrown.es
     ;; global options: +cmd
     ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 64018
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 40072
     ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: ec57e8bf6ff0a2b201000000635d86dd3786d805fd489b98 (good)
+    ; COOKIE: a1ff85fe806432700100000063ef1eb9ff2777f239f7c9a3 (good)
     ;; QUESTION SECTION:
     ;webmail.icecrown.es.		IN	A
 
@@ -640,7 +609,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ;; Query time: 0 msec
     ;; SERVER: 127.0.0.1#53(127.0.0.1)
-    ;; WHEN: Sat Oct 29 22:02:37 CEST 2022
+    ;; WHEN: Fri Feb 17 07:29:13 CET 2023
     ;; MSG SIZE  rcvd: 113
     ```
 
@@ -671,23 +640,97 @@ Llegados a este punto, el módulo estaría configurado en Zentyal, no obstante, 
     dig @8.8.8.8 webmail.icecrown.es
     ```
 
-    A continuación, los resultados que he obtenido: **>>TODO<<** Volver a añadir los resultados.
+    A continuación, los resultados que he obtenido:
 
     ```text
     ## Para el dominio
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 7888
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	A
+
+    ;; ANSWER SECTION:
+    icecrown.es.		60	IN	A	15.237.168.75
+
+    ;; Query time: 16 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Fri Feb 17 07:30:36 CET 2023
+    ;; MSG SIZE  rcvd: 56
 
 
     ## Para el nombre del servidor
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 arthas.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33376
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;arthas.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    arthas.icecrown.es.	120	IN	A	15.237.168.75
+
+    ;; Query time: 36 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Fri Feb 17 07:30:56 CET 2023
+    ;; MSG SIZE  rcvd: 63
 
 
+    ## Para el alias 'mail'
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 mail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 46107
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ## Para los alias
-    ## Alias 1
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;mail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    mail.icecrown.es.	300	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	120	IN	A	15.237.168.75
+
+    ;; Query time: 16 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Fri Feb 17 07:31:29 CET 2023
+    ;; MSG SIZE  rcvd: 82
 
 
+    ## Para el alias 'webmail'
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 webmail.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 9490
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
 
-    ## Alias 2
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;webmail.icecrown.es.		IN	A
+
+    ;; ANSWER SECTION:
+    webmail.icecrown.es.	300	IN	CNAME	arthas.icecrown.es.
+    arthas.icecrown.es.	120	IN	A	15.237.168.75
+
+    ;; Query time: 36 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Fri Feb 17 07:31:59 CET 2023
+    ;; MSG SIZE  rcvd: 85
     ```
 
 Tras confirmar el funcionamiento del dominio tanto internamente (desde Zentyal) como externamente, el módulo de DNS estará correctamente configurado y podremos proseguir con el siguiente módulo.
@@ -708,11 +751,11 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![DC description](images/zentyal/dc-description.png "DC description")
 
-2. Establecemos el valor que tendrá la quota por defecto para los nuevos usuarios del dominio:
+2. Establecemos el valor que tendrá la quota por defecto para los nuevos usuarios del dominio desde `Users and Computers -> User Template`:
 
     ![DC quotas](images/zentyal/dc-quotas.png "DC quotas")
 
-3. Revisamos que el PAM está deshabilitado:
+3. Revisamos que el PAM está deshabilitado desde `Users and Computers -> LDAP Settings`:
 
     ![DC pam](images/zentyal/dc-pam.png "DC pam")
 
@@ -720,11 +763,11 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![DC enable](images/zentyal/modules_dc.png "DC enable")
 
-5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio provisionado, comprobaremos que la estructura por defecto se creó con éxito. Para ello, vamos a `Users and Computers -> Manage`
+5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio provisionado, comprobaremos que la estructura por defecto se creó con éxito. Para ello, vamos a `Users and Computers -> Manage`:
 
     ![DC default structure](images/zentyal/dc-default_structure.png "DC default structure")
 
-6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y será miembro del grupo de administradores `Domain Admins`:
+6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y deberá ser miembro del grupo de administradores `Domain Admins`:
 
     ![DC administrator](images/zentyal/dc-administrator.png "DC administrator")
 
@@ -766,48 +809,77 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mail enable](images/zentyal/modules_mail.png "Mail enable")
 
-6. Creamos el registro de tipo `MX` en el dominio: **>>TODO<<**
+6. Creamos el registro de tipo `MX` en el dominio, que en mi caso, lo haré desde Route53:
+
+    ![Mail DNS record](images/zentyal/mail-dns_record.png "Mail DNS record")
+
+
+    Adicionalmente, también lo crearé en Zentyal, no obstante, al ser un alias habrá que hacerlo usando la CLI:
 
     ```sh
     sudo samba-tool dns add 127.0.0.1 icecrown.es icecrown.es MX "mail.icecrown.es 10" -U zenadmin
     ```
 
-7. Comprobamos que la consulta sea accesible desde el exterior: **>>TODO<<**
+7. Comprobamos el nuevo registro DNS tanto interna como externamente:
 
     ```sh
     dig MX icecrown.es
+    dig @8.8.8.8 MX icecrown.es
     ```
 
-    En resultado que obtengo: **>>TODO<<**
+    En resultado que obtengo:
 
-    ```sh
-    ; <<>> DiG 9.16.1-Ubuntu <<>> MX icecrown.es @15.237.168.75
+    ```text
+    ## Consulta interna
+    ; <<>> DiG 9.16.1-Ubuntu <<>> MX icecrown.es
     ;; global options: +cmd
     ;; Got answer:
-    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 10566
-    ;; flags: qr aa rd; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
-    ;; WARNING: recursion requested but not available
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 432
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
 
     ;; OPT PSEUDOSECTION:
     ; EDNS: version: 0, flags:; udp: 4096
-    ; COOKIE: 1fb1e2e7f1e3cb540100000063e90b4b145c1242ca992586 (good)
+    ; COOKIE: 7d99083c5d639dad0100000063ef22121ec656087bc76972 (good)
     ;; QUESTION SECTION:
     ;icecrown.es.			IN	MX
 
     ;; ANSWER SECTION:
     icecrown.es.		900	IN	MX	10 mail.icecrown.es.
 
-    ;; Query time: 32 msec
-    ;; SERVER: 15.237.168.75#53(15.237.168.75)
-    ;; WHEN: dom feb 12 16:52:43 CET 2023
+    ;; Query time: 8 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Fri Feb 17 07:43:30 CET 2023
     ;; MSG SIZE  rcvd: 89
+
+
+    ## Consulta externa
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 MX icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 28263
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	MX
+
+    ;; ANSWER SECTION:
+    icecrown.es.		300	IN	MX	10 mail.icecrown.es.
+
+    ;; Query time: 36 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Fri Feb 17 07:44:00 CET 2023
+    ;; MSG SIZE  rcvd: 61
     ```
 
-8. Creamos el usuario `postmaster@icecrown.es` especificado en el paso 2 desde `Users and Computers -> Manage`:
+8. Creamos el usuario `postmaster@icecrown.es` especificado en el paso 2 y también un usuario de pruebas, que en mi caso se llamará `test.djoven` . Para ello, iremos a `Users and Computers -> Manage`:
 
     ![Mail postmaster user](images/zentyal/mail-user_postmaster.png "Mail postmaster user")
+    ![Mail test account](images/zentyal/mail-test_account.png "Mail test account")
 
-Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que podemos configurar la cuenta del usuario `postmaster`:
+Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que podemos configurar la cuenta del usuario de pruebas creado:
 
 1. Configuramos una nueva cuenta en Thunderbird:
 
@@ -827,9 +899,34 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird login](images/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
-5. Finalmente, enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo: **>>TODO<<**
+5. Enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo. Cuando tratemos de enviar el mensaje, recibiremos un error debido a que el certificado es autofirmado, por lo que tendremos que hacerlo también.
 
-    IMG
+    ![Thunderbird sending error](images/zentyal/mail-thunderbird_sending-error-1.png "Thunderbird sending error")
+
+    ![Thunderbird accepting certificate](images/zentyal/mail-thunderbird_sending-error-2.png "Thunderbird accepting certificate")
+
+6. Si todo fue bien, deberíamos de haber recibido el email tanto en la cuenta interna como externa y además, en el log `/var/log/mail.log` deberíamos de ver registros similares a:
+
+    ```text
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: connect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36]
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: 958BDFEEFC: client=36.red-45-4-127.staticip.rima-tde.net[88.6.127.36], sasl_method=PLAIN, sasl_username=test.
+    djoven@icecrown.es
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/cleanup[27145]: 958BDFEEFC: message-id=<17715909-c13a-eed6-7f23-18f697740075@icecrown.es>
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/qmgr[24894]: 958BDFEEFC: from=<test.djoven@icecrown.es>, size=681, nrcpt=2 (queue active)
+    Feb 17 07:02:41 ip-10-0-1-200 dovecot: lda(test.djoven@icecrown.es)<27148><b1LEMJEm72MMagAAcf9/Kw>: msgid=<17715909-c13a-eed6-7f23-18f697740075@icecrown.es>: sav
+    ed mail to INBOX
+
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/pipe[27146]: 958BDFEEFC: to=<test.djoven@icecrown.es>, relay=dovecot, delay=0.29, delays=0.24/0.01/0/0.03, dsn=2.0.0, status=sent (delivered via dovecot service)
+
+    Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: disconnect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36] ehlo=2 starttls=1 auth=1 mail=1 rcpt=2 data=1 quit=1 commands=9
+    Feb 17 07:02:42 ip-10-0-1-200 dovecot: imap-login: Disconnected (no auth attempts in 1 secs): user=<>, rip=88.6.127.36, lip=10.0.1.200, TLS handshaking: SSL_accept() failed: error:14094412:SSL routines:ssl3_read_bytes:sslv3 alert bad certificate: SSL alert number 42, session=<mXZJ5t/0eLxYBn8k>
+
+    Feb 17 07:02:42 ip-10-0-1-200 postfix/smtp[27147]: 958BDFEEFC: to=<external-account>, relay=gmail-smtp-in.l.google.com[74.125.133.27]:25, delay=1, delays=0.24/0.01/0.08/0.67, dsn=2.0.0, status=sent (250 2.0.0 OK  1676617362 n13-20020adfe34d000000b002c56af91a8esi3912146wrj.115 - gsmtp)
+
+    Feb 17 07:02:42 ip-10-0-1-200 postfix/qmgr[24894]: 958BDFEEFC: removed
+    ```
+
+    **NOTA:** Como se puede ver, el status es `sent` para ambos emails.
 
 Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, habrá otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
 
@@ -859,11 +956,15 @@ El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permiti
 
     ![Webmail login webpage](images/zentyal/webmail-access_login.png "Webmail login webpage")
 
-5. Nos logeamos con el usuario `postmaster` para confirmar que la autenticación funciona correctamente: **>>TODO<<** DEBERÍA DE VERSE LOS EMAILS DE PRUEBA
+5. Nos logeamos con el usuario de prueba para confirmar que la autenticación funciona correctamente:
 
     ![Webmail user login](images/zentyal/webmail-access_user.png "Webmail user login")
 
-6. Finalmente, tratamos de enviar un email a nosotros mismos para verificar la integración con el módulo de correo: **>>TODO<<**
+    **NOTA:** Si no vemos el buzón de correo, es posible que estemos experimentando un bug en el código. Ver el documento `bug fixing`.
+
+6. Finalmente, tratamos de enviar otro email a nosotros mismos para verificar la integración con el módulo de correo:
+
+    ![Webmail sending an email](images/zentyal/webmail-sending_email.png "Webmail sending an email")
 
 [ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
 

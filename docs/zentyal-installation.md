@@ -123,7 +123,7 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     ![Initial wizard - Network 1](images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
     ![Initial wizard - Network 2](images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
-    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
+    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la doc `Bug fixing` o simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
 
 8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 

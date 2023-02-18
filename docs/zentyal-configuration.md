@@ -344,8 +344,9 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 ### Quota
 
-**>>TODO<<**
-Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo como de usuario del dominio, procederemos a instalar y configurar esta funcionalidad para las particiones `/home/` y `/var/vmail/` creadas en el apartado anterior.
+Como Zentyal nos permite establecer quotas para limitar el uso de información que un usuario del dominio puede almacenar en el servidor, así como para el tamaño máximo del buzón de correo, es necesario instalar una serie de paquetes y habilitar su uso en el disco.
+
+**NOTA:** No es necesario habilitar la quota en el disco que contiene los buzones de correo, ya que se gestionan de otra forma, por lo tanto, sólo la habilitaremos para el disco duro que contiene el punto de montaje `/home/`.
 
 1. Instalamos los siguientes paquetes requeridos para instances en AWS:
 
@@ -381,7 +382,7 @@ Como Zentyal nos permite establecer quotas tanto a nivel de buzón de correo com
     echo 'quota_v2' | sudo tee -a /etc/modules
     ```
 
-7. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
+6. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
 
     ```sh
     sudo quotacheck -vugmf /home

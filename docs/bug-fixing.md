@@ -45,7 +45,7 @@ Este bug se encuentra en la versión `7.0.0` del paquete `zentyal-sogo`. Podemos
 Hay varias soluciones a este problema:
 
 1. Podemos modificar el parámetro de configuración para que permita conexiones certificados inseguros en localhost.
-2. Podemos habilitar adicionalmente el protocolo `IMAP` desde `Mail -> General`.
+2. Podemos habilitar temporalmente el protocolo `IMAP` desde `Mail -> General`.
 3. Podemos usar un certificado reconocido en el módulo de Webmail (Sogo) como se explica en el documento `Certificados`.
 
 En caso de que queramos aplicar la primera opción, tendremos que realizar las siguientes acciones:

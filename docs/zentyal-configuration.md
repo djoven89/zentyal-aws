@@ -452,6 +452,8 @@ Con la finalidad de tener nuestro servidor actualizado, habilitaremos y establec
 
     ![Modules installation](images/zentyal/software_installation.png "Modules installation")
 
+    **IMPORTANTE:** Tras instalarse los módulos, se crearán automáticamente múltiples reglas en la sección `Filtering rules from internal networks to Zentyal` del firewall para permitir el accesos a estos módulos.
+
 ### Módulo de NTP
 
 El primero de los módulos recién instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente donde está ubicado el servidor.
@@ -767,7 +769,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![DC default structure](images/zentyal/dc-default_structure.png "DC default structure")
 
-6. La última acción que realizaré sobre este módulo por el momento será crear un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y deberá ser miembro del grupo de administradores `Domain Admins`:
+6. Finalmente, creamos un nuevo usuario administrador del dominio, en mi caso se llamará `zenadmin` y deberá ser miembro del grupo de administradores `Domain Admins`:
 
     ![DC administrator](images/zentyal/dc-administrator.png "DC administrator")
 
@@ -1081,21 +1083,21 @@ La configuración que aplicaré será:
 
 A continuación las acciones a realizar para configurar el módulo:
 
-1. Habilitamos los servicios de este módulo y estableceremos un correo electrónico para emails problemáticos que no sean spam:
+1. Habilitamos los servicios de este módulo y estableceremos un correo electrónico para emails problemáticos que no sean spam desde `Mail filter -> SMTP Mail Filter`:
 
     ![Mailfilter services](images/zentyal/mailfilter-general.png "Mailfilter services")
 
-2. Establecemos las políticas antispam:
+2. Establecemos las políticas por defecto relativas al comportamiento del módulo ante ciertos eventos:
+
+    ![Mailfilter event policies](images/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
+
+3. Establecemos las políticas antispam desde `Mail Filter -> Antispam`:
 
     ![Mailfilter Antispam configuration](images/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
 
-3. Añadimos nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
+4. Añadimos nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
 
     ![Mailfilter whitelist](images/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
-
-4. Establecemos las políticas por defecto relativas al comportamiento del módulo ante ciertos eventos:
-
-    ![Mailfilter event policies](images/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
 
 5. Deshabilitamos las siguientes extensiones desde `Mail Filter -> Files ACL -> File extensions`:
 
@@ -1115,31 +1117,86 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mailfilter enable](images/zentyal/modules_mailfilter.png "Mailfilter enable")
 
-7. Creamos la cuenta de correo que hemos establecido en el paso 1 desde `Users and Computers -> Manage`: **>>TODO<<**
+7. Creamos la cuenta de correo que hemos establecido en el paso 1 desde `Users and Computers -> Manage`:
 
-    IMG
+    ![Mail account for issues](images/zentyal/mailfilter-issues_account.png "Mail account for issues")
 
 8. Nos enviamos un email sencillo desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
 
     ```sh
-    Nov  5 10:39:31 arthas amavis[9409]: (09409-01) 9Vx6OoIz2Q4W FWD from <someuser@gmail.com> -> <postmaster@icecrown.es>, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF
+    Feb 18 11:18:57 arthas postfix/smtpd[18582]: connect from mail-lj1-f176.google.com[209.85.208.176]
+    Feb 18 11:18:57 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f176.google.com, client_address=209.85.208.176/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
+    Feb 18 11:18:57 arthas postfix/smtpd[18582]: A69DDFEF59: client=mail-lj1-f176.google.com[209.85.208.176]
+    Feb 18 11:18:57 arthas postfix/cleanup[18587]: A69DDFEF59: message-id=<CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com>
+    Feb 18 11:18:57 arthas postfix/qmgr[18435]: A69DDFEF59: from=<some-account@gmail.com>, size=2749, nrcpt=1 (queue active)
+    Feb 18 11:18:57 arthas amavis[18438]: (18438-01) ESMTP :10024 /var/lib/amavis/amavis-20230218T111857-18438-QzIlgFHk: <some-account@gmail.com> -> <test.djoven@icecrown.es> SIZE=2749 Received: from mail.icecrown.es ([127.0.0.1]) by localhost (arthas.icecrown.es [127.0.0.1]) (amavisd-new, port 10024) with ESMTP for <test.djoven@icecrown.es>; Sat, 18 Feb 2023 11:18:57 +0100 (CET)
+    Feb 18 11:18:57 arthas amavis[18438]: (18438-01) Checking: O_3VfGJTdv4Z [127.0.0.1] <some-account@gmail.com> -> <test.djoven@icecrown.es>
+    Feb 18 11:18:59 arthas amavis[18591]: (18438-01) SA info: util: setuid: ruid=128 euid=128 rgid=136 136 egid=136 136
+    Feb 18 11:19:02 arthas postfix/smtpd[18592]: connect from localhost.localdomain[127.0.0.1]
+    Feb 18 11:19:02 arthas postfix/smtpd[18592]: 8975FFEF70: client=localhost.localdomain[127.0.0.1]
+    Feb 18 11:19:02 arthas postfix/cleanup[18587]: 8975FFEF70: message-id=<CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com>
+    Feb 18 11:19:02 arthas postfix/qmgr[18435]: 8975FFEF70: from=<some-account@gmail.com>, size=3762, nrcpt=1 (queue active)
 
-    Nov  5 10:39:31 arthas amavis[9409]: (09409-01) Passed CLEAN, [127.0.0.1] <someuser@gmail.com> -> <postmaster@icecrown.es>, Message-ID: <CAB89cFCp7rhmrjxbMzphfEV3qR4gMBaHTmYg=PXUgBbBZMEh1Zw@mail.gmail.com>, Hits: -0.017
+    Feb 18 11:19:02 arthas amavis[18438]: (18438-01) O_3VfGJTdv4Z FWD from <some-account@gmail.com> -> <test.djoven@icecrown.es>, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8975FFEF70
+    Feb 18 11:19:02 arthas amavis[18438]: (18438-01) Passed CLEAN, [127.0.0.1] <some-account@gmail.com> -> <test.djoven@icecrown.es>, Message-ID: <CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com>, Hits: -5.947
+    Feb 18 11:19:02 arthas postfix/smtp[18588]: A69DDFEF59: to=<test.djoven@icecrown.es>, relay=127.0.0.1[127.0.0.1]:10024, delay=4.9, delays=0.07/0.01/0.01/4.9, dsn=2.0.0, status=sent (250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8975FFEF70)
 
-    Nov  5 10:39:31 arthas postfix/smtp[9512]: 1245B43D97: to=<postmaster@icecrown.es>, relay=127.0.0.1[127.0.0.1]:10024, delay=3.5, delays=0.02/0/0.49/3, dsn=2.0.0, status=sent (250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8EA3743DEF)
+    Feb 18 11:19:02 arthas postfix/qmgr[18435]: A69DDFEF59: removed
+
+    Feb 18 11:19:02 arthas dovecot: lda(test.djoven@icecrown.es)<18594><u/B4JBam8GOiSAAAcf9/Kw>: msgid=<CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com>: saved mail to INBOX
+    Feb 18 11:19:02 arthas postfix/pipe[18593]: 8975FFEF70: to=<test.djoven@icecrown.es>, relay=dovecot, delay=0.09, delays=0.03/0.01/0/0.05, dsn=2.0.0, status=sent (delivered via dovecot service)
+
+    Feb 18 11:19:02 arthas postfix/qmgr[18435]: 8975FFEF70: removed
     ```
 
-    Como se puede ver, el mensaje llegó desde una cuenta de GMail, fue analizado por 'Amavis', el cual lo puntuó con '-0.017' y lo dió por limpio. Finalmente el mensaje llegó a nuestro buzón de correo.
+    Como se puede ver, el mensaje llegó desde una cuenta de GMail, fue analizado por el servicio 'Amavis', el cual lo puntuó con '-5.947' por lo que lo dío por bueno y el mensaje llegó al buzón de correo del usuario interno.
 
-9. Finalmente, enviamos otro email desde un dominio externo, aunque esta vez, usaremos palabras que sean consideras SPAM así como un archivo con extension 'sh' y revisamos el archivo de log  `/var/log/mail.log` nuevamente: **>>TODO<<**
+9. Confirmado que los emails son correctamente recibidos, procederemos a comprobar mediante el envío de otro email con un archivo adjunto cuya extensión sea `.sh` - denegada en el paso 5 - desde una cuenta externa para confirmar el funcionamiento del módulo. A continuación los registros registrados en el log  `/var/log/mail.log` relativos al éxito del bloqueo:
 
     ```sh
-    >>TODO<<
+    Feb 18 11:31:30 arthas postfix/smtpd[18720]: connect from mail-lj1-f171.google.com[209.85.208.171]
+    Feb 18 11:31:30 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f171.google.com, client_address=209.85.208.171/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
+    Feb 18 11:31:30 arthas postfix/smtpd[18720]: 79C12FEF59: client=mail-lj1-f171.google.com[209.85.208.171]
+    Feb 18 11:31:30 arthas postfix/cleanup[18722]: 79C12FEF59: message-id=<CAHOKk5uyuTatJ4c7_qp9oZsovphBziK_YDbUfHtO7Jkg89P5yQ@mail.gmail.com>
+    Feb 18 11:31:30 arthas postfix/qmgr[18435]: 79C12FEF59: from=<some-account@gmail.com>, size=3158, nrcpt=1 (queue active)
+
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) ESMTP :10024 /var/lib/amavis/amavis-20230218T111857-18438-QzIlgFHk: <some-account@gmail.com> -> <test.djoven@icecrown.es> SIZE=3158 Received: from mail.icecrown.es ([127.0.0.1]) by localhost (arthas.icecrown.es [127.0.0.1]) (amavisd-new, port 10024) with ESMTP for <test.djoven@icecrown.es>; Sat, 18 Feb 2023 11:31:30 +0100 (CET)
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) Checking: BVbKQQ9S3o7N [127.0.0.1] <some-account@gmail.com> -> <test.djoven@icecrown.es>
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) p.path BANNED:1 test.djoven@icecrown.es: "P=p004,L=1,M=multipart/mixed | P=p003,L=1/2,M=application/x-shellscript,T=asc,N=sample-script.sh", matching_key="(?^i:\\.sh$)"
+
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: connect from localhost.localdomain[127.0.0.1]
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: AA4D5FEF71: client=localhost.localdomain[127.0.0.1]
+    Feb 18 11:31:30 arthas postfix/cleanup[18722]: AA4D5FEF71: message-id=<VABVbKQQ9S3o7N@arthas.icecrown.es>
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+    Feb 18 11:31:30 arthas postfix/qmgr[18435]: AA4D5FEF71: from=<postmaster@arthas.icecrown.es>, size=4373, nrcpt=1 (queue active)
+
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) yMQxchA40B3f(BVbKQQ9S3o7N) SEND from <postmaster@arthas.icecrown.es> -> <issues@icecrown.es>, ENVID=AM.yMQxchA40B3f.20230218T103130Z@arthas.icecrown.es 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as AA4D5FEF71
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: connect from localhost.localdomain[127.0.0.1]
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: B0E32FEF75: client=localhost.localdomain[127.0.0.1]
+    Feb 18 11:31:30 arthas postfix/cleanup[18722]: B0E32FEF75: message-id=<VSBVbKQQ9S3o7N@arthas.icecrown.es>
+    Feb 18 11:31:30 arthas postfix/smtpd[18725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+    Feb 18 11:31:30 arthas postfix/qmgr[18435]: B0E32FEF75: from=<>, size=6606, nrcpt=1 (queue active)
+
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) jkDgUKQwzSN1(BVbKQQ9S3o7N) SEND from <> -> <some-account@gmail.com>, BODY=7BIT ENVID=AM.jkDgUKQwzSN1.20230218T103130Z@arthas.icecrown.es 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as B0E32FEF75
+    Feb 18 11:31:30 arthas amavis[18438]: (18438-02) Blocked BANNED (application/x-shellscript,.asc,sample-script.sh), [127.0.0.1] <some-account@gmail.com> -> <test.djoven@icecrown.es>, Message-ID: <CAHOKk5uyuTatJ4c7_qp9oZsovphBziK_YDbUfHtO7Jkg89P5yQ@mail.gmail.com>, Hits: -
+    Feb 18 11:31:30 arthas postfix/smtp[18723]: 79C12FEF59: to=<test.djoven@icecrown.es>, relay=127.0.0.1[127.0.0.1]:10024, delay=0.29, delays=0.08/0.01/0/0.2, dsn=2.5.0, status=sent (250 2.5.0 Ok, id=18438-02, BOUNCE)
+    Feb 18 11:31:30 arthas postfix/qmgr[18435]: 79C12FEF59: removed
+
+    Feb 18 11:31:30 arthas dovecot: lda(issues@icecrown.es)<18727><zrubKwKp8GMnSQAAcf9/Kw>: msgid=<VABVbKQQ9S3o7N@arthas.icecrown.es>: saved mail to INBOX
+    Feb 18 11:31:30 arthas postfix/pipe[18726]: AA4D5FEF71: to=<issues@icecrown.es>, relay=dovecot, delay=0.07, delays=0.02/0.01/0/0.04, dsn=2.0.0, status=sent (delivered via dovecot service)
+    Feb 18 11:31:30 arthas postfix/qmgr[18435]: AA4D5FEF71: removed
+
+    Feb 18 11:31:31 arthas postfix/smtp[18728]: B0E32FEF75: to=<some-account@gmail.com>, relay=gmail-smtp-in.l.google.com[173.194.76.27]:25, delay=0.47, delays=0.02/0.01/0.08/0.36, dsn=2.0.0, status=sent (250 2.0.0 OK  1676716291 o14-20020a5d62ce000000b002c58cc4a950si7000660wrv.22 - gsmtp)
+    Feb 18 11:31:31 arthas postfix/qmgr[18435]: B0E32FEF75: removed
     ```
 
-Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratarán en el documento llamado 'Hardening'.
+    Como se puede apreciar, el email procedente de una cuenta de GMail llegó al servidor, el servicio de Amavis lo analizó y denegó debido a la extensión del archivo adjunto. A continuación se lo notificó a la cuenta `issues@icecrown.es` y finalmente, devolvió el correo a la cuenta externa.
 
-Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra parte del proyecto, concretamente en el documento 'Certificados'.
+10. Finalmente, confirmamos que la cuenta `issues@icecrown.es` tiene un email con nuestra última prueba.
+
+    ![Mail confirmation](images/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
+
+Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratarán en el documento llamado `Hardening`. Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra parte del proyecto, concretamente en el documento `Certificados`.
 
 ### Módulo de CA
 
@@ -1153,7 +1210,9 @@ Para poder hacer uso del módulo de OpenVPN, necesitaremos configurar previament
 
     **NOTA** Este módulo no tiene posibilidad de '*habilitarse*' como el resto.
 
-Adicionalmente, es posible emitir certificados para los módulos que estamos usando con el CommonName correctos, no obstante, como vamos a emitir certificados reconocidos a través de Let's Encrypt, no haremos uso de tal funcionalidad. De querer usarse, habría que ir a `Certificate Authority -> Services`.
+Adicionalmente, es posible emitir certificados para los módulos que estamos usando con el CommonName correctos, no obstante, como vamos a emitir certificados reconocidos a través de Let's Encrypt, no haremos uso de tal funcionalidad. De querer usarse, habría que ir a `Certificate Authority -> Services` como se indica a continuación:
+
+![Certificates for services](images/zentyal/ca-services.png "Certificates for services")
 
 [CA]: https://doc.zentyal.org/es/ca.html
 
@@ -1171,7 +1230,7 @@ Las configuraciones que estableceré serán:
 
 A continuación las acciones a realizar para configurar el módulo:
 
-1. Creamos el certificado cuyo nombre tendrá un prefijo concreto, de esta forma, sólo permitiremos en las conexiones VPN certificados que empiecen por este patrón. Además, nos facilitará las tareas de mantenimiento y troubleshooting relativas a los certificados. Para ello, vamos a `Certificate Authority -> General`:
+1. Creamos el certificado cuyo nombre usaremos como. Para ello, vamos a `Certificate Authority -> General`:
 
     ![CA prefix certificate](images/zentyal/ca-prefix-certificate.png "CA prefix certificate")
 
@@ -1179,7 +1238,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![OpenVPN server](images/zentyal/vpn-server.png "OpenVPN server")
 
-3. Procedemos a configurar la conexión con los datos mencionados al inicio de la sección:
+3. Configuramos la conexión desde `VPN -> Servers -> Configuration`:
 
     ![OpenVPN configuration 1](images/zentyal/vpn-configuration-1.png "OpenVPN configuration 1")
     ![OpenVPN configuration 2](images/zentyal/vpn-configuration-2.png "OpenVPN configuration 2")

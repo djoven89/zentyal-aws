@@ -1,60 +1,104 @@
 # Hardening
 
-Las últimas implementaciones que realizaremos sobre el servicio de correo será añadir [SPF], [DKIM] y [DMARC] para incrementar la seguridad.
+En esta documentación se realizarán una serie de implementaciones en varios módulos cuya finalidad es incrementar su seguridad.
 
-[SPF]: https://www.dmarcanalyzer.com/es/spf-3/
-[DKIM]: https://www.dmarcanalyzer.com/es/dkim-3/
-[DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
+Los módulos sobre los que aplicarán estas mejoras son:
+
+* Domain controller
+* Mail
+* Webmail
 
 ## Módulo de controlador de dominio
 
-TODO
+Las configuraciones adicionales de seguridad que se implementarán en el módulo de controlador de dominio serán:
 
-* [link](https://wiki.samba.org/index.php/Password_Settings_Objects)
+* Políticas de contraseña.
 
-usar 'pso' tiene cierto impacto a nivel de recursos como menciona la documentación.
+### Política de contraseñas
 
-```sh
-sudo samba-tool domain passwordsettings show
-```
+Vamos a establecer unas políticas de contraseñas mediante el comando `samba-tool domain passwordsettings` para los usuarios del dominio, de esta forma, reduciremos la posibilidad de que se usen contraseñas débiles.
 
-```sh
-Password complexity: off
-Store plaintext passwords: off
-Password history length: 24
-Minimum password length: 0
-Minimum password age (days): 0
-Maximum password age (days): 365
-Account lockout duration (mins): 30
-Account lockout threshold (attempts): 0
-Reset account lockout after (mins): 30
-```
+Mencionar adicionalmente que a partir de Samba 4.9 es posible definir políticas de contraseña más particulares como se explican en [este] enlace, no obstante, usar esta funcionalidad tiene un aumento de recursos, por lo que en mi caso concreto no haré uso de ella.
 
-```sh
-sudo samba-tool domain passwordsettings set \
-    --complexity=on \
-    --min-pwd-length=8 \
-```
+[este]: (https://wiki.samba.org/index.php/Password_Settings_Objects)
 
-**NOTA:** history-length sólo puede establecerte un máximo de 24.
+Las políticas que definiré serán:
 
-```sh
-Password complexity: on
-Store plaintext passwords: off
-Password history length: 24
-Minimum password length: 8
-Minimum password age (days): 0
-Maximum password age (days): 365
-Account lockout duration (mins): 30
-Account lockout threshold (attempts): 0
-Reset account lockout after (mins): 30
-```
+* Habilitaré la complejidad de las contraseñas.
+* Estableceré un mínimo de 8 los caracteres que deberán tener las contraseñas.
+* Una contraseña tendrá una vigencia máxima de 6 meses.
 
-Podríamos establecer un tiempo máximo de duración de contraseña, aunque tiene la contra de que se requerirá de que el administrador de sistemas les recuerde el cambio de contraseña, sino tendrá que establecer la contraseña y que luego el usuario, se encargue de cambiarla por una que él mismo decida (a través de Sogo).
+Las acciones a realizar son:
+
+1. Verificamos las políticas por defecto:
+
+    ```sh
+    sudo samba-tool domain passwordsettings show
+    ```
+
+    El resultado obtenido en mi caso es:
+
+    ```text
+    Password information for domain 'DC=icecrown,DC=es'
+
+    Password complexity: off
+    Store plaintext passwords: off
+    Password history length: 24
+    Minimum password length: 0
+    Minimum password age (days): 0
+    Maximum password age (days): 365
+    Account lockout duration (mins): 30
+    Account lockout threshold (attempts): 0
+    Reset account lockout after (mins): 30
+    ```
+
+2. Establecemos las nuevas políticas:
+
+    ```sh
+    sudo samba-tool domain passwordsettings \
+        set \
+        --complexity=on \
+        --min-pwd-length=8 \
+        --max-pwd-age=180
+    ```
+
+3. Volvemos a mostrar la configuración para cerciorarnos que se aplicaron las políticas:
+
+    ```sh
+    sudo samba-tool domain passwordsettings show
+    ```
+
+    El resultado obtenido en mi caso es:
+
+    ```text
+    Password information for domain 'DC=icecrown,DC=es'
+
+    Password complexity: on
+    Store plaintext passwords: off
+    Password history length: 24
+    Minimum password length: 8
+    Minimum password age (days): 0
+    Maximum password age (days): 180
+    Account lockout duration (mins): 30
+    Account lockout threshold (attempts): 0
+    Reset account lockout after (mins): 30
+    ```
+
+4. Finalmente, tratamos de crear un usuario con una contraseña débil para confirmar que las políticas están en funcionamiento:
+
+    ![User with weak password](images/zentyal/hardening-dc_password.png "User with weak password")
 
 ## Módulo de correo
 
+Las configuraciones adicionales de seguridad que se implementarán en el módulo de correo serán:
+
+* SPF
+* DKIM
+* DMARC
+
 ### SPF
+
+[SPF]: https://www.dmarcanalyzer.com/es/spf-3/
 
 SPF será lo primero que implementaron, para ello, realizaremos las siguientes acciones:
 
@@ -80,6 +124,8 @@ SPF será lo primero que implementaron, para ello, realizaremos las siguientes a
     ![SPF check](images/zentyal/mail-spf_mxtoolbox.png "SPF check")
 
 ### DKIM
+
+[DKIM]: https://www.dmarcanalyzer.com/es/dkim-3/
 
 DKIM será el próximo elemento a implementar, las acciones que realizaremos serán las mismas que se describen [aquí](https://doc.zentyal.org/es/mail.html#securizacion-del-servidor-de-correo).
 
@@ -216,4 +262,8 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
 
 ### DMARC
 
-TODO
+[DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
+
+## Webmail
+
+### Apache

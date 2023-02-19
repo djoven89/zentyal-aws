@@ -90,7 +90,7 @@ Las acciones a realizar son:
 
 ## Módulo de correo
 
-Las configuraciones adicionales de seguridad que se implementarán en el módulo de correo serán:
+Para este módulo vamos a implementar las siguientes funcionalidades para incrementar considerablemente la seguridad de nuestro servicio de correo:
 
 * SPF
 * DKIM
@@ -98,30 +98,86 @@ Las configuraciones adicionales de seguridad que se implementarán en el módulo
 
 ### SPF
 
-[SPF]: https://www.dmarcanalyzer.com/es/spf-3/
+[SPF] será el primero que implementaremos. El objetivo que trata de cubrir SPF es proteger nuestro dominio contra ataques de tipo spoofing y phishing. Básicamente crearemos un registro en nuestro DNS el cual indicará qué servidores pueden enviar correos desde nuestro dominio. Para más información, ver [este] otro enlace.
 
-SPF será lo primero que implementaron, para ello, realizaremos las siguientes acciones:
+[SPF]: https://support.google.com/a/answer/33786?hl=es-419
+[este]: https://www.dmarcanalyzer.com/es/spf-3/
 
-1. Generaremos el registro DNS a través de un generador [este](https://www.spfwizard.net/).
+1. A través de [esta](https://www.spfwizard.net/) web generaremos el registro DNS necesario para implementar este método de autenticación:
 
     ![SPF generator](images/zentyal/mail-spf.png "SPF generator")
 
-2. Creamos el registro de tipo `TXT` en nuestro dominio:
+2. Creamos el registro de tipo `TXT` tanto en el módulo DNS como en el proveedor DNS - en mi caso, Route53 -:
 
-    ![SPF DNS record](images/zentyal/mail-spf_record.png "SPF DNS record")
+    Para Zentyal, vamos a `DNS -> Domains -> TXT records`:
 
-3. Comprobamos que el registro haya sido añadido usando la CLI:
+    ![SPF Zentyal record](images/zentyal/mail-spf_zentyal.png "SPF Zentyal record")
+
+    Para Route 53:
+
+    ![SPF Route53 record](images/zentyal/mail-spf_route53.png "SPF Route53 record")
+
+3. Comprobamos la resolución del nuevo registro tanto interna como externamente:
 
     ```bash
-    sudo samba-tool dns query 127.0.0.1 icecrown.es @ TXT -U zenadmin
-
-        Name=, Records=1, Children=0
-        TXT: "v=spf1 mx ip4:15.237.168.75 a:mail ~all" (flags=600000f0, serial=15, ttl=259200)
+    dig TXT icecrown.es
+    dig @8.8.8.8 icecrown.es
     ```
 
-4. Finalmente, comprobamos desde [MXtoolbox](https://mxtoolbox.com/spf.aspx):
+    El resultado obtenido en mi caso:
+
+    ```text
+    ## Consulta interna (desde Zentyal)
+    ; <<>> DiG 9.16.1-Ubuntu <<>> TXT icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8888
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: f1292e180a5d3b430100000063f25f4ddf828c60e1a71af2 (good)
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	TXT
+
+    ;; ANSWER SECTION:
+    icecrown.es.		259200	IN	TXT	"v=spf1 mx ip4:15.237.168.75 ~all"
+
+    ;; Query time: 204 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sun Feb 19 18:41:33 CET 2023
+    ;; MSG SIZE  rcvd: 113
+
+
+    ## Consulta externa
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 TXT icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 5656
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;icecrown.es.			IN	TXT
+
+    ;; ANSWER SECTION:
+    icecrown.es.		300	IN	TXT	"v=spf1 mx ip4:15.237.168.75 ~all"
+
+    ;; Query time: 16 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Sun Feb 19 18:42:07 CET 2023
+    ;; MSG SIZE  rcvd: 85
+    ```
+
+4. Usaremos también [MXtoolbox](https://mxtoolbox.com/spf.aspx) para comprobar el registro:
 
     ![SPF check](images/zentyal/mail-spf_mxtoolbox.png "SPF check")
+
+5. Finalmente, enviaremos un correo a una cuenta externa - GMail en mi caso - y verificaremos las cabeceras:
+
+    ![SPF sending check](images/zentyal/mail-spf_test-email.png "SPF sending check")
 
 ### DKIM
 
@@ -264,6 +320,6 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
 
 [DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
 
-## Webmail
+## Módulo de Webmail
 
 ### Apache

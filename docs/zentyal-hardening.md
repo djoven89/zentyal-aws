@@ -476,4 +476,28 @@ La última implementación que realizaremos será [DMARC]. Este mecanismo de aut
 
 ## Módulo de Webmail
 
+El módulo de Webmail sirve su contenido a través del servicio Apache, el cual por defecto, muestra demasiada información, la cual puede ser usada para un posible ataque.
+
 ### Apache
+
+Por defecto, es posible obtener la versión de Ubuntu y Apache que usa el servicio web. Además, que la página por defecto de Apache es muy característica. Por lo tanto, procederemos a reducir la información que es posible obtener consultando al servicio y también, crearemos una página muy sencilla.
+
+1. Modificamos los siguientes parámetros de configuración del archivo `/etc/apache2/conf-enabled/security.conf` para reducir la información del servicio:
+
+    ```sh
+    sed -i -e 's/^ServerSignature.*/ServerSignature Off/' \
+        -e 's/^ServerTokens.*/ServerTokens Prod/' \
+        /etc/apache2/conf-enabled/security.conf
+    ```
+
+2. Reiniciamos el servicio para que se apliquen los cambios:
+
+    ```sh
+    sudo systemctl restart apache2
+    ```
+
+3. Finalmente, modificamos el index por defecto:
+
+    ```sh
+    echo '<h1>Website not found</h1>' | sudo tee /var/www/html/index.html
+    ```

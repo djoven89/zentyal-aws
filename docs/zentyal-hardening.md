@@ -285,7 +285,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 12. Creamos el registro DNS de tipo `TXT` tanto en el servidor Zentyal como en el proveedor DNS:
 
-    Para el servidor Zentyal vamos a `DNS -> Domains -> TXT records`:
+    Para el servidor Zentyal tendremos que hacer uso de la CLI debido a la limitación de caracteres de Zentyal en el entorno gráfico:
 
     ```bash
     sudo samba-tool dns add \
@@ -393,7 +393,86 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 ### DMARC
 
+La última implementación que realizaremos será [DMARC]. Este mecanismo de autenticación se integrará con SPF y DKIM, por lo que será necesario implementarlos previamente.
+
 [DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
+
+1. A través de [esta](https://mxtoolbox.com/DMARCRecordGenerator.aspx) web generaremos el registro DNS necesario para implementar este método de autenticación:
+
+    ![DMARC generator 1](images/zentyal/mail-dmarc-generator_1.png "DMARC generator 1")
+    ![DMARC generator 2](images/zentyal/mail-dmarc-generator_2.png "DMARC generator 2")
+
+2. Creamos el registro DNS de tipo `TXT` tanto en el servidor Zentyal como en el proveedor DNS:
+
+    Para el servidor Zentyal vamos a `DNS -> Domains -> TXT records`:
+
+    !["DNS record for DMARC in Zentyal"](images/zentyal/mail-dmarc_zentyal.png "DNS record for DMARC in Zentyal")
+
+    Para Route53:
+
+    !["DNS record for DMARC in Route53"](images/zentyal/mail-dmarc_route53.png "DNS record for DMARC in Route53")
+
+3. Comprobamos la resolución del nuevo registro tanto interna como externamente:
+
+    ```bash
+    dig TXT _DMARC.icecrown.es
+    dig @8.8.8.8 TXT _DMARC.icecrown.es
+    ```
+
+    El resultado obtenido en mi caso:
+
+    ```text
+    ## Consulta interna (desde Zentyal)
+    ; <<>> DiG 9.16.1-Ubuntu <<>> TXT _DMARC.novadevs.com
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37988
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: 035a971807e4de9f0100000063f27c0e87c3ffcc2d62887c (good)
+    ;; QUESTION SECTION:
+    ;_DMARC.novadevs.com.		IN	TXT
+
+    ;; ANSWER SECTION:
+    _DMARC.novadevs.com.	14400	IN	TXT	"v=DMARC1; p=quarantine; sp=quarantine; adkim=s; aspf=s; rua=mailto:webmaster@novadevs.com; ruf=mailto:webmaster@novadevs.com; rf=afrf; pct=100; ri=86400"
+
+    ;; Query time: 40 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sun Feb 19 20:44:14 CET 2023
+    ;; MSG SIZE  rcvd: 241
+
+
+    ## Consulta externa
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 TXT _DMARC.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 42645
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;_DMARC.icecrown.es.		IN	TXT
+
+    ;; ANSWER SECTION:
+    _DMARC.icecrown.es.	300	IN	TXT	"v=DMARC1; p=quarantine; rua=mailto:issues@icecrown.es; ruf=mailto:issues@icecrown.es; rf=afrf; sp=quarantine; fo=1; pct=100; ri=86400; adkim=s; aspf=s"
+
+    ;; Query time: 16 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Sun Feb 19 20:44:48 CET 2023
+    ;; MSG SIZE  rcvd: 210
+    ```
+
+4. Usaremos también [MXtoolbox](https://mxtoolbox.com/DMARC.aspx) para comprobar el registro:
+
+    ![DMARC check](images/zentyal/mail-dmarc_mxtoolbox.png "DMARC check")
+
+5. Finalmente, enviaremos un correo a una cuenta externa - GMail en mi caso - y verificaremos las cabeceras:
+
+    ![DMARC sending email](images/zentyal/mail-dmarc-test_email.png "DMARC sending email")
 
 ## Módulo de Webmail
 

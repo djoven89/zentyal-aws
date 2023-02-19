@@ -181,24 +181,24 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 ### DKIM
 
+[DKIM] será la siguiente implementación de seguridad que realizaremos. El objetivo de DKIM es que el receptor pueda verificar que el email recibido es legítimo. Los pasos de configuración necesarias las he sacado de [aquí](https://doc.zentyal.org/es/mail.html#securizacion-del-servidor-de-correo).
+
 [DKIM]: https://www.dmarcanalyzer.com/es/dkim-3/
 
-DKIM será el próximo elemento a implementar, las acciones que realizaremos serán las mismas que se describen [aquí](https://doc.zentyal.org/es/mail.html#securizacion-del-servidor-de-correo).
-
-1. Instalamos el paquete necesario para la implementación de está técnica de autenticación para los correos electrónicos:
+1. Instalamos el paquete necesario para la implementación de DKIM:
 
     ```bash
     sudo apt update
-    sudo apt install opendkim opendkim-tools
+    sudo apt install -y opendkim opendkim-tools
     ```
 
-2. Creamos el directorio donde se almacenerán las claves de OpenDKIM:
+2. Creamos el directorio donde se almacenarán las claves de OpenDKIM:
 
     ```bash
     sudo mkdir -vp /etc/opendkim/keys
     ```
 
-3. Generamos la clave privada que será usada para firmar los correos electrónicos:
+3. Generamos la clave privada que será usada para firmar los correos electrónicos y como selector le daremos `mail`:
 
     ```bash
     sudo opendkim-genkey -s mail -d icecrown.es -D /etc/opendkim/keys
@@ -211,7 +211,7 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
     sudo chmod 0640 /etc/opendkim/keys/*.private
     ```
 
-5. Creamos el archivo de configuración `/etc/opendkim/TrustedHosts` y establecemos en él, los dominios e IPs confiables:
+5. Creamos el archivo de configuración `/etc/opendkim/TrustedHosts` y establecemos en él el dominio y direcciones IP confiables:
 
     ```bash
     127.0.0.1
@@ -223,32 +223,34 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
 6. Creamos el archivo de configuración `/etc/opendkim/SigningTable` que contendrá el dominio a firmar por OpenDKIM:
 
     ```bash
-    *@icecrown.es
+    *@icecrown.es mail._domainkey.icecrown.es
     ```
 
-7. Creamos el archivo de configuración `/etc/opendkim/KeyTable` que tendrá el selector y la ruta a la clave privada encargada de firmar los correos electrónicos:
+7. Creamos el archivo de configuración `/etc/opendkim/KeyTable` que tendrá el nombre del selector y la ruta a la clave privada encargada de firmar los correos electrónicos:
 
     ```bash
-    mail icecrown.es:mail:/etc/opendkim/keys/mail.private
+    mail._domainkey.icecrown.es icecrown.es:mail:/etc/opendkim/keys/mail.private
     ```
 
-8. Creamos el archivo de configuración pricipal llamado `/etc/opendkim.conf` y establecemos la configuración del servicio OpenDKIM:
+8. Creamos el archivo de configuración principal llamado `/etc/opendkim.conf` y establecemos la configuración del servicio OpenDKIM:
 
     ```bash
-    Mode                    sv
-    PidFile                 /var/run/opendkim/opendkim.pid
-    UserID                  opendkim:opendkim
+    Syslog			        yes
+    LogWhy			        yes
+    UMask			        007
+    Mode			        sv
+    SubDomains		        no
+    Canonicalization	    relaxed/simple
     Socket                  inet:8891@127.0.0.1
-    SignatureAlgorithm      rsa-sha256
-    AutoRestart             Yes
-    AutoRestartRate         10/1h
-    Syslog                  yes
-    SyslogSuccess           yes
-    LogWhy                  Yes
-    UMask                   002
-    OversignHeaders         From
-    Canonicalization        relaxed/simple
-
+    PidFile                 /run/opendkim/opendkim.pid
+    OversignHeaders		    From
+    TrustAnchorFile         /usr/share/dns/root.key
+    UserID                  opendkim
+    AutoRestart			    yes
+    AutoRestartRate		    10/1M
+    Background			    yes
+    DNSTimeout			    5
+    SignatureAlgorithm	    rsa-sha256
     ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
     InternalHosts           refile:/etc/opendkim/TrustedHosts
     KeyTable                refile:/etc/opendkim/KeyTable
@@ -258,8 +260,9 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
 9. Establecemos la configuración del socket en el archivo de configuración `/etc/default/opendkim`:
 
     ```bash
-    ## Custom configuration
-    SOCKET="inet:8891@127.0.0.1"
+    ## Custom configuration created on 19-02-2023 by Daniel
+    # SOCKET=local:$RUNDIR/opendkim.sock
+    SOCKET=inet:8891@127.0.0.1
     ```
 
 10. Habilitamos, reiniciamos y comprobamos el servicio de OpenDKIM:
@@ -270,15 +273,19 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
     sudo systemctl status opendkim
     ```
 
-11. Obtenemos el contenido del registro `TXT` que deberemos que crear en el dominio, para ello, abrimos el archivo de configuración `/etc/opendkim/keys/mail.txt`:
+11. El contenido del registro `TXT` que deberemos que crear en el dominio se encuentra en el archivo de configuración `/etc/opendkim/keys/mail.txt`:
+
+    En mi caso, el contenido es:
 
     ```bash
     mail._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; "
-        "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoqxhxg3LfJqV7OxzD6u38H14HlKUUINI6jVyLnYY2gUN/jCfMGvkz//Tx6twdLOxMkGUKwKajShcgZFQn9S1v2VaC/WfL64bo6L/c7EdOsqimSY9ftmzyre5WwHMskA9TUhlQHtBeCoJOWtX1mxMqks34D5b2uMMgfGqYdJ8IgeOTUcNTEH98TcfE65evfNq21Gr5t+DYBs20o"
-        "K+Sjx/C9HiedOmqZP8jblQqs/YJZivu8J/duF4eIV5LBwW4aUcezd3Rz1Y0LEwxyLCFQ3uCB3zuAsMuq2T4PpxpV+Lz2HfKj13wmBzGWfsSNlvdvlbzevcDarQAiUAE0be6BpBuQIDAQAB" )  ; ----- DKIM key mail for icecrown.es
+	  "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn"
+	  "9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB" )  ; ----- DKIM key mail for icecrown.es
     ```
 
-12. Creamos el registro TXT en el dominio. A diferencia de SPF, para este registro habrá que usar la CLI:
+12. Creamos el registro DNS de tipo `TXT` tanto en el servidor Zentyal como en el proveedor DNS:
+
+    Para el servidor Zentyal vamos a `DNS -> Domains -> TXT records`:
 
     ```bash
     sudo samba-tool dns add \
@@ -286,35 +293,103 @@ DKIM será el próximo elemento a implementar, las acciones que realizaremos ser
         icecrown.es \
         mail._domainkey.icecrown.es \
         TXT \
-        '"v=DKIM1; h=sha256; k=rsa; "
-        "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoqxhxg3LfJqV7OxzD6u38H14HlKUUINI6jVyLnYY2gUN/jCfMGvkz//Tx6twdLOxMkGUKwKajShcgZFQn9S1v2VaC/WfL64bo6L/c7EdOsqimSY9ftmzyre5WwHMskA9TUhlQHtBeCoJOWtX1mxMqks34D5b2uMMgfGqYdJ8IgeOTUcNTEH98TcfE65evfNq21Gr5t+DYBs20o"
-        "K+Sjx/C9HiedOmqZP8jblQqs/YJZivu8J/duF4eIV5LBwW4aUcezd3Rz1Y0LEwxyLCFQ3uCB3zuAsMuq2T4PpxpV+Lz2HfKj13wmBzGWfsSNlvdvlbzevcDarQAiUAE0be6BpBuQIDAQAB"' \
+        'v=DKIM1; h=sha256; k=rsa;
+        "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn"
+        "9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB"' \
         -U zenadmin
     ```
 
-13. Revisamos desde [MXtoolbox] el registro añadido:
+    Para Route53:
+
+    !["DNS record for DKIM in Route53"](images/zentyal/mail-dkim_route53.png "DNS record for DKIM in Route53")
+
+13. Comprobamos la resolución del nuevo registro tanto interna como externamente:
+
+    ```bash
+    dig TXT mail._domainkey.icecrown.es
+    dig @8.8.8.8 TXT mail._domainkey.icecrown.es
+    ```
+
+    El resultado obtenido en mi caso:
+
+    ```text
+    ## Consulta interna (desde Zentyal)
+    ; <<>> DiG 9.16.1-Ubuntu <<>> TXT mail._domainkey.icecrown.es
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 47343
+    ;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 4096
+    ; COOKIE: e524c5bb228993ae0100000063f26951777512932a30cbc1 (good)
+    ;; QUESTION SECTION:
+    ;mail._domainkey.icecrown.es.	IN	TXT
+
+    ;; ANSWER SECTION:
+    mail._domainkey.icecrown.es. 900 IN	TXT	"v=DKIM1;" "h=sha256;" "k=rsa;" "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn" "9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB"
+
+    ;; Query time: 4 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sun Feb 19 19:24:17 CET 2023
+    ;; MSG SIZE  rcvd: 518
+
+
+    ## Consulta externa
+    ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 TXT mail._domainkey.icecrown.es
+    ; (1 server found)
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 58941
+    ;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+    ;; OPT PSEUDOSECTION:
+    ; EDNS: version: 0, flags:; udp: 512
+    ;; QUESTION SECTION:
+    ;mail._domainkey.icecrown.es.	IN	TXT
+
+    ;; ANSWER SECTION:
+    mail._domainkey.icecrown.es. 300 IN	TXT	"9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB"
+    mail._domainkey.icecrown.es. 300 IN	TXT	"v=DKIM1; h=sha256; k=rsa;" "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn"
+
+    ;; Query time: 16 msec
+    ;; SERVER: 8.8.8.8#53(8.8.8.8)
+    ;; WHEN: Sun Feb 19 19:25:24 CET 2023
+    ;; MSG SIZE  rcvd: 502
+    ```
+
+14. Usaremos también [MXtoolbox] para comprobar el registro:
 
     ![MXtoolbox](images/zentyal/mail-dkim_mxtoolbox.png "DKIM check")
 
-14. Una vez que hayamos terminado de configurar DKIM, procederemos a configurar Postfix para que haga uso de este servicio. Para ello, modificamos el stub `/etc/zentyal/stubs/mail/main.cf.mas` que creamos anteriormente:
+15. Una vez confirmado el registro DNS, procederemos a configurar el servicio Postfix (SMTP) para que haga uso de este servicio. Para ello, añadimos las siguientes líneas al final del stub `/etc/zentyal/stubs/mail/main.cf.mas`:
 
     ```bash
-    ## DKIM Configuration
+    ## DKIM Configuration created on 19-02-2023 by Daniel
     milter_protocol = 6
     milter_default_action = accept
     smtpd_milters = inet:127.0.0.1:8891
     non_smtpd_milters = inet:127.0.0.1:8891
     ```
 
-15. Reiniciamos el módulo de correo para que se apliquen los cambios:
+    En caso de no tener dicho archivo, tendremos que ejecutar los siguientes comandos:
+
+    ```sh
+    sudo mkdir -v /etc/zentyal/stubs/mail/
+    sudo cp -v /usr/share/zentyal/stubs/mail/main.cf.mas /etc/zentyal/stubs/mail/main.cf.mas
+    ```
+
+16. Reiniciamos el módulo de correo para que se apliquen los cambios:
 
     ```bash
     sudo zs mail restart
     ```
 
-16. Finalmente, enviamos un email desde una cuenta de correo interna a un dominio externo para verificar las cabeceras del correo electrónico enviado por Zentyal:
+17. Finalmente, enviaremos un correo a una cuenta externa - GMail en mi caso - y verificaremos las cabeceras:
 
-    ![DKIM headers](images/zentyal/mail-dkim_mxtoolbox.png "DKIM headers")
+    ![DKIM headers](images/zentyal/mail-dkim-test-email.png "DKIM headers")
+
+[MXtoolbox]: https://mxtoolbox.com/dkim.aspx
 
 ### DMARC
 

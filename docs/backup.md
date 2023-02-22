@@ -1,46 +1,79 @@
 # Backup
 
+En este documento se explicarán varios opciones para la realización de copias de seguridad para este proyecto, aunque también son válidas para despliegues en otras infraestructuras.
+
+Como es lógico, todo servidor de producción debe tener un sistema de copias de seguridad que garantice la recuperación del sistema y de sus datos ante eventos catastróficos o errores humanos.
+
+Las posibilidades de implementación de copias de seguridad para este proyecto son varias:
+
+1. [AWS DLM] (snapshots de los volúmenes EBS).
+2. Funcionalidad de [backup de configuración].
+3. Módulo de [backup].
+4. Scripting.
+
+[AWS DLM]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
+[backup de configuración]: https://doc.zentyal.org/es/backup-conf.html
+[backup]: https://doc.zentyal.org/es/backup.html
+
+En el caso de este proyecto, usaremos las opciones:
+
+* **AWS DLM** para los 3 volúmenes EBS, ya que nos permitirá restaurar nuestro servidor Zentyal o los datos de forma rápida y sencilla. Además, que también nos permitiría montar otros entornos como staging o testing usando una configuración idéntica.
+* Funcionalidad de **backup de configuración**, automatizaremos el uso de esta funcionalidad para tener siempre disponibles una versión con la configuración de los módulos.
+
 ## AWS DLM
 
+Mediante la funcionalidad [DLM] del servicio de EC2 realizaremos una snapshot diaria de los 3 volúmenes, lo que nos asegurará tener la información a resguardo en AWS. Esta funcionalidad lo que hace es hacer una snapshot sobre el/los volúmenes, las cuales son snapshots incrementales. Su uso supondrá un coste mensual adicional, el cual podemos ver [aquí].
 
+[aquí]: https://aws.amazon.com/es/ebs/pricing/
 
-## Módulo de backup
+Las horas en las que estableceré las snapshots serán:
 
+* **02:00 AM** para el volumen de los correos.
+* **03:30 AM** para el volumen de los recursos compartidos.
+* **04:00 AM** para el volumen del sistema.
+    * **NOTA:** Es importante que se realice antes de las actualizaciones automáticas de Zentyal (05:30 AM en nuestro caso).
 
+[DLM]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
+
+### DLM sobre el volumen del sistema
+
+### DLM sobre el volumen de los correos
+
+### DLM sobre el volumen de los recursos compartidos
 
 ## Funcionalidad backup de configuración
 
-1. Probamos el comando desde la CLI:
+Esta funcionalidad nos permitirá tener una copia de seguridad de la configuración de Zentyal, lo que nos ofrece múltiples ventajas como:
+
+1. Rollback de la configuración de los módulos de Zentyal.
+2. Posibilidad de crear servidores idénticos para otros entornos como staging o testing.
+3. Una especia de versionado de la configuración de Zentyal.
+
+**IMPORTANTE:** Esta funcionalidad no almacena los datos de los usuarios como sus directorios personales, los recursos compartidos o los emails, sino que simplemente almacena la configuración para cada módulo - incluyendo los objectos del controlador de dominio como usuarios o grupos -.
+
+Para la implementación de esta funcionalidad definiremos una tarea programada, la cual se ejecutará diariamente a las 02:30 AM.
+
+Las acciones que realizaremos para la implementación son:
+
+1. Desde la CLI, probamos el comando que realiza la copia de seguridad y será el que ejecute la tarea programa:
 
     ```sh
     sudo /usr/share/zentyal/make-backup --description "CLI backup on `date '+%d-%m-%Y'`"
     ```
 
-2. Comprobamos el éxito desde la GUI:
+2. Una vez que haya terminado, nos logeamos en la interfaz gráfica de Zentyal y vamos a `System -> Configuration Backup` para confirmar que el backup es detectado por Zentyal y que se puede descargar.
 
     ![Configuration backup from CLI](images/zentyal/backup-zentyal_conf.png "Configuration backup from CLI")
 
-3. También lo comprobamos desde la CLI:
-
-    ```sh
-    sudo ls -l /var/lib/zentyal/conf/backups/
-    ```
-
-    Un ejemplo:
-
-    ```sh
-    -rw-rw---- 1 ebox ebox 3368960 Feb 12 17:26 2023-02-12-172557.tar
-    ```
-
-3. Una vez confirmado, creamos la tarea programada. Para ello, creamos el archivo `/etc/cron.d/custom-backup_conf`:
+3. Una vez confirmado su funcionamiento, creamos la tarea programada para que se ejecute diariamente a las 02:30 AM. Para ello, creamos el archivo de configuración en `/etc/cron.d/custom-backup_conf` con el siguiente contenido:
 
     ```sh
     ## Configuration backup created on 12-02-2023 by Daniel
     30 02 * * * root /usr/share/zentyal/make-backup --description "Cronjob backup on `date '+\%d-\%m-\%Y'`" >/dev/null 2>&1
     ```
 
-    **NOTA:** Es recomendable establecer una hora próxima para confirmarlo.
-
 4. Finalmente, revisamos que la tarea programada:
 
     ![Configuration backup from Cronjob](images/zentyal/backup-zentyal_conf-cronjob.png "Configuration backup from Cronjob")
+
+    **NOTA:** La hora es distinta porque la modifiqué para poder verificar su funcionamiento inmediatamente para no tener que esperar a las 02:30 AM.

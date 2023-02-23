@@ -29,7 +29,7 @@ Mediante la funcionalidad [DLM] del servicio de EC2 realizaremos una snapshot di
 Las horas en las que estableceré las snapshots serán:
 
 * **02:00 AM** para el volumen de los correos.
-* **03:30 AM** para el volumen de los recursos compartidos.
+* **03:00 AM** para el volumen de los recursos compartidos.
 * **04:00 AM** para el volumen del sistema.
     * **NOTA:** Es importante que se realice antes de las actualizaciones automáticas de Zentyal (05:30 AM en nuestro caso).
 
@@ -37,9 +37,81 @@ Las horas en las que estableceré las snapshots serán:
 
 ### DLM sobre el volumen del sistema
 
+La primera regla que crearemos será la del volumen del sistema. Esta regla constará de lo siguiente:
+
+* La etiqueta usada para identificar el disco EBS será: `Type = System`.
+* La hora establecida serán las 05:00 UTC, aunque para confirmar su funcionamiento en el último paso, la cambiaré temporalmente.
+
+A continuación las acciones a realizar para implementar la regla DLM:
+
+1. Desde el servicio de EC2 vamos a `Elastic Block Store -> Lifecycle Manager`.
+2. Creamos una política de tipo `EBS snapshot policy`:
+
+    ![DLM for system - Target](images/aws/backup-dlm-system_target.png "DLM for system - Target")
+    ![DLM for system - Tags](images/aws/backup-dlm-system_tags.png "DLM for system - Tags")
+    ![DLM for system - Schedule](images/aws/backup-dlm-system_schedule.png "DLM for system - Schedule")
+
+    Resumen de las configuración:
+
+    ![DLM for system - Summary](images/aws/backup-dlm-system_summary.png "DLM for system - Summary")
+
+3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
+
+    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
+
+    ![DLM for system - Snapshot](images/aws/backup-dlm-system_snapshot.png "DLM for system - Snapshot")
+
 ### DLM sobre el volumen de los correos
 
+La segunda regla que crearemos será la del volumen de los correos. Esta regla constará de lo siguiente:
+
+* La etiqueta usada para identificar el disco EBS será: `Type = Mail`.
+* La hora establecida serán las 03:00 UTC, aunque para confirmar su funcionamiento en el último paso, la cambiaré temporalmente.
+
+A continuación las acciones a realizar para implementar la regla DLM:
+
+1. Desde el servicio de EC2 vamos a `Elastic Block Store -> Lifecycle Manager`.
+2. Creamos una política de tipo `EBS snapshot policy`:
+
+    ![DLM for mail - Target](images/aws/backup-dlm-mail_target.png "DLM for mail - Target")
+    ![DLM for mail - Tags](images/aws/backup-dlm-mail_tags.png "DLM for mail - Tags")
+    ![DLM for mail - Schedule](images/aws/backup-dlm-mail_schedule.png "DLM for mail - Schedule")
+
+    Resumen de las configuración:
+
+    ![DLM for mail - Summary](images/aws/backup-dlm-mail_summary.png "DLM for mail - Summary")
+
+3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
+
+    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
+
+    ![DLM for mail - Snapshot](images/aws/backup-dlm-mail_snapshot.png "DLM for mail - Snapshot")
+
 ### DLM sobre el volumen de los recursos compartidos
+
+La última regla que crearemos será la del volumen de los recursos compartidos. Esta regla constará de lo siguiente:
+
+* La etiqueta usada para identificar el disco EBS será: `Type = Shares`.
+* La hora establecida serán las 04:00 UTC, aunque para confirmar su funcionamiento en el último paso, la cambiaré temporalmente.
+
+A continuación las acciones a realizar para implementar la regla DLM:
+
+1. Desde el servicio de EC2 vamos a `Elastic Block Store -> Lifecycle Manager`.
+2. Creamos una política de tipo `EBS snapshot policy`:
+
+    ![DLM for shares - Target](images/aws/backup-dlm-shares_target.png "DLM for shares - Target")
+    ![DLM for shares - Tags](images/aws/backup-dlm-shares_tags.png "DLM for shares - Tags")
+    ![DLM for shares - Schedule](images/aws/backup-dlm-shares_schedule.png "DLM for shares - Schedule")
+
+    Resumen de las configuración:
+
+    ![DLM for shares - Summary](images/aws/backup-dlm-shares_summary.png "DLM for shares - Summary")
+
+3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
+
+    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
+
+    ![DLM for shares - Snapshot](images/aws/backup-dlm-shares_snapshot.png "DLM for shares - Snapshot")
 
 ## Funcionalidad backup de configuración
 

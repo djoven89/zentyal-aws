@@ -1,6 +1,24 @@
 # Mantenimiento
 
+En este documento explicaré algunas acciones a revisar periódicamente en el servidor Zentyal para confirmar su estabilidad.
+
 ## Archivos de logs
+
+Lo primero y más importante es saber si los archivos de logs importantes del sistema muestra algún error. Para este proyecto, los archivos de logs más importantes son:
+
+* **/var/log/zentyal/zentyal.log** -> Módulos de Zentyal.
+* **/var/log/syslog** -> Estado de los servicios y otros eventos genéricos del sistema.
+* **/var/log/samba/samba.log** -> Módulo de controlador de dominio.
+* **/var/log/mail.log** -> Módulo de correo.
+* **/var/log/mail.err** -> Módulo de correo.
+* **/var/log/sogo/sogo.log** -> Módulo de webmail.
+* **/var/log/apache2/** -> Módulo de webmail.
+* **/var/log/clamav/** -> Módulo de antivirus.
+* **/var/log/letsencrypt/letsencrypt.log** -> Certificados emitidos por Let's Encrypt con Certbot.
+* **/var/log/openvpn/** -> Módulo de vpn.
+* **/var/log/auth.log** -> Autenticación locales del sistema.
+
+A continuación un ejemplo de una búsqueda de warnings y errores en el log de Zentyal:
 
 ```sh
 egrep -i '(ERROR|WARN)>' /var/log/zentyal/zentyal.log
@@ -8,7 +26,7 @@ egrep -i '(ERROR|WARN)>' /var/log/zentyal/zentyal.log
 
 **NOTA:** Los warning no suele ser relevantes.
 
-Ejemplo de un warning inofensivo y un error:
+El resultado de un warning inofensivo y un error:
 
 ```sh
 2023/02/04 20:06:31 WARN> zentyal.psgi:43 Plack::Sandbox::_2fusr_2fshare_2fzentyal_2fpsgi_2fzentyal_2epsgi::__ANON__ - Argument "Icecrown-RC-" isn't numeric in numeric eq (==) at /usr/share/perl5/EBox/OpenVPN/Model/ServerConfiguration.pm line 572.
@@ -18,10 +36,13 @@ Ejemplo de un warning inofensivo y un error:
 
 ## Estado del sistema de paquetes del sistema
 
+Otra tarea crítica a revisar es si el servidor tiene algún paquete roto. Esto lo se puede ver con el siguiente comando:
 
 ```sh
 dpkg -l | egrep -v '^(ii|rc)'
 ```
+
+Un ejemplo de un sistema sin ningún paquete roto:
 
 ```sh
 Desired=Unknown/Install/Remove/Purge/Hold
@@ -33,13 +54,15 @@ Desired=Unknown/Install/Remove/Purge/Hold
 
 ## Reporte del sistema
 
+Es conveniente generar un reporte del sistema una vez a la semana para ver el estado general del servidor y detectar posibles incidencias. El reporte se puede usando la CLI como se muestra a continuación:
+
 ```sh
 /usr/share/zentyal/smart-admin-report > zentyal-report_12-02-2023
 ```
 
-Algunos detalles del reporte:
+A continuación algunas de las secciones más importantes del reporte que hay que revisar con detenimiento (**NOTA:** El resultado mostrado es el de un sistema en buen estado):
 
-* Disk usage -> Espacio disponible en los discos.
+* **Disk usage** -> Espacio disponible en los discos.
 
 ```sh
 Filesystem      Type      Size  Used Avail Use% Mounted on
@@ -49,13 +72,13 @@ Filesystem      Type      Size  Used Avail Use% Mounted on
 /dev/nvme0n1p15 vfat      105M  5.2M  100M   5% /boot/efi
 ```
 
-* Network Interfaces where were -> Fallos de red.
+* **Network Interfaces where were** -> Fallos de red.
 
 ```sh
 ## Network Interfaces where were 'Down': 0
 ```
 
-* Server packages -> Paquetes rotos o pendientes por actualizar.
+* **Server packages** -> Paquetes rotos o pendientes por actualizar.
 
 ```sh
 Broken packages: 0
@@ -71,13 +94,13 @@ See https://ubuntu.com/esm or run: sudo pro status
 Last update by Zentyal: 2023-02-122
 ```
 
-* DNS users on DnsAdmins -> El usuario debe pertenecer al grupo especial del dominio `DnsADmins`.
+* **DNS users on DnsAdmins** -> El usuario especial del DNS existir y pertenecer al grupo especial del dominio llamado `DnsADmins`.
 
 ```sh
 dns-arthas
 ```
 
-* Daemons' information -> Todos los demonios deberán estar inactivos.
+* **Daemons' information** -> Estado de los demonios antiguos del controlador del dominio (deben estar *inactivos*).
 
 ```sh
 Status of the daemon: 'smbd': inactive
@@ -93,19 +116,19 @@ Status of the daemon: 'sssd': inactive
 State of the daemon: 'sssd':
 ```
 
-* Samba database check -> Sin errores en la base de datos de Samba.
+* **Samba database check** -> Errores en la base de datos de Samba.
 
 ```sh
 Checked 3763 objects (0 errors)
 ```
 
-* DNS alias -> Deberá haber un alias.
+* **DNS alias** -> Registro especial de tipo CNAME en el dominio para el controlador de dominio.
 
 ```sh
 cb8c94d6-fde3-4f61-9d61-8b7e6c1ce537._msdcs.icecrown.es is an alias for arthas.icecrown.es.
 ```
 
-* Mails status -> El estado de los emails gestionados por los servidores de Zentyal.
+* **Mails status** -> El estado de los emails gestionados por el módulo de correo.
 
 ```sh
 Mail queue:

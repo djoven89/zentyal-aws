@@ -283,6 +283,23 @@ Una vez que tenemos el entorno de AWS listo, procederemos a instalar y configura
     !["CloudWatch logs 1"](images/aws/monitoring-check_logs-1.png "CloudWatch logs 1")
     !["CloudWatch logs 2"](images/aws/monitoring-check_logs-2.png "CloudWatch logs 2")
 
+### Logs
+
+Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear un filtro de métrica que compruebe si el archivo de log contiene el evento `ERROR>`. La finalidad es poder enviar notificaciones a través de AWS SNS ante tales eventos.
+
+1. Vamos a `CloudWatch -> Metric filters` y creamos el filtro:
+
+    !["CloudWatch filter log 1"](images/aws/monitoring-logs_filter-1.png "CloudWatch filter log 1")
+    !["CloudWatch filter log 2"](images/aws/monitoring-logs_filter-2.png "CloudWatch filter log 2")
+
+2. Una vez creado el filtro y pasado un par de minutos para que CloudWatch recolecte información.
+
+3. Finalmente, verificamos que desde `CloudWatch -> All metrics` tenemos la métrica disponible:
+
+    !["CloudWatch filter metric"](images/aws/monitoring-logs_metric-check.png "CloudWatch filter metric")
+
+    **NOTA:** El tipo de métrica mostrado en la imagen es de tipo `Number` como se puede ver en la parte superior.
+
 ### Dashboard
 
 Una vez confirmado el funcionamiento del sistema de monitorización, crearemos un dashboard que agrupe las métricas más importantes desde `CloudWatch -> Dashboard`. A continuación un ejemplo sencillo:
@@ -333,6 +350,10 @@ La siguiente acción que configuraremos será las alertas. Las alertas que confi
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
     * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+* **Errores en el log de Zentyal:**
+    * La comprobación se hará una vez al día.
+    * El valor de la alerta para que se disparé será igual o superior a 1.
+    * Para que se envia una notificación, la alerta tendrá que producirse una única vez.
 
 #### CPU
 
@@ -383,3 +404,8 @@ La siguiente acción que configuraremos será las alertas. Las alertas que confi
 
 !["CloudWatch EC2 Instance alert 1"](images/aws/monitoring-alert_ec2-instance-1.png "CloudWatch EC2 Instance alert 1")
 !["CloudWatch EC2 Instance alert 2"](images/aws/monitoring-alert_ec2-instance-2.png "CloudWatch EC2 Instance alert 2")
+
+#### Log de Zentyal
+
+!["CloudWatch Log alert 1"](images/aws/monitoring-alert_log-1.png "CloudWatch Log alert 1")
+!["CloudWatch Log alert 2"](images/aws/monitoring-alert_log-2.png "CloudWatch Log alert 2")

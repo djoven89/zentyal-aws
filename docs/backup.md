@@ -57,8 +57,6 @@ A continuación las acciones a realizar para implementar la regla DLM:
 
 3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
 
-    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
-
     ![DLM for system - Snapshot](images/aws/backup-dlm-system_snapshot.png "DLM for system - Snapshot")
 
 ### DLM sobre el volumen de los correos
@@ -83,8 +81,6 @@ A continuación las acciones a realizar para implementar la regla DLM:
 
 3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
 
-    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
-
     ![DLM for mail - Snapshot](images/aws/backup-dlm-mail_snapshot.png "DLM for mail - Snapshot")
 
 ### DLM sobre el volumen de los recursos compartidos
@@ -108,8 +104,6 @@ A continuación las acciones a realizar para implementar la regla DLM:
     ![DLM for shares - Summary](images/aws/backup-dlm-shares_summary.png "DLM for shares - Summary")
 
 3. Finalmente, confirmamos su funcionamiento, para ello, desde el servicio de EC2 vamos a `Elastic Block Store -> Snapshots`:
-
-    **NOTA:** En mi caso, cambié temporalmente la hora para verificar su funcionamiento.
 
     ![DLM for shares - Snapshot](images/aws/backup-dlm-shares_snapshot.png "DLM for shares - Snapshot")
 

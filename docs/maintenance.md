@@ -64,80 +64,80 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
 
 * **Disk usage** -> Espacio disponible en los discos.
 
-```sh
-Filesystem      Type      Size  Used Avail Use% Mounted on
-/dev/root       ext4       29G  8.0G   21G  28% /
-/dev/nvme2n1p1  ext4      9.8G   17M  9.3G   1% /var/vmail
-/dev/nvme1n1p1  ext4      9.8G  228K  9.3G   1% /home
-/dev/nvme0n1p15 vfat      105M  5.2M  100M   5% /boot/efi
-```
+    ```text
+    Filesystem      Type      Size  Used Avail Use% Mounted on
+    /dev/root       ext4       29G  8.0G   21G  28% /
+    /dev/nvme2n1p1  ext4      9.8G   17M  9.3G   1% /var/vmail
+    /dev/nvme1n1p1  ext4      9.8G  228K  9.3G   1% /home
+    /dev/nvme0n1p15 vfat      105M  5.2M  100M   5% /boot/efi
+    ```
 
 * **Network Interfaces where were** -> Fallos de red.
 
-```sh
-## Network Interfaces where were 'Down': 0
-```
+    ```sh
+    Network Interfaces where were 'Down': 0
+    ```
 
 * **Server packages** -> Paquetes rotos o pendientes por actualizar.
 
-```sh
-Broken packages: 0
-Upgradable packages:
+    ```text
+    Broken packages: 0
+    Upgradable packages:
 
-Expanded Security Maintenance for Applications is not enabled.
+    Expanded Security Maintenance for Applications is not enabled.
 
-0 updates can be applied immediately.
+    0 updates can be applied immediately.
 
-Enable ESM Apps to receive additional future security updates.
-See https://ubuntu.com/esm or run: sudo pro status
+    Enable ESM Apps to receive additional future security updates.
+    See https://ubuntu.com/esm or run: sudo pro status
 
-Last update by Zentyal: 2023-02-122
-```
+    Last update by Zentyal: 2023-02-122
+    ```
 
 * **DNS users on DnsAdmins** -> El usuario especial del DNS existir y pertenecer al grupo especial del dominio llamado `DnsADmins`.
 
-```sh
-dns-arthas
-```
+    ```text
+    dns-arthas
+    ```
 
 * **Daemons' information** -> Estado de los demonios antiguos del controlador del dominio (deben estar *inactivos*).
 
-```sh
-Status of the daemon: 'smbd': inactive
-State of the daemon: 'smbd': masked
+    ```text
+    Status of the daemon: 'smbd': inactive
+    State of the daemon: 'smbd': masked
 
-Status of the daemon: 'nmbd': inactive
-State of the daemon: 'nmbd': masked
+    Status of the daemon: 'nmbd': inactive
+    State of the daemon: 'nmbd': masked
 
-Status of the daemon: 'winbind': inactive
-State of the daemon: 'winbind': masked
+    Status of the daemon: 'winbind': inactive
+    State of the daemon: 'winbind': masked
 
-Status of the daemon: 'sssd': inactive
-State of the daemon: 'sssd':
-```
+    Status of the daemon: 'sssd': inactive
+    State of the daemon: 'sssd':
+    ```
 
 * **Samba database check** -> Errores en la base de datos de Samba.
 
-```sh
-Checked 3763 objects (0 errors)
-```
+    ```text
+    Checked 3763 objects (0 errors)
+    ```
 
 * **DNS alias** -> Registro especial de tipo CNAME en el dominio para el controlador de dominio.
 
-```sh
-cb8c94d6-fde3-4f61-9d61-8b7e6c1ce537._msdcs.icecrown.es is an alias for arthas.icecrown.es.
-```
+    ```text
+    cb8c94d6-fde3-4f61-9d61-8b7e6c1ce537._msdcs.icecrown.es is an alias for arthas.icecrown.es.
+    ```
 
 * **Mails status** -> El estado de los emails gestionados por el módulo de correo.
 
-```sh
-Mail queue:
-Mail queue is empty
-Mails sent: 2
-Mails rejected: 0
-Mails bounced: 0
-Mails analized by Mailfilter: 1
-Mails with virus: 0
-Mails block by SPAM: 0
-Mails block by File Type: 0
-```
+    ```text
+    Mail queue:
+    Mail queue is empty
+    Mails sent: 2
+    Mails rejected: 0
+    Mails bounced: 0
+    Mails analized by Mailfilter: 1
+    Mails with virus: 0
+    Mails block by SPAM: 0
+    Mails block by File Type: 0
+    ```

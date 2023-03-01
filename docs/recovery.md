@@ -16,16 +16,7 @@ En este apartado simularé que un usuario ha eliminado un archivo importante lla
 
 TODO
 
-
-### Restauración de la snapshot
-
-TODO
-
 ### Recuperación del archivo
-
-TODO
-
-### Comprobación final
 
 TODO
 
@@ -167,16 +158,129 @@ Para este apartado simularé que el sistema ha quedado totalmente inoperativo de
 
 ### Simulación del desastre
 
-TODO
+Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
 
-### Restauración de la snapshot
+1. Nos logeamos en el servidor a través de SSH y comprobamos el estado de los paquetes de Zentyal:
 
-TODO
+    ```sh
+    dpkg -l | egrep 'zen(buntu|tyal)-'
+    ```
 
-### Restauración del servicio
+    El resultado obtenido en mi caso:
 
-TODO
+    ```text
+    ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+    ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+    ii  zentyal-core                          7.0.5                             all          Zentyal - Core
+    ii  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+    ii  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+    ii  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+    ii  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+    ii  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+    ii  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+    ii  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+    ii  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+    ii  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+    ii  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+    ```
 
-### Comprobación final
+2. Eliminamos el paquete `zentyal-core` para causar la inestabilidad:
 
-TODO
+    ```sh
+    sudo apt remove -y zentyal-core
+    ```
+
+3. Finalmente, confirmamos que los módulos se han desinstalado, dejando el servidor ha quedado inoperativo:
+
+    ```sh
+    dpkg -l | egrep 'zen(buntu|tyal)-'
+    ```
+
+    ```text
+    rc  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+    rc  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+    rc  zentyal-core                          7.0.5                             all          Zentyal - Core
+    rc  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+    rc  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+    rc  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+    rc  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+    rc  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+    rc  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+    rc  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+    rc  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+    rc  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+    rc  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+    ```
+
+### Restauración del sistema
+
+Con el desastre correctamente implementado, procederemos a restaurarlo a través de la última snapshot disponible.
+
+1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot:
+
+    !["Getting the latest snapshot"](images/aws/recovery-system_snapshot-1.png "Getting the latest snapshot")
+
+2. Configuramos el volumen:
+
+    **NOTA:** Deberá crearse en la misma zona de disponibilidad.
+
+    !["Creating the volume 1"](images/aws/recovery-system_snapshot-2.png "Creating the volume 1")
+    !["Creating the volume 2"](images/aws/recovery-system_snapshot-3.png "Creating the volume 2")
+
+3. Verificamos que el volumen haya sido creado con éxito y que esté disponible:
+
+    !["Verifying the volume"](images/aws/recovery-mail_snapshot-4.png "Verifying the volume")
+
+4. Paramos la instancia EC2, para ello, vamos a `EC2 -> Instances -> Instance state`:
+
+    !["Stopping the instance"](images/aws/recovery-system_shutdown.png "Stopping the instance")
+
+5. Una vez parada, obtenemos el punto de montaje del volumen del sistema desde `EC2 -> Elastic Block Store -> Volumes` (opción **Attached instances**):
+
+    !["Getting the system volume ID"](images/aws/recovery-system_volume-id.png "Getting the system volume ID")
+
+6. Desvinculamos el EBS del sistema desde `Actions -> Detach volume`:
+
+    !["Detach the system volume"](images/aws/recovery-system_volume-detach.png "Detach the system volume")
+
+7. Asociamos el volumen creado en el paso 2 desde `Actions -> Detach volume`::
+
+    !["Attach the new system volume 1"](images/aws/recovery-system_volume-attach_1.png "Attach the new system volume 1")
+    !["Attach the new system volume 2"](images/aws/recovery-system_volume-attach_2.png "Attach the new system volume 2")
+
+8. Iniciamos la instancia desde `EC2 -> Instances -> Instance state`:
+
+    !["Starting the instance"](images/aws/recovery-system_start.png "Starting the instance")
+
+9. Nos conectamos a la instancia y verificamos que volvemos a tener los paquetes correctamente instalados:
+
+    ```sh
+    dpkg -l | egrep 'zen(buntu|tyal)-'
+    ```
+
+    El resultado obtenido en mi caso:
+
+    ```text
+    ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+    ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+    ii  zentyal-core                          7.0.5                             all          Zentyal - Core
+    ii  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+    ii  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+    ii  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+    ii  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+    ii  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+    ii  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+    ii  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+    ii  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+    ii  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+    ii  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+    ```
+
+10. Eliminamos el volumen EBS inestable, para ello vamos a `EC2 -> Elastic Block Store -> Volumes -> Delete volume`:
+
+    !["Removing the old volume"](images/aws/recovery-system_volume-remove.png "Removing the old volume")
+
+11. Finalmente, modificamos la etiqueta `Name` del nuevo volumen desde `Tags -> Manage tags`:
+
+    !["Tagging the new volume 1"](images/aws/recovery-system_volume-tags_1.png "Tagging the new volume 1")
+    !["Tagging the new volume 2"](images/aws/recovery-system_volume-tags_2.png "Tagging the new volume 2")

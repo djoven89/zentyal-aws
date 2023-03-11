@@ -31,9 +31,7 @@ Para este proyecto en concreto, se harán uso de los siguientes servicios dispon
 * [KMS](https://aws.amazon.com/es/kms/)
 * [EC2](https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html)
 * [CloudWatch](https://docs.aws.amazon.com/es_es/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html)
-* [ChatBot](https://aws.amazon.com/es/chatbot/)
 * [SNS](https://docs.aws.amazon.com/es_es/sns/latest/dg/welcome.html)
-* [Config](https://aws.amazon.com/es/config/)
 
 ## Zentyal
 
@@ -89,13 +87,14 @@ A continuación se indican algunas consideraciones a tener en cuenta si se quier
 
 ## Índice
 
-El índice del proyecto para su implementación es:
+El índice del proyecto para su implementación sería:
 
 1. AWS
 2. Instalación
 3. Configuración
-4. Securización
-5. Monitorización
-6. Mantenimiento
+4. Certificados
+5. Hardening
+6. Backup
+7. Monitorización
 
-En caso de querer implementar o probar el proyecto en un servidor físico ajeno a un proveedor cloud, los pasos 1 y 5 no se aplicarían.
+En caso de querer implementar o probar el proyecto en un servidor on-premise o en otro proveedor cloud, los pasos 1, parte del 6 y 7 no se aplicarían.

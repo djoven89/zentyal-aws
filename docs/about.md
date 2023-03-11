@@ -5,7 +5,7 @@ Mi nombre es Daniel Joven y soy administrador de sistemas Linux desde hace 6 añ
 * Creación y gestión de hosting webs con: cPanel, Plesk e ISPconfig.
 * Automatización de tareas con Ansible y bash scripting.
 * Diseño, creación y mantenimiento de entorno cloud en AWS.
-* Diseño, creación y mantenimiento de flujos de trabajo (DevOps) para entornos de desarrollo y staging.
+* Diseño, creación y mantenimiento de CI/CD para entornos de desarrollo, staging y producción.
 
 Además, desde que comencé mi formación en IT he podido obtener los siguientes certificados:
 

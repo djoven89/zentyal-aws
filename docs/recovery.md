@@ -2,25 +2,122 @@
 
 En este documento se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en el documento de backup.
 
-## Pérdida de información en los recursos compartidos
+## Recursos compartidos
 
-En este apartado simularé que un usuario ha eliminado un archivo importante llamado `nomimas-2023.pdf` en un recurso compartido llamado `rrhh`. El proceso general consistirá en:
+En este apartado simularé que un usuario ha eliminado un archivo importante llamado `Nomimas 2023.pdf` en un recurso compartido llamado `rrhh`. El proceso general consistirá en:
 
 1. Comprobaremos la existencia del recurso y posteriormente lo eliminaremos.
 2. Crearemos un volumen EBS de la última snapshot disponible.
 3. Montaremos el volumen en una ubicación temporal.
 4. Restauraremos el archivo eliminado.
 5. Comprobaremos que el usuario vuelve a tener el archivo y que éste es accesible.
+6. Desmontamos y eliminamos el volumen.
 
-### Simulación del desastre
+Para simular la pérdida del documento importante, simplemente me conectaré con el usuario, comprobaré la existencia del documento y lo eliminaré.
 
-TODO
+1. Con el usuario comprobamos la existencia del documento en el recurso compartido:
 
-### Recuperación del archivo
+    !["Check pdf file"](images/aws/recovery-shares_disaster-1.png "Check pdf file")
 
-TODO
+2. Eliminamos el recurso:
 
-## Pérdida de información en el correo
+    !["Removing the pdf"](images/aws/recovery-shares_disaster-2.png "Removing the pdf")
+
+Con el desastre simulado, procederemos a su recuperación.
+
+1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot:
+
+    !["Getting the latest snapshot"](images/aws/recovery-shares_snapshot-1.png "Getting the latest snapshot")
+
+2. Configuramos el volumen temporal:
+
+    **NOTA:** Deberá crearse en la misma zona de disponibilidad.
+
+    !["Creating the volume 1"](images/aws/recovery-shares_snapshot-2.png "Creating the volume 1")
+    !["Creating the volume 2"](images/aws/recovery-shares_snapshot-3.png "Creating the volume 2")
+
+3. Verificamos que el volumen haya sido creado con éxito y que esté disponible:
+
+    !["Verifying the volume"](images/aws/recovery-shares_snapshot-4.png "Verifying the volume")
+
+4. Asociamos el volumen a la instancia, para ello, vamos a `Actions -> Attach volume`:
+
+    !["Attaching the volume"](images/aws/recovery-shares_snapshot-5.png "Attaching the volume")
+
+5. Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:
+
+    ```sh
+    lsblk
+    ```
+
+    En mi entorno, el volumen ha sido montado como `nvme3n1p1`:
+
+    ```text
+    NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    nvme0n1      259:0    0   30G  0 disk
+    ├─nvme0n1p1  259:2    0 29.9G  0 part /
+    ├─nvme0n1p14 259:3    0    4M  0 part
+    └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+    nvme2n1      259:1    0   10G  0 disk
+    └─nvme2n1p1  259:5    0   10G  0 part /home
+    nvme1n1      259:6    0   10G  0 disk
+    └─nvme1n1p1  259:7    0   10G  0 part /var/vmail
+    nvme3n1      259:8    0   10G  0 disk
+    └─nvme3n1p1  259:9    0   10G  0 part
+    ```
+
+6. Creamos un directorio temporal donde montaremos el nuevo disco:
+
+    ```sh
+    sudo mkdir -v /mnt/shares-recovery
+    ```
+
+7. Montamos el volumen:
+
+    ```sh
+    sudo mount /dev/nvme3n1p1 /mnt/shares-recovery
+    ```
+
+8. Buscamos el documento en el recurso compartido `rrhh` en el directorio donde hemos montado el disco temporal:
+
+    ```sh
+    sudo find /mnt/shares-recovery/samba/shares/rrhh/ -type f -exec ls -l {} \;
+    ```
+
+    Ejemplo en mi servidor:
+
+    ```text
+    -rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 21377 Feb 27 20:57 '/mnt/shares-recovery/samba/shares/rrhh/Nominas 2023.pdf'
+    ```
+
+9. Una vez identificado el archivo, procedemos a su restauración:
+
+    ```sh
+    cp -vp /mnt/shares-recovery/samba/shares/rrhh/Nominas\ 2023.pdf /home/samba/shares/rrhh/
+    ```
+
+    **NOTA:** Es importante que usemos la opción `-p` para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el.
+
+10. Desde el usuario, comprobaremos que el archivo fue recuperado y que es accesible:
+
+    !["Confirming the email recovery"](images/aws/recovery-shares_restoration.png "Confirming the email recovery")
+
+11. Una vez la hayamos terminado con la restauración, procedemos a desmontar el disco y eliminar el directorio temporal creado:
+
+    ```sh
+    sudo umount -v /mnt/shares-recovery
+    sudo rmdir -v /mnt/shares-recovery
+    ```
+
+12. Desvinculamos el volumen EBS de la instancia, para ello, vamos a `Actions -> Detach volume`:
+
+    !["Detaching the volumen"](images/aws/recovery-shares_detach.png "Detaching the volumen")
+
+13. Finalmente, eliminamos el volumen EBS:
+
+    !["Removing the volumen"](images/aws/recovery-shares_volumen-remove.png "Removing the volumen")
+
+## Correos
 
 El objetivo de este apartado es simular que un usuario llamado `maria` a eliminado un email llamado `Presupuesto 2023` con un adjunto. El proceso general es muy similar al anterior, que consiste de forma general en:
 
@@ -29,8 +126,7 @@ El objetivo de este apartado es simular que un usuario llamado `maria` a elimina
 3. Montaremos el volumen en una ubicación temporal.
 4. Restauraremos el email eliminado.
 5. Comprobaremos que el usuario vuelve a tener acceso al email.
-
-### Simulación del desastre
+6. Desmontamos y eliminamos el volumen.
 
 Para simular la pérdida de un email importante, usaré el webmail para verificar el correo y posteriormente, lo eliminaré.
 
@@ -42,8 +138,6 @@ Para simular la pérdida de un email importante, usaré el webmail para verifica
 
     !["Removing the email 1"](images/aws/recovery-mail_disaster-2.png "Removing the email 1")
     !["Removing the email 2"](images/aws/recovery-mail_disaster-3.png "Removing the email 2")
-
-### Restauración del correo
 
 Ahora que tenemos simulado el desastre, procederemos a realizar las acciones necesarias para recuperar el email.
 
@@ -72,7 +166,7 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
     lsblk
     ```
 
-    En mi entorno, el volumen ha sido montado como `nvme3n1`:
+    En mi entorno, el volumen ha sido montado como `nvme3n1p1`:
 
     ```text
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
@@ -147,7 +241,7 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
     !["Removing the volumen"](images/aws/recovery-mail_volumen-remove.png "Removing the volumen")
 
-## Fallo en el sistema operativo
+## Sistema
 
 Para este apartado simularé que el sistema ha quedado totalmente inoperativo debido a que un administrador de sistemas ha eliminado accidentalmente el paquete `zentyal-core`. El proceso general consiste en:
 
@@ -155,8 +249,7 @@ Para este apartado simularé que el sistema ha quedado totalmente inoperativo de
 2. Crearemos un volumen EBS de la última snapshot disponible.
 3. Reemplazaremos el volumen de la instancia.
 4. Comprobaremos que el servidor vuelve a estar operativo.
-
-### Simulación del desastre
+5. Eliminamos el volumen original.
 
 Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
 
@@ -211,8 +304,6 @@ Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
     rc  zentyal-software                      7.0.0                             all          Zentyal - Software Management
     rc  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
     ```
-
-### Restauración del sistema
 
 Con el desastre correctamente implementado, procederemos a restaurarlo a través de la última snapshot disponible.
 

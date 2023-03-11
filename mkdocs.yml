@@ -13,6 +13,7 @@ theme:
     - toc.integrate
     - content.code.copy
     - content.code.annotate
+    - navigation.top
   language: es
 
 markdown_extensions:
@@ -22,7 +23,7 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
-site_name: Implementación de Zentyal
+site_name: Implementación de Zentyal en AWS
 nav:
   - Home: 'index.md'
   - AWS: 'aws-configuration.md'

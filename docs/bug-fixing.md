@@ -30,7 +30,7 @@ Para solucionar temporalmente la incidencia, hay que realizar lo siguiente:
     sudo zs webadmin restart
     ```
 
-Con esto, el bug debería estar solucionado temporalmente2.
+Con esto, el bug se solucionará temporalmente.
 
 ## Webmail
 

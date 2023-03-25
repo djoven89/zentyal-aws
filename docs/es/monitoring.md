@@ -14,18 +14,18 @@ Para notificar cualquier alerta que se dispare en CloudWatch haremos uso del ser
 
 1. Vamos a `SNS` y creamos un 'topic' llamado `Prod-Zentyal-Email-Alerting`:
 
-    !["SNS topic creation"](images/aws/monitoring-sns_topic.png "SNS topic creation")
-    !["SNS topic creation"](images/aws/monitoring-sns_topic-tags.png "SNS topic creation")
+    !["SNS topic creation"](assets/images/aws/monitoring-sns_topic.png "SNS topic creation")
+    !["SNS topic creation"](assets/images/aws/monitoring-sns_topic-tags.png "SNS topic creation")
 
 2. Creamos una 'subscription' para la cuenta de correo que recibirá las notificaciones:
 
-    !["SNS topic creation"](images/aws/monitoring-sns_subscription.png "SNS topic creation")
+    !["SNS topic creation"](assets/images/aws/monitoring-sns_subscription.png "SNS topic creation")
 
 3. Finalmente, esperamos a que nos llegue la invitación a la cuenta de correo para activar la suscripción.
 
     **NOTA:** Al tener habilitado la lista gris, nos tardará en llegar unos minutos.
 
-    !["SNS subscription confirmation"](images/aws/monitoring-sns_confirmation.png "SNS subscription confirmation")
+    !["SNS subscription confirmation"](assets/images/aws/monitoring-sns_confirmation.png "SNS subscription confirmation")
 
 ## SSM Parameter Store
 
@@ -54,7 +54,7 @@ A continuación se indican las acciones a realizar:
 2. Vamos a `AWS Systems Manager -> Parameter Store -> Create parameter`.
 3. Configuramos el 'parámetro':
 
-    !["Parameter store configuration"](images/aws/monitoring-parameter_config.png "Parameter store configuration")
+    !["Parameter store configuration"](assets/images/aws/monitoring-parameter_config.png "Parameter store configuration")
 
 4. Añadimos la configuración del agente en la sección de `Value`:
 
@@ -177,7 +177,7 @@ A continuación se indican las acciones a realizar:
     }
     ```
 
-    !["IAM policy for CloudWatch Agent"](images/aws/monitoring-iam_cloudwatch.png "IAM policy for CloudWatch Agent")
+    !["IAM policy for CloudWatch Agent"](assets/images/aws/monitoring-iam_cloudwatch.png "IAM policy for CloudWatch Agent")
 
 8. Creamos otra política que permita subir el archivo de log a Cloudwatch:
 
@@ -202,17 +202,17 @@ A continuación se indican las acciones a realizar:
     }
     ```
 
-    !["IAM policy for CloudWatch Logs"](images/aws/monitoring-iam_cloudwatch-logs.png "IAM policy for CloudWatch Logs")
+    !["IAM policy for CloudWatch Logs"](assets/images/aws/monitoring-iam_cloudwatch-logs.png "IAM policy for CloudWatch Logs")
 
 9. Creamos un rol donde asociaremos las políticas recién creadas y también, la existente llamada `CloudWatchAgentServerPolicy`. Para ello vamos a `IAM -> Roles`:
 
-    !["IAM role entity"](images/aws/monitoring-iam_role-entity.png "IAM role entity")
-    !["IAM role summary 1"](images/aws/monitoring-iam_role-summary-1.png "IAM role summary 1")
-    !["IAM role summary 2"](images/aws/monitoring-iam_role-summary-2.png "IAM role summary 2")
+    !["IAM role entity"](assets/images/aws/monitoring-iam_role-entity.png "IAM role entity")
+    !["IAM role summary 1"](assets/images/aws/monitoring-iam_role-summary-1.png "IAM role summary 1")
+    !["IAM role summary 2"](assets/images/aws/monitoring-iam_role-summary-2.png "IAM role summary 2")
 
 10. Finalmente, asociamos el rol recién creado a la instancia de Zentyal. Para ello vamos a `EC2 -> Actions -> Security -> Modify IAM role`:
 
-    !["IAM role assign to EC2"](images/aws/monitoring-iam_role-ec2.png "IAM role assign to EC2")
+    !["IAM role assign to EC2"](assets/images/aws/monitoring-iam_role-ec2.png "IAM role assign to EC2")
 
 ## Cloudwatch
 
@@ -275,13 +275,13 @@ Una vez que tenemos el entorno de AWS listo, procederemos a instalar y configura
 
 8. Tras esperar un par de minutos, vamos a `CloudWatch -> All metrics` y comprobamos que el namespace con las métricas personalizas se hayan creado:
 
-    !["CloudWatch namespace"](images/aws/monitoring-check_metrics-1.png "CloudWatch namespace")
-    !["CloudWatch metrics"](images/aws/monitoring-check_metrics-2.png "CloudWatch metrics")
+    !["CloudWatch namespace"](assets/images/aws/monitoring-check_metrics-1.png "CloudWatch namespace")
+    !["CloudWatch metrics"](assets/images/aws/monitoring-check_metrics-2.png "CloudWatch metrics")
 
 9. Finalmente, revisamos también que se esté monitorizando el archivo de log de Zentyal, para ello vamos a `CloudWatch -> Log groups`:
 
-    !["CloudWatch logs 1"](images/aws/monitoring-check_logs-1.png "CloudWatch logs 1")
-    !["CloudWatch logs 2"](images/aws/monitoring-check_logs-2.png "CloudWatch logs 2")
+    !["CloudWatch logs 1"](assets/images/aws/monitoring-check_logs-1.png "CloudWatch logs 1")
+    !["CloudWatch logs 2"](assets/images/aws/monitoring-check_logs-2.png "CloudWatch logs 2")
 
 ### Logs
 
@@ -289,14 +289,14 @@ Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear u
 
 1. Vamos a `CloudWatch -> Metric filters` y creamos el filtro:
 
-    !["CloudWatch filter log 1"](images/aws/monitoring-logs_filter-1.png "CloudWatch filter log 1")
-    !["CloudWatch filter log 2"](images/aws/monitoring-logs_filter-2.png "CloudWatch filter log 2")
+    !["CloudWatch filter log 1"](assets/images/aws/monitoring-logs_filter-1.png "CloudWatch filter log 1")
+    !["CloudWatch filter log 2"](assets/images/aws/monitoring-logs_filter-2.png "CloudWatch filter log 2")
 
 2. Una vez creado el filtro y pasado un par de minutos para que CloudWatch recolecte información.
 
 3. Finalmente, verificamos que desde `CloudWatch -> All metrics` tenemos la métrica disponible:
 
-    !["CloudWatch filter metric"](images/aws/monitoring-logs_metric-check.png "CloudWatch filter metric")
+    !["CloudWatch filter metric"](assets/images/aws/monitoring-logs_metric-check.png "CloudWatch filter metric")
 
     **NOTA:** El tipo de métrica mostrado en la imagen es de tipo `Number` como se puede ver en la parte superior.
 
@@ -304,7 +304,7 @@ Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear u
 
 Una vez confirmado el funcionamiento del sistema de monitorización, crearemos un dashboard que agrupe las métricas más importantes desde `CloudWatch -> Dashboard`. A continuación un ejemplo sencillo:
 
-!["CloudWatch dashboard"](images/aws/monitoring-dashboard.png "CloudWatch dashboard")
+!["CloudWatch dashboard"](assets/images/aws/monitoring-dashboard.png "CloudWatch dashboard")
 
 ### Alertas
 
@@ -357,55 +357,55 @@ La siguiente acción que configuraremos será las alertas. Las alertas que confi
 
 #### CPU
 
-!["CloudWatch CPU alert 1"](images/aws/monitoring-alert_cpu-1.png "CloudWatch CPU alert 1")
-!["CloudWatch CPU alert 2"](images/aws/monitoring-alert_cpu-2.png "CloudWatch CPU alert 2")
+!["CloudWatch CPU alert 1"](assets/images/aws/monitoring-alert_cpu-1.png "CloudWatch CPU alert 1")
+!["CloudWatch CPU alert 2"](assets/images/aws/monitoring-alert_cpu-2.png "CloudWatch CPU alert 2")
 
 #### RAM
 
-!["CloudWatch RAM alert 1"](images/aws/monitoring-alert_ram-1.png "CloudWatch RAM alert 1")
-!["CloudWatch RAM alert 2"](images/aws/monitoring-alert_ram-2.png "CloudWatch RAM alert 2")
+!["CloudWatch RAM alert 1"](assets/images/aws/monitoring-alert_ram-1.png "CloudWatch RAM alert 1")
+!["CloudWatch RAM alert 2"](assets/images/aws/monitoring-alert_ram-2.png "CloudWatch RAM alert 2")
 
 #### Disco - Sistema
 
-!["CloudWatch System disk alert 1"](images/aws/monitoring-alert_disk-system-1.png "CloudWatch System disk alert 1")
-!["CloudWatch System disk alert 2"](images/aws/monitoring-alert_disk-system-2.png "CloudWatch System disk alert 2")
+!["CloudWatch System disk alert 1"](assets/images/aws/monitoring-alert_disk-system-1.png "CloudWatch System disk alert 1")
+!["CloudWatch System disk alert 2"](assets/images/aws/monitoring-alert_disk-system-2.png "CloudWatch System disk alert 2")
 
 #### Disco - Mail
 
-!["CloudWatch Mail disk alert 1"](images/aws/monitoring-alert_disk-mail-1.png "CloudWatch Mail disk alert 1")
-!["CloudWatch Mail disk alert 2"](images/aws/monitoring-alert_disk-mail-2.png "CloudWatch Mail disk alert 2")
+!["CloudWatch Mail disk alert 1"](assets/images/aws/monitoring-alert_disk-mail-1.png "CloudWatch Mail disk alert 1")
+!["CloudWatch Mail disk alert 2"](assets/images/aws/monitoring-alert_disk-mail-2.png "CloudWatch Mail disk alert 2")
 
 #### Disco - Shares
 
-!["CloudWatch Shares disk alert 1"](images/aws/monitoring-alert_disk-shares-1.png "CloudWatch Shares disk alert 1")
-!["CloudWatch Shares disk alert 2"](images/aws/monitoring-alert_disk-shares-2.png "CloudWatch Shares disk alert 2")
+!["CloudWatch Shares disk alert 1"](assets/images/aws/monitoring-alert_disk-shares-1.png "CloudWatch Shares disk alert 1")
+!["CloudWatch Shares disk alert 2"](assets/images/aws/monitoring-alert_disk-shares-2.png "CloudWatch Shares disk alert 2")
 
 #### DLM - Sistema
 
-!["CloudWatch DLM System alert 1"](images/aws/monitoring-alert_dlm-system-1.png "CloudWatch DLM system alert 1")
-!["CloudWatch DLM System alert 2"](images/aws/monitoring-alert_dlm-system-2.png "CloudWatch DLM system alert 2")
+!["CloudWatch DLM System alert 1"](assets/images/aws/monitoring-alert_dlm-system-1.png "CloudWatch DLM system alert 1")
+!["CloudWatch DLM System alert 2"](assets/images/aws/monitoring-alert_dlm-system-2.png "CloudWatch DLM system alert 2")
 
 #### DLM - Mail
 
-!["CloudWatch DLM Mail alert 1"](images/aws/monitoring-alert_dlm-mail-1.png "CloudWatch DLM Mail alert 1")
-!["CloudWatch DLM Mail alert 2"](images/aws/monitoring-alert_dlm-mail-2.png "CloudWatch DLM Mail alert 2")
+!["CloudWatch DLM Mail alert 1"](assets/images/aws/monitoring-alert_dlm-mail-1.png "CloudWatch DLM Mail alert 1")
+!["CloudWatch DLM Mail alert 2"](assets/images/aws/monitoring-alert_dlm-mail-2.png "CloudWatch DLM Mail alert 2")
 
 #### DLM - Shares
 
-!["CloudWatch DLM Shares alert 1"](images/aws/monitoring-alert_dlm-shares-1.png "CloudWatch DLM Shares alert 1")
-!["CloudWatch DLM Shares alert 2"](images/aws/monitoring-alert_dlm-shares-2.png "CloudWatch DLM Shares alert 2")
+!["CloudWatch DLM Shares alert 1"](assets/images/aws/monitoring-alert_dlm-shares-1.png "CloudWatch DLM Shares alert 1")
+!["CloudWatch DLM Shares alert 2"](assets/images/aws/monitoring-alert_dlm-shares-2.png "CloudWatch DLM Shares alert 2")
 
 #### EC2 - System
 
-!["CloudWatch EC2 System alert 1"](images/aws/monitoring-alert_ec2-system-1.png "CloudWatch EC2 System alert 1")
-!["CloudWatch EC2 System alert 2"](images/aws/monitoring-alert_ec2-system-2.png "CloudWatch EC2 System alert 2")
+!["CloudWatch EC2 System alert 1"](assets/images/aws/monitoring-alert_ec2-system-1.png "CloudWatch EC2 System alert 1")
+!["CloudWatch EC2 System alert 2"](assets/images/aws/monitoring-alert_ec2-system-2.png "CloudWatch EC2 System alert 2")
 
 #### EC2 - Instance
 
-!["CloudWatch EC2 Instance alert 1"](images/aws/monitoring-alert_ec2-instance-1.png "CloudWatch EC2 Instance alert 1")
-!["CloudWatch EC2 Instance alert 2"](images/aws/monitoring-alert_ec2-instance-2.png "CloudWatch EC2 Instance alert 2")
+!["CloudWatch EC2 Instance alert 1"](assets/images/aws/monitoring-alert_ec2-instance-1.png "CloudWatch EC2 Instance alert 1")
+!["CloudWatch EC2 Instance alert 2"](assets/images/aws/monitoring-alert_ec2-instance-2.png "CloudWatch EC2 Instance alert 2")
 
 #### Log de Zentyal
 
-!["CloudWatch Log alert 1"](images/aws/monitoring-alert_log-1.png "CloudWatch Log alert 1")
-!["CloudWatch Log alert 2"](images/aws/monitoring-alert_log-2.png "CloudWatch Log alert 2")
+!["CloudWatch Log alert 1"](assets/images/aws/monitoring-alert_log-1.png "CloudWatch Log alert 1")
+!["CloudWatch Log alert 2"](assets/images/aws/monitoring-alert_log-2.png "CloudWatch Log alert 2")

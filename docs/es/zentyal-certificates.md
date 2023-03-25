@@ -24,16 +24,16 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 2. Creamos una regla temporal en el firewall de Zentyal como en el security group de AWS que permita el protocolo HTTP para que el certificado pueda expedirse:
 
     Para el firewall de Zentyal:
-    ![Firewall rule in Zentyal](images/zentyal/certificates_firewall-zentyal.png "Firewall rule in Zentyal")
+    ![Firewall rule in Zentyal](assets/images/zentyal/certificates_firewall-zentyal.png "Firewall rule in Zentyal")
 
     Para el security group de AWS:
-    ![Firewall rule in AWS](images/zentyal/certificates_firewall-aws.png "Firewall rule in AWS")
+    ![Firewall rule in AWS](assets/images/zentyal/certificates_firewall-aws.png "Firewall rule in AWS")
 
     **NOTA:** Podremos eliminar esta regla una vez hayamos emitidos los certificados o la mantendremos para evitar tener que volver a establecerla cuando toque la renovación de los certificados.
 
 3. Creamos la cuenta de correo que recibirá las notificaciones:
 
-    ![Mail account for notifications](images/zentyal/certificates-email_account.png "Mail account for notifications")
+    ![Mail account for notifications](assets/images/zentyal/certificates-email_account.png "Mail account for notifications")
 
 4. Comprobaremos que desde el exterior podemos resolver los subdominios en cuestión:
 
@@ -205,7 +205,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 8. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
 
-    ![Webadmin certificate verification](images/zentyal/certificate-webadmin_login.png "Webadmin certificate verification")
+    ![Webadmin certificate verification](assets/images/zentyal/certificate-webadmin_login.png "Webadmin certificate verification")
 
 ## Mail y Webmail
 
@@ -293,7 +293,7 @@ Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/e
 
 4. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
 
-    ![Webmail certificate verification](images/zentyal/certificate-webmail.png "Webmail certificate verification")
+    ![Webmail certificate verification](assets/images/zentyal/certificate-webmail.png "Webmail certificate verification")
 
 ### Mail
 

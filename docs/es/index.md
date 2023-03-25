@@ -1,28 +1,25 @@
 # Información del proyecto
 
-El objetivo principal de este proyecto es mostrar y explicar una configuración detallada, robusta, segura y monitorizada del despliegue de un servidor [Zentyal] 7.0 en el proveedor de cloud de Amazon [AWS] para un entorno de producción.
+El objetivo principal de este proyecto es mostrar y explicar una configuración detallada, robusta, segura y monitorizada del despliegue de un servidor [Zentyal 7.0] en el proveedor cloud de Amazon [AWS] para un entorno de producción.
 
-**NOTA:** Es importante tener en cuenta que todo lo explicado en el proyecto es un **ejemplo** real de implementación, que puede usarse como base o guía para el diseño de vuestro propio entorno.
+**NOTA:** Es importante tener en cuenta que todo lo explicado en el proyecto es un **ejemplo** real de implementación, el cual puede usarse como base o guía para el diseño de vuestro propio entorno.
 
-[Zentyal]: https://zentyal.com/
+[Zentyal 7.0]: https://zentyal.com/
 [AWS]: https://aws.amazon.com/es/what-is-aws/
 
 Las funciones que tendrá este servidor será de actuar como servidor de correo para la organización y adicionalmente, como servidor de recursos compartidos para los distintos departamentos.
 
-Finalmente, mencionar que también se realizarán configuraciones adicionales que bajo mi punto de vista mejoran la experiencia en la CLI durante las tareas de mantenimiento o troubleshooting.
+Finalmente, mencionar que también se realizarán múltiples configuraciones adicionales, como la securización mediante SPF, DKIM y DMARC para el servicio de correo, políticas de contraseñas para el controlador de dominio o incluso, mejoras a nivel de CLI.
 
 ## AWS
 
 Como se ha explicado, se usará AWS para alojar el servidor Zentyal. Este servidor tendrá un coste mensual, el cual dependerá de varios factores, como por ejemplo:
 
 * Tipo de servidor.
-* Si se contrata la instancia con [Saving Plans].
-* Número de volúmenes EBS.
+* Tipo y número de volúmenes EBS.
 * Tráfico que recibe el servidor.
 * Políticas de copias de seguridad.
 * Sistema de monitorización.
-
-[Saving plans]: https://aws.amazon.com/es/savingsplans/
 
 Para este proyecto en concreto, se harán uso de los siguientes servicios disponibles de AWS:
 
@@ -39,8 +36,8 @@ El servidor Zentyal usará la última versión estable disponible, que a fecha d
 
 Los módulos que se instalarán y configurarán serán:
 
-* [Network](https://doc.zentyal.org/en/firststeps.html#network-configuration-with-zentyal)
-* [Logs](https://doc.zentyal.org/en/logs.html)
+* [Network](https://doc.zentyal.org/es/firststeps.html#network-configuration-with-zentyal)
+* [Logs](https://doc.zentyal.org/es/logs.html)
 * [Firewall](https://doc.zentyal.org/es/firewall.html)
 * [Software](https://doc.zentyal.org/es/software.html)
 * [NTP](https://doc.zentyal.org/es/ntp.html)
@@ -73,17 +70,18 @@ Para poder implementar o probar los pasos descritos en este proyecto, se requeri
 1. Conocimiento en la administración de sistemas operativos Linux, y más concretamente, en Ubuntu.
 2. Conocimiento en el manejo de la CLI (línea de comandos).
 3. Privilegios de administrador sobre el servidor.
-4. En caso de querer usar AWS, se deberá de tener una cuenta con permisos suficientes para los servicios mencionados en el apartado 'AWS'.
+4. En caso de querer usar AWS, se deberá de tener una cuenta con permisos suficientes para los servicios mencionados en el apartado 'AWS' de este mismo documento.
 
 ## Consideraciones
 
 A continuación se indican algunas consideraciones a tener en cuenta si se quiere implementar o probar el proyecto:
 
-1. En caso de no tener conocimientos robustos sobre Linux pero querer implementarlo para vuestra organización en producción, es recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
-2. El proyecto ha sido probado en el proveedor cloud AWS, no obstante, debería poder funcionar en otros proveedores cloud.
-3. En caso de usarse un proveedor cloud, es muy probable que el despliegue tenga un coste económico mensual.
-4. El módulo de red es el módulo más crítico en caso de querer implementar este proyecto en un proveedor cloud.
-5. Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM para la realización de pruebas, no obstante, si se quiere usar en producción habrá que añadir más RAM.
+1. Aunque los pasos están explicados, es altamente recomendable tener unos conocimientos mínimos sobre Linux ya que se utiliza bastante la terminal.
+2. Si se quiere implementar en producción, es altamente recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones a versiones superiores de Zentyal.
+3. El proyecto ha sido probado en el proveedor cloud AWS, no obstante, debería poder funcionar en otros proveedores cloud.
+4. En caso de usarse en un proveedor cloud, es muy probable que el despliegue tenga un coste económico mensual.
+5. El módulo de red es el módulo más crítico en caso de querer implementar este proyecto en un proveedor cloud, por lo que hay que tener bien analizada y definida la configuración que tendrá antes de proceder con su configuración.
+6. Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM para la realización de pruebas, no obstante, si se quiere usar en producción habrá que añadir más RAM.
 
 ## Índice
 

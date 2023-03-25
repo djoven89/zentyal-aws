@@ -116,18 +116,18 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
 
 6. En el wizard de configuración inicial, únicamente instalaremos el módulo de [firewall], de esta forma se nos instalará como dependencia el módulo de [network] a su vez.
 
-    ![Initial wizard - Packages](images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
+    ![Initial wizard - Packages](assets/images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
 
 7. Configuramos la tarjeta de red como `estática` e `internal`:
 
-    ![Initial wizard - Network 1](images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
-    ![Initial wizard - Network 2](images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
+    ![Initial wizard - Network 1](assets/images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
+    ![Initial wizard - Network 2](assets/images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
     **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la doc `Bug fixing` o simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
 
 8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 
-    ![Zentyal initial dashboard](images/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
+    ![Zentyal initial dashboard](assets/images/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
 
 9. Finalmente, antes de procedes a configurar el servidor, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor:
 

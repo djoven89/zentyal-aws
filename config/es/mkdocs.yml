@@ -1,8 +1,16 @@
 ---
 
+site_name: Implementación de Zentyal en AWS
+docs_dir: '../../docs/es/'
+site_dir: '../../generated/es/'
+
 ## https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#configuration
 theme:
   name: material
+  custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
+  logo: assets/images/logo.svg                    # The logo is shared by all languages
+  favicon: assets/images/favicon.ico              # The favicon is shared by all languages
+  language: es                                    # The build's language
   features:
     - navigation.instant
     - navigation.tracking
@@ -14,7 +22,23 @@ theme:
     - content.code.copy
     - content.code.annotate
     - navigation.top
-  language: es
+
+extra:             # Language Selection
+  alternate:
+
+    # Switch to Spanish
+    - name: Spanish
+      link: /es/
+      lang: es
+
+    # Switch to English
+    - name: English
+      link: /en/
+      lang: en
+
+plugins:
+  - search:
+      lang: es     # Set language for search
 
 markdown_extensions:
   - pymdownx.highlight:
@@ -23,7 +47,6 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
-site_name: Implementación de Zentyal en AWS
 nav:
   - Home: 'index.md'
   - AWS: 'aws-configuration.md'

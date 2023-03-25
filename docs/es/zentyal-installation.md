@@ -1,6 +1,10 @@
 # Instalación de Zentyal
 
-En este documento se explicará como instalar Zentyal 7.0 sobre un Ubuntu Server 20.04 en una instancia EC2 del proveedor cloud AWS. El objetivo es simplemente instalar Zentyal 7.0 con sólo los módulos esenciales y confirmar que no hay incidencias a nivel de red ante un reinicio.
+En esta página se explicará como instalar Zentyal 7.0 sobre un Ubuntu Server 20.04 en una instancia EC2 del proveedor cloud AWS. El objetivo es simplemente instalar Zentyal 7.0 con sólo los módulos esenciales y confirmar que no hay incidencias a nivel de red ante un reinicio.
+
+Para la instalación, usaremos [este] script disponible por parte de Zentyal. Mencionar que instalaremos Zentyal sin entorno gráfico, ya que queremos reducir el uso de recursos que necesita el servidor.
+
+[este]: https://doc.zentyal.org/es/installation.html#instalacion-sobre-ubuntu-20-04-lts-server-o-desktop
 
 Los datos del entorno que crearé para el proyecto son:
 
@@ -18,7 +22,7 @@ Los datos del entorno que crearé para el proyecto son:
 
 ## Consideraciones
 
-* Los pasos descritos a continuación son idénticos tantos en entornos cloud como en entornos tradicionales.
+* Los pasos descritos a continuación son idénticos tantos en entornos cloud como en entornos on-premise.
 * En caso de no tener conocimientos robustos sobre Linux, es recomendable usar la versión comercial, ya que se puede contratar acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.
 * En caso de instalar el servidor en un proveedor cloud o en una ubicación sin acceso físico al servidor, la estabilidad del módulo de red será crítica. A continuación se indican algunas recomendaciones al respecto:
     * Definir previamente la configuración que se establecerá.
@@ -26,24 +30,21 @@ Los datos del entorno que crearé para el proyecto son:
     * Establecer la IP de la instancia como estática en Zentyal.
     * Se recomienda configurar la tarjeta de red en Zentyal como interna, así se evita bloquearse a uno mismo durante la configuración inicial.
 
-## Instalación
+## Configuración previa
 
-Para la instalación, usaremos [este] script disponible por parte de Zentyal. Mencionar que instalaremos Zentyal sin entorno gráfico, ya que queremos reducir el uso de recursos que consume el servidor, además que para este proyecto en concreto, al estar alojado en AWS no tendremos acceso físico al servidor.
+Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
 
-[este]: https://doc.zentyal.org/es/installation.html#instalacion-sobre-ubuntu-20-04-lts-server-o-desktop
-
-Las acciones que procederemos a realizar son:
-
-1. Nos conectamos a la instancia usando la clave privada que nos hemos descargado (key pair):
+1. Nos conectamos a la instancia a través de SSH usando la clave privada que nos hemos descargado cuando creamos el Key pair:
 
     ```bash
     ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
     ```
 
-2. Establecemos una contraseña para el usuario `root`:
+2. Establecemos una contraseña para los usuarios: `root` y `ubuntu`:
 
     ```bash
     sudo passwd root
+    sudo passwd ubuntu
     ```
 
 3. Actualizamos los paquetes del servidor:
@@ -68,14 +69,16 @@ Las acciones que procederemos a realizar son:
     su - djoven
     ```
 
-6. Creamos el directorio y archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH:
+6. Creamos el directorio y el archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH:
 
     ```bash
     mkdir -v .ssh
     touch .ssh/authorized_keys
     ```
 
-7. Finalmente, añadimos el contenido de nuestra clave pública al archivo recién creado `.ssh/authorized_keys`:
+7. Finalmente, añadimos el contenido de nuestra clave pública al archivo recién creado `.ssh/authorized_keys`.
+
+## Instalación
 
 A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A continuación las acciones a realizar para su instalación:
 
@@ -92,13 +95,13 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     sudo chmod 0750 /opt/zentyal-install/zentyal_installer.sh
     ```
 
-3. Instalamos Zentyal a través del script:, contestando `n` a la pregunta sobre la instalación del entorno gráfico:
+3. Instalamos Zentyal a través del script:
 
     ```bash
     sudo bash /opt/zentyal-install/zentyal_installer.sh
     ```
 
-    **NOTA:** Contestaremos `n` a la pregunta: '*Do you want to install the Zentyal Graphical environment?*'.
+    **NOTA:** Contestaremos `n` a la pregunta: '*Do you want to install the Zentyal Graphical environment?*', ya que no queremos instalar el entorno gráfico.
 
     Los paquetes de Zentyal que nos instalará el script serán:
 
@@ -106,24 +109,24 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     * zentyal-core
     * zentyal-software
 
-    **NOTA:** Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos su acceso.
+    **NOTA:** Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos el acceso a través de SSH.
 
 4. Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
 
     **NOTA:** En caso de que no hayamos creado el registro `A` en el DNS, usaremos la dirección IP pública de la instancia.
 
-5. Nos logeamos con el usuario administrador que hemos creado previamente, que en mi caso es `djoven`.
+5. Nos logeamos con el usuario administrador que hemos creado previamente, en mi caso es `djoven`.
 
 6. En el wizard de configuración inicial, únicamente instalaremos el módulo de [firewall], de esta forma se nos instalará como dependencia el módulo de [network] a su vez.
 
     ![Initial wizard - Packages](assets/images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
 
-7. Configuramos la tarjeta de red como `estática` e `internal`:
+7. Configuramos la tarjeta de red como `internal` y `estática`:
 
     ![Initial wizard - Network 1](assets/images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
     ![Initial wizard - Network 2](assets/images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
-    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la doc `Bug fixing` o simplemente modificar la URL por: <https://arthas.icecrown.es:8443>
+    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la página `Bug fixing` (ver menú superior de navegación) o simplemente modificamos la URL por: <https://arthas.icecrown.es:8443>
 
 8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 

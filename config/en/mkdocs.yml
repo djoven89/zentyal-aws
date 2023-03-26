@@ -4,16 +4,16 @@ INHERIT: ../mkdocs-common.yml
 
 site_author: Daniel Joven
 site_name: Implementación de Zentyal en AWS
-site_url: https://zentyal.projects.djoven.es/es/
-docs_dir: '../../docs/es'
-site_dir: '../../generated/es'
+site_url: https://zentyal.projects.djoven.es/en/
+docs_dir: '../../docs/en'
+site_dir: '../../generated/en'
 
 theme:
-  language: es                                    # The build's language
+  language: en                                    # The build's language
 
 plugins:
   - search:
-      lang: es     # Set language for search
+      lang: en     # Set language for search
 
 nav:
   - Home: 'index.md'
@@ -28,5 +28,4 @@ nav:
   - Recovery: 'recovery.md'
   - Bug fixing: 'zentyal-bug-fixing.md'
   - Sobre mi: 'about.md'
-
 ...

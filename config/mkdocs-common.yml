@@ -1,0 +1,74 @@
+---
+#####
+## Plantilla base
+#####
+
+## https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#configuration
+
+theme:
+  name: material
+  custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
+  # logo: assets/images/logo.png                    # The logo is shared by all languages
+  # favicon: assets/images/favicon.ico              # The favicon is shared by all languages
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+    - navigation.top
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+        accent: indigo
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+extra:             # Language Selection
+  alternate:
+    # Switch to Spanish
+    - name: Spanish
+      link: http://zentyal-aws.djoven.lan/es/
+      lang: es
+
+    # Switch to English
+    - name: English
+      link: http://zentyal-aws.djoven.lan/en/
+      lang: en
+
+plugins:
+  - search:
+      lang: {}     # Set language for search
+  - tags:
+      enabled: true
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
+
+...

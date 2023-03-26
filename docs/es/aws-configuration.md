@@ -1,3 +1,10 @@
+---
+
+tags:
+  - AWS
+
+---
+
 # AWS
 
 En esta página se explicará como configurar el entorno del proveedor cloud AWS para poder desplegar el servidor Zentyal.

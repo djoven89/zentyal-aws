@@ -1,3 +1,10 @@
+---
+
+tags:
+  - Zentyal
+
+---
+
 # Certificados
 
 Zentyal por defecto uso certificados auto firmados para sus módulos, incluyendo el uso del módulo de CA. Esta situación provoca que se muestren warning como por ejemplo, usando clientes de correo o al acceder al webadmin o webmail. Es por esto que en esta página se mostrará como generar certificados reconocidos emitidos por Let's Encrypt.

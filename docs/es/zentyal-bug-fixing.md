@@ -1,3 +1,10 @@
+---
+
+tags:
+  - Zentyal
+
+---
+
 # Bugfixing
 
 En esta página se explicarán brevemente y se propondrán soluciones a los bugs encontrados a fecha de (2023-02) que afectan al despliegue de Zentyal que hemos realizado en este proyecto.

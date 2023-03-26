@@ -1,3 +1,10 @@
+---
+
+tags:
+  - AWS
+
+---
+
 # Backup
 
 En esta página se explicarán varios opciones para la realización de copias de seguridad para este proyecto.

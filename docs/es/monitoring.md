@@ -1,3 +1,10 @@
+---
+
+tags:
+  - AWS
+
+---
+
 # Monitorización
 
 En esta página configuraremos un sistema de monitorización para nuestro servidor Zentyal usando el servicio de AWS [Cloudwatch]. Además, también haremos uso del servicio de AWS SSM [Parameter Store] para alojar la configuración del agente de Cloudwatch en nuestro servidor y finalmente, del servicio AWS [SNS] para las notificaciones de las alertas.

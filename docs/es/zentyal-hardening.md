@@ -1,3 +1,10 @@
+---
+
+tags:
+  - Zentyal
+
+---
+
 # Hardening
 
 En esta página se realizarán una serie de implementaciones en varios módulos cuya finalidad es incrementar su seguridad.

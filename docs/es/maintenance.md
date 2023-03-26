@@ -1,3 +1,10 @@
+---
+
+tags:
+  - Zentyal
+
+---
+
 # Mantenimiento
 
 En esta página explicaré algunas acciones a revisar periódicamente en el servidor Zentyal para confirmar su estabilidad.

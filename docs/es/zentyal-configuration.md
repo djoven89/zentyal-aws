@@ -1,3 +1,10 @@
+---
+
+tags:
+  - Zentyal
+
+---
+
 # Configuración de Zentyal
 
 En esta página se abordará la configuración del servidor Zentyal para que actúe como servidor de correo y compartición de ficheros.

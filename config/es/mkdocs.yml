@@ -61,7 +61,7 @@ nav:
   - Monitorización: 'monitoring.md'
   - Mantenimiento: 'maintenance.md'
   - Recovery: 'recovery.md'
-  - Bug fixing: 'bug-fixing.md'
+  - Bug fixing: 'zentyal-bug-fixing.md'
   - Sobre mi: 'about.md'
 
 ...

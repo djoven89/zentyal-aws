@@ -1,6 +1,6 @@
 # Recovery
 
-En este documento se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en el documento de backup.
+En esta página se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en la página de backup.
 
 ## Recursos compartidos
 
@@ -25,13 +25,15 @@ Para simular la pérdida del documento importante, simplemente me conectaré con
 
 Con el desastre simulado, procederemos a su recuperación.
 
-1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot:
+1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
     !["Getting the latest snapshot"](assets/images/aws/recovery-shares_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen temporal:
 
-    **NOTA:** Deberá crearse en la misma zona de disponibilidad.
+    !!! warning
+
+        Deberá crearse en la misma zona de disponibilidad.
 
     !["Creating the volume 1"](assets/images/aws/recovery-shares_snapshot-2.png "Creating the volume 1")
     !["Creating the volume 2"](assets/images/aws/recovery-shares_snapshot-3.png "Creating the volume 2")
@@ -96,13 +98,15 @@ Con el desastre simulado, procederemos a su recuperación.
     cp -vp /mnt/shares-recovery/samba/shares/rrhh/Nominas\ 2023.pdf /home/samba/shares/rrhh/
     ```
 
-    **NOTA:** Es importante que usemos la opción `-p` para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el.
+    !!! warning
+
+        Es importante que usemos la opción `-p` para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el.
 
 10. Desde el usuario, comprobaremos que el archivo fue recuperado y que es accesible:
 
     !["Confirming the email recovery"](assets/images/aws/recovery-shares_restoration.png "Confirming the email recovery")
 
-11. Una vez la hayamos terminado con la restauración, procedemos a desmontar el disco y eliminar el directorio temporal creado:
+11. Una vez hayamos confirmado la restauración del fichero, procedemos a desmontar el disco y eliminar el directorio temporal creado:
 
     ```sh
     sudo umount -v /mnt/shares-recovery
@@ -113,7 +117,7 @@ Con el desastre simulado, procederemos a su recuperación.
 
     !["Detaching the volumen"](assets/images/aws/recovery-shares_detach.png "Detaching the volumen")
 
-13. Finalmente, eliminamos el volumen EBS:
+13. Finalmente, eliminamos el volumen EBS desde `Actions -> Delete volume`:
 
     !["Removing the volumen"](assets/images/aws/recovery-shares_volumen-remove.png "Removing the volumen")
 
@@ -141,13 +145,15 @@ Para simular la pérdida de un email importante, usaré el webmail para verifica
 
 Ahora que tenemos simulado el desastre, procederemos a realizar las acciones necesarias para recuperar el email.
 
-1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot:
+1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
     !["Getting the latest snapshot"](assets/images/aws/recovery-mail_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen temporal:
 
-    **NOTA:** Deberá crearse en la misma zona de disponibilidad.
+    !!! warning
+
+        Deberá crearse en la misma zona de disponibilidad.
 
     !["Creating the volume 1"](assets/images/aws/recovery-mail_snapshot-2.png "Creating the volume 1")
     !["Creating the volume 2"](assets/images/aws/recovery-mail_snapshot-3.png "Creating the volume 2")
@@ -219,7 +225,9 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
     sudo cp -vp '/mnt/mail-recovery/icecrown.es/maria/Maildir/cur/1677530165.M104169P13132.arthas,S=31900,W=32366:2,S' /var/vmail/icecrown.es/maria/Maildir/cur/
     ```
 
-    Es importante que se use la opción `-p` para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el. Además, también será importante que la restauración se haga en el mismo directorio, que en mi caso es: `icecrown.es/maria/Maildir/cur/`.
+    !!! warning
+
+        Es importante que se use la opción `-p` para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el. Además, también será importante que la restauración se haga en el mismo directorio, que en mi caso es: `icecrown.es/maria/Maildir/cur/`.
 
 10. Desde la cuenta del usuario de correo, verificamos que lo hemos recuperado junto con su adjunto.
 
@@ -237,7 +245,7 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
     !["Detaching the volumen"](assets/images/aws/recovery-mail_detach.png "Detaching the volumen")
 
-13. Finalmente, eliminamos el volumen EBS:
+13. Finalmente, eliminamos el volumen EBS desde `Actions -> Delete volume`:
 
     !["Removing the volumen"](assets/images/aws/recovery-mail_volumen-remove.png "Removing the volumen")
 
@@ -307,13 +315,15 @@ Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
 
 Con el desastre correctamente implementado, procederemos a restaurarlo a través de la última snapshot disponible.
 
-1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot:
+1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
     !["Getting the latest snapshot"](assets/images/aws/recovery-system_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen:
 
-    **NOTA:** Deberá crearse en la misma zona de disponibilidad.
+    !!! warning
+
+        Deberá crearse en la misma zona de disponibilidad.
 
     !["Creating the volume 1"](assets/images/aws/recovery-system_snapshot-2.png "Creating the volume 1")
     !["Creating the volume 2"](assets/images/aws/recovery-system_snapshot-3.png "Creating the volume 2")
@@ -334,10 +344,14 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
     !["Detach the system volume"](assets/images/aws/recovery-system_volume-detach.png "Detach the system volume")
 
-7. Asociamos el volumen creado en el paso 2 desde `Actions -> Detach volume`::
+7. Asociamos el volumen creado en el paso 2 desde `Actions -> Detach volume`:
 
     !["Attach the new system volume 1"](assets/images/aws/recovery-system_volume-attach_1.png "Attach the new system volume 1")
     !["Attach the new system volume 2"](assets/images/aws/recovery-system_volume-attach_2.png "Attach the new system volume 2")
+
+    !!! warning
+
+        El punto de montaje (Device name) deberá ser el mismo que el obtenido en el paso 5.
 
 8. Iniciamos la instancia desde `EC2 -> Instances -> Instance state`:
 

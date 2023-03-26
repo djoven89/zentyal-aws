@@ -1,6 +1,6 @@
 # Sobre mi
 
-Mi nombre es Daniel Joven y soy administrador de sistemas Linux desde hace 6 años. Durante estos años, he trabajado principalmente en Zentyal, prestando el soporte oficial para los clientes y colaborando en la gestión de su infraestructura IT. Adicionalmente a este cliente, también he trabajado en otros proyectos como:
+Mi nombre es Daniel Joven y soy administrador de sistemas Linux desde hace 6 años. Durante estos años, he trabajado principalmente en Zentyal, prestando el soporte oficial para los clientes y colaborando en la gestión de su infraestructura IT. Adicionalmente a este cliente, también he trabajado en otros proyectos realizando tareas como:
 
 * Creación y gestión de hosting webs con: cPanel, Plesk e ISPconfig.
 * Automatización de tareas con Ansible y bash scripting.
@@ -17,4 +17,4 @@ Además, desde que comencé mi formación en IT he podido obtener los siguientes
 * (2019) Red Hat Certified Specialist in Ansible Automation.
 * (2022) Certified Kubernetes Administrator (CKA).
 
-Con la experiencia adquirida durante estos años, he decidido crear un proyecto completo con Zentyal y AWS y compartirlo para ayudar - espero - a otros miembros de IT que estén considerando o que tengan problemas en la implementación de un entorno de producción con Zentyal y AWS.
+Con la experiencia adquirida durante estos años, he decidido crear un proyecto completo con Zentyal y AWS y compartirlo para ayudar - espero - a otros miembros de IT que estén considerando o que tengan problemas en la implementación de un entorno de producción con Zentyal.

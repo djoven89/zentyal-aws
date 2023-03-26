@@ -61,7 +61,9 @@ Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
     sudo passwd djoven
     ```
 
-    **NOTA:** Es importante que el usuario pertenezca al grupo `sudo`, de lo contrario no podremos usarlo para acceder a la interfaz de administración.
+    !!! warning
+
+        Es importante que el usuario pertenezca al grupo `sudo`, de lo contrario no podremos usarlo para acceder a la interfaz de administración.
 
 5. Nos logeamos con el usuario recién creado:
 
@@ -101,7 +103,9 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     sudo bash /opt/zentyal-install/zentyal_installer.sh
     ```
 
-    **NOTA:** Contestaremos `n` a la pregunta: '*Do you want to install the Zentyal Graphical environment?*', ya que no queremos instalar el entorno gráfico.
+    !!! nota
+
+        Contestaremos `n` a la pregunta: '*Do you want to install the Zentyal Graphical environment?*', ya que no queremos instalar el entorno gráfico.
 
     Los paquetes de Zentyal que nos instalará el script serán:
 
@@ -109,11 +113,15 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     * zentyal-core
     * zentyal-software
 
-    **NOTA:** Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos el acceso a través de SSH.
+    !!! warning
+
+        Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos el acceso a través de SSH.
 
 4. Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <https://arthas.icecrown.es:8443>
 
-    **NOTA:** En caso de que no hayamos creado el registro `A` en el DNS, usaremos la dirección IP pública de la instancia.
+    !!! info
+
+        En caso de que no hayamos creado el registro `A` en el DNS, usaremos la dirección IP pública de la instancia.
 
 5. Nos logeamos con el usuario administrador que hemos creado previamente, en mi caso es `djoven`.
 
@@ -126,7 +134,9 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     ![Initial wizard - Network 1](assets/images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
     ![Initial wizard - Network 2](assets/images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
-    **NOTA:** Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la página `Bug fixing` (ver menú superior de navegación) o simplemente modificamos la URL por: <https://arthas.icecrown.es:8443>
+    !!! warning
+
+        Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la página `Bug fixing` (ver menú superior de navegación) o simplemente modificamos la URL por: <https://arthas.icecrown.es:8443>
 
 8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 

@@ -39,7 +39,9 @@ Vamos a crear una VPC con la siguiente configuración:
     * **Name:** VPC-Prod-Zentyal
     * **Env**: Production
 
-**NOTA:** Como Zentyal no permite IPv6, lo deshabilitamos para evitar posibles brechas de seguridad.
+!!! nota
+
+    Como Zentyal no permite IPv6, lo deshabilitamos para evitar posibles brechas de seguridad.
 
 A continuación una imagen con la configuración.
 
@@ -173,7 +175,9 @@ Para este recurso concreto, haremos 2 cosas:
         * **Env**: Production
         * **Host:** arthas.icecrown.es
 
-    **NOTA:** El host 'arthas.icecrown.es' será el nombre que le daré al servidor Zentyal.
+    !!! nota
+
+        El host 'arthas.icecrown.es' será el nombre que le daré al servidor Zentyal.
 
     ![Security Group tags](assets/images/aws/aws-15-vpc_securityGroup-3.png "Security Group tags")
 
@@ -266,7 +270,11 @@ Una vez que hemos creado todos los recursos anteriores en el servicio de EC2, pr
     * EBS para los emails de 10GB.
     * EBS para los directorios personales y los recursos compartidos de 10GB.
 * Habilitaré la monitorización avanzada ya que usaré AWS CloudWatch como sistema de monitorización.
-    * **NOTA:** Esta opción tiene un coste añadido, el cual se puede consultar [aquí](https://aws.amazon.com/cloudwatch/pricing/).
+
+    !!! warning
+
+         Esta opción tiene un coste añadido, el cual se puede consultar [aquí](https://aws.amazon.com/cloudwatch/pricing/).
+
 * Las opciones que configuraré y que suponen un coste mensual son:
     * Instance type.
     * Root volume.
@@ -323,7 +331,9 @@ Antes de proceder a crear los volúmenes adicionales, estableceremos las tags pa
 
 A continuación, creamos los volúmenes adicionales:
 
-  **NOTA:** Los volúmenes deberán estar en la misma zona de disponibilidad que la instancia, **eu-west-3a** en mi caso.
+!!! warning
+
+    Los volúmenes deberán estar en la misma zona de disponibilidad que la instancia, **eu-west-3a** en mi caso.
 
 **Para los buzones de correo:**
 

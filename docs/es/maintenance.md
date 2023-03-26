@@ -1,6 +1,6 @@
 # Mantenimiento
 
-En este documento explicaré algunas acciones a revisar periódicamente en el servidor Zentyal para confirmar su estabilidad.
+En esta página explicaré algunas acciones a revisar periódicamente en el servidor Zentyal para confirmar su estabilidad.
 
 ## Archivos de logs
 
@@ -24,11 +24,13 @@ A continuación un ejemplo de una búsqueda de warnings y errores en el log de Z
 egrep -i '(ERROR|WARN)>' /var/log/zentyal/zentyal.log
 ```
 
-**NOTA:** Los warning no suele ser relevantes.
+!!! info
+
+    Los warning no suele ser relevantes.
 
 El resultado de un warning inofensivo y un error:
 
-```sh
+```text
 2023/02/04 20:06:31 WARN> zentyal.psgi:43 Plack::Sandbox::_2fusr_2fshare_2fzentyal_2fpsgi_2fzentyal_2epsgi::__ANON__ - Argument "Icecrown-RC-" isn't numeric in numeric eq (==) at /usr/share/perl5/EBox/OpenVPN/Model/ServerConfiguration.pm line 572.
 
 2023/02/04 20:06:53 ERROR> MyDBEngine.pm:200 EBox::MyDBEngine::_connect - Connection DB Error: Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)
@@ -44,7 +46,7 @@ dpkg -l | egrep -v '^(ii|rc)'
 
 Un ejemplo de un sistema sin ningún paquete roto:
 
-```sh
+```text
 Desired=Unknown/Install/Remove/Purge/Hold
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
 |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
@@ -54,13 +56,13 @@ Desired=Unknown/Install/Remove/Purge/Hold
 
 ## Reporte del sistema
 
-Es conveniente generar un reporte del sistema una vez a la semana para ver el estado general del servidor y detectar posibles incidencias. El reporte se puede usando la CLI como se muestra a continuación:
+Es conveniente generar un reporte del sistema una vez a la semana para ver el estado general del servidor y detectar posibles incidencias. El reporte se puede generar usando la CLI como se muestra a continuación:
 
 ```sh
 /usr/share/zentyal/smart-admin-report > zentyal-report_12-02-2023
 ```
 
-A continuación algunas de las secciones más importantes del reporte que hay que revisar con detenimiento (**NOTA:** El resultado mostrado es el de un sistema en buen estado):
+A continuación algunas de las secciones más importantes del reporte que hay que revisar con detenimiento (**NOTA:** El resultado mostrado a continuación es de un sistema en buen estado):
 
 * **Disk usage** -> Espacio disponible en los discos.
 
@@ -94,7 +96,7 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
     Last update by Zentyal: 2023-02-122
     ```
 
-* **DNS users on DnsAdmins** -> El usuario especial del DNS existir y pertenecer al grupo especial del dominio llamado `DnsADmins`.
+* **DNS users on DnsAdmins** -> El usuario especial del módulo de DNS debe existir y pertenecer al grupo especial del dominio llamado `DnsADmins`.
 
     ```text
     dns-arthas

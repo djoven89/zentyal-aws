@@ -1,8 +1,10 @@
 # Monitorización
 
-En este documento configuraremos un sistema de monitorización para nuestro servidor Zentyal usando el servicio de AWS [Cloudwatch]. Además, también haremos uso del servicio de AWS SSM [Parameter Store] para alojar la configuración del agente de Cloudwatch en nuestro servidor y finalmente, el servicio AWS [SNS] para las notificaciones de las alertas.
+En esta página configuraremos un sistema de monitorización para nuestro servidor Zentyal usando el servicio de AWS [Cloudwatch]. Además, también haremos uso del servicio de AWS SSM [Parameter Store] para alojar la configuración del agente de Cloudwatch en nuestro servidor y finalmente, del servicio AWS [SNS] para las notificaciones de las alertas.
 
-La implementación de estos servicios tendrán un coste adicional mensual.
+!!! warning
+
+    La implementación de estos servicios tendrán un coste adicional mensual.
 
 [Cloudwatch]: https://docs.aws.amazon.com/es_es/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html
 [Parameter Store]: https://docs.aws.amazon.com/es_es/systems-manager/latest/userguide/systems-manager-parameter-store.html
@@ -12,26 +14,28 @@ La implementación de estos servicios tendrán un coste adicional mensual.
 
 Para notificar cualquier alerta que se dispare en CloudWatch haremos uso del servicio SNS, el cual enviará un email a una cuenta de correo. En mi caso, usaré la cuenta creada de `it.infra@icecrown.es`.
 
-1. Vamos a `SNS` y creamos un 'topic' llamado `Prod-Zentyal-Email-Alerting`:
+1. Vamos a `SNS` y creamos un *topic* llamado `Prod-Zentyal-Email-Alerting`:
 
     !["SNS topic creation"](assets/images/aws/monitoring-sns_topic.png "SNS topic creation")
     !["SNS topic creation"](assets/images/aws/monitoring-sns_topic-tags.png "SNS topic creation")
 
-2. Creamos una 'subscription' para la cuenta de correo que recibirá las notificaciones:
+2. Creamos una *subscription* para la cuenta de correo que recibirá las notificaciones:
 
     !["SNS topic creation"](assets/images/aws/monitoring-sns_subscription.png "SNS topic creation")
 
 3. Finalmente, esperamos a que nos llegue la invitación a la cuenta de correo para activar la suscripción.
 
-    **NOTA:** Al tener habilitado la lista gris, nos tardará en llegar unos minutos.
-
     !["SNS subscription confirmation"](assets/images/aws/monitoring-sns_confirmation.png "SNS subscription confirmation")
+
+    !!! nota
+
+        Al tener habilitado la lista gris, nos tardará en llegar unos minutos.
 
 ## SSM Parameter Store
 
-Para monitorizar los recursos del servidor Zentyal y el archivo principal de Zentyal con AWS Cloudwatch será necesario instalar y configurar un agente. El archivo de configuración en cuestión lo alojaremos en AWS SSM Parameter store en lugar del propio servidor.
+Para monitorizar los recursos del servidor Zentyal usaremos el servicio AWS Cloudwatch, cuyo archivo de configuración almacenaremos en SSM Parameter store.
 
-La configuración que tendrá el agente será:
+La configuración que especificaré será:
 
 * La ruta completa al parámetro se llamará `/zentyal/prod/cloudwatch-config`
 * El namespace en Cloudwatch se llamará `CWA-Prod-Zentyal`.
@@ -44,7 +48,9 @@ La configuración que tendrá el agente será:
 * Se monitorizará también el log `/var/log/zentyal/zentyal.log`, el cual tendrá una retención de 7 días.
 * El grupo de logs en CloudWatch se llamará `CWAL-Prod-Zentyal`.
 
-Para configuraciones adicionales o dudas, [aquí] tenemos la referencia.
+!!! info
+
+    Para añadir configuraciones adicionales o resolver dudas, [aquí] tenemos la referencia de la configuración.
 
 [aquí]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-Configuration-File-Details.html#CloudWatch-Agent-Configuration-File-Metricssection
 
@@ -52,7 +58,7 @@ A continuación se indican las acciones a realizar:
 
 1. Nos ubicamos en la región donde tenemos la instancia, que en mi caso es Paris.
 2. Vamos a `AWS Systems Manager -> Parameter Store -> Create parameter`.
-3. Configuramos el 'parámetro':
+3. Creamos el *parámetro*:
 
     !["Parameter store configuration"](assets/images/aws/monitoring-parameter_config.png "Parameter store configuration")
 
@@ -146,9 +152,8 @@ A continuación se indican las acciones a realizar:
     }
     ```
 
-5. Creamos el parámetro.
-6. Con el parámetro creado, crearemos una política de IAM que permita el acceso desde la instancia EC2 al parámetro recién creado. Para ello vamos a `IAM -> Policies`
-7. Creamos una política que tenga el siguiente contenido:
+5. Con el parámetro creado, crearemos una política de IAM que permita el acceso desde la instancia EC2 al parámetro recién creado. Para ello vamos a `IAM -> Policies`
+6. Creamos una política que tenga el siguiente contenido:
 
     ```json
     {
@@ -179,7 +184,7 @@ A continuación se indican las acciones a realizar:
 
     !["IAM policy for CloudWatch Agent"](assets/images/aws/monitoring-iam_cloudwatch.png "IAM policy for CloudWatch Agent")
 
-8. Creamos otra política que permita subir el archivo de log a Cloudwatch:
+7. Creamos otra política que permita subir el archivo de log a Cloudwatch:
 
     ```json
     {
@@ -204,13 +209,13 @@ A continuación se indican las acciones a realizar:
 
     !["IAM policy for CloudWatch Logs"](assets/images/aws/monitoring-iam_cloudwatch-logs.png "IAM policy for CloudWatch Logs")
 
-9. Creamos un rol donde asociaremos las políticas recién creadas y también, la existente llamada `CloudWatchAgentServerPolicy`. Para ello vamos a `IAM -> Roles`:
+8. Creamos un rol donde asociaremos las políticas recién creadas y también, la existente llamada `CloudWatchAgentServerPolicy`. Para ello vamos a `IAM -> Roles`:
 
     !["IAM role entity"](assets/images/aws/monitoring-iam_role-entity.png "IAM role entity")
     !["IAM role summary 1"](assets/images/aws/monitoring-iam_role-summary-1.png "IAM role summary 1")
     !["IAM role summary 2"](assets/images/aws/monitoring-iam_role-summary-2.png "IAM role summary 2")
 
-10. Finalmente, asociamos el rol recién creado a la instancia de Zentyal. Para ello vamos a `EC2 -> Actions -> Security -> Modify IAM role`:
+9. Finalmente, asociamos el rol recién creado a la instancia de Zentyal. Para ello vamos a `EC2 -> Actions -> Security -> Modify IAM role`:
 
     !["IAM role assign to EC2"](assets/images/aws/monitoring-iam_role-ec2.png "IAM role assign to EC2")
 
@@ -285,7 +290,7 @@ Una vez que tenemos el entorno de AWS listo, procederemos a instalar y configura
 
 ### Logs
 
-Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear un filtro de métrica que compruebe si el archivo de log contiene el evento `ERROR>`. La finalidad es poder enviar notificaciones a través de AWS SNS ante tales eventos.
+Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear un filtro de métrica que compruebe si el archivo de log contiene el evento `ERROR>`. La finalidad es poder crear una alerta que notifique vía email a través de AWS SNS cuando se produzca este tipo de eventos.
 
 1. Vamos a `CloudWatch -> Metric filters` y creamos el filtro:
 
@@ -298,26 +303,28 @@ Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear u
 
     !["CloudWatch filter metric"](assets/images/aws/monitoring-logs_metric-check.png "CloudWatch filter metric")
 
-    **NOTA:** El tipo de métrica mostrado en la imagen es de tipo `Number` como se puede ver en la parte superior.
+    !!! nota
+
+        El tipo de métrica mostrado en la imagen es de tipo `Number` como se puede ver en la parte superior.
 
 ### Dashboard
 
-Una vez confirmado el funcionamiento del sistema de monitorización, crearemos un dashboard que agrupe las métricas más importantes desde `CloudWatch -> Dashboard`. A continuación un ejemplo sencillo:
+Una vez confirmado el funcionamiento del sistema de monitorización, podremos crear un dashboard que agrupe las métricas más importantes desde `CloudWatch -> Dashboard`. A continuación un ejemplo sencillo:
 
 !["CloudWatch dashboard"](assets/images/aws/monitoring-dashboard.png "CloudWatch dashboard")
 
 ### Alertas
 
-La siguiente acción que configuraremos será las alertas. Las alertas que configuraremos se harán desde `CloudWatch -> All alarm` y serán las siguientes:
+Lo último que haremos sobre el sistema de monitorización será crear las alertas. Todas las alertas que configuraremos se harán desde `CloudWatch -> All alarm` y serán las siguientes:
 
 * **CPU:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **RAM:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **Disco de sistema:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.

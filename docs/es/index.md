@@ -2,7 +2,9 @@
 
 El objetivo principal de este proyecto es mostrar y explicar una configuración detallada, robusta, segura y monitorizada del despliegue de un servidor [Zentyal 7.0] en el proveedor cloud de Amazon [AWS] para un entorno de producción.
 
-**NOTA:** Es importante tener en cuenta que todo lo explicado en el proyecto es un **ejemplo** real de implementación, el cual puede usarse como base o guía para el diseño de vuestro propio entorno.
+!!! note
+
+    Es importante tener en cuenta que todo lo explicado en el proyecto es un **ejemplo** real de implementación, el cual puede usarse como base o guía para el diseño de vuestro propio entorno.
 
 [Zentyal 7.0]: https://zentyal.com/
 [AWS]: https://aws.amazon.com/es/what-is-aws/

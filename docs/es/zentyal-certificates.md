@@ -1,24 +1,24 @@
 # Certificados
 
-Zentyal por defecto uso certificados auto firmados para sus módulos, incluyendo el uso del módulo de CA. Esta situación provoca que se muestren warning como por ejemplo, usando clientes de correo o al acceder al webadmin o webmail. Es por esto que en este documento se mostrará como generar certificados reconocidos emitidos por Let's Encrypt.
+Zentyal por defecto uso certificados auto firmados para sus módulos, incluyendo el uso del módulo de CA. Esta situación provoca que se muestren warning como por ejemplo, usando clientes de correo o al acceder al webadmin o webmail. Es por esto que en esta página se mostrará como generar certificados reconocidos emitidos por Let's Encrypt.
 
 Las acciones que realizaré para el proyecto serán:
 
-1. Emitiré 2 certificados, teniendo uno de ellos un subdominio adicional:
-    * Módulo de webadmin: arthas.icecrown.es
-    * Módulo de correo y webmail: mail.icecrown.es y webmail.icecrown.es
+1. Emitiré 2 certificados, teniendo uno de ellos dos subdominios:
+    * Módulo de webadmin: `arthas.icecrown.es`
+    * Módulo de correo y webmail: `mail.icecrown.es` y `webmail.icecrown.es`
 2. Usaré el [challenge] de tipo HTTP.
-3. Usaré la cuenta de correo 'it.infra@icecrown.es' como cuenta de correo para la recepción de notificaciones.
+3. Usaré la cuenta de correo `it.infra@icecrown.es` como cuenta de correo para la recepción de notificaciones por parte de Let's Encrypt.
 
 [challenge]: https://letsencrypt.org/docs/challenge-types/
 
 A continuación se indican las acciones a realizar antes de proceder a la generación de los certificados.
 
-1. Instalaremos el paquete necesario para la generación de los certificados:
+1. Instalamos los paquetes necesarios para la generación de los certificados:
 
     ```bash
     sudo apt update
-    sudo apt install -y certbot
+    sudo apt install -y certbot python3-certbot-apache
     ```
 
 2. Creamos una regla temporal en el firewall de Zentyal como en el security group de AWS que permita el protocolo HTTP para que el certificado pueda expedirse:
@@ -29,7 +29,9 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
     Para el security group de AWS:
     ![Firewall rule in AWS](assets/images/zentyal/certificates_firewall-aws.png "Firewall rule in AWS")
 
-    **NOTA:** Podremos eliminar esta regla una vez hayamos emitidos los certificados o la mantendremos para evitar tener que volver a establecerla cuando toque la renovación de los certificados.
+    !!! nota
+
+        Podremos eliminar esta regla una vez hayamos emitidos los certificados o la mantendremos para evitar tener que volver a establecerla cuando toque la renovación de los certificados.
 
 3. Creamos la cuenta de correo que recibirá las notificaciones:
 
@@ -115,14 +117,7 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 
 Para generar el certificado para el **Webadmin (panel de administración)** usaremos el paquete `python3-certbot-apache` en lugar de `python3-certbot-nginx` debido a que Zentyal ejecuta Nginx de forma personalizada, lo que provoca errores a la hora de generar certificados.
 
-1. Instalamos el paquete `python3-certbot-apache`:
-
-    ```sh
-    sudo apt update
-    sudo apt install -y python3-certbot-apache
-    ```
-
-2. Generaremos el certificado:
+1. Generaremos el certificado:
 
     ```bash
     sudo certbot certonly \
@@ -160,19 +155,19 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     Donating to EFF:                    https://eff.org/donate-le
     ```
 
-3. Con el certificado generado, tendremos que modificar una plantilla de configuración ([stub](https://doc.zentyal.org/en/appendix-c.html#stubs)) del módulo, para que dicho cambio sea persistente ante futuras actualizaciones del módulo por parte de Zentyal. Para ello, crearemos los directorios necesarios:
+2. Con el certificado generado, tendremos que modificar la plantilla de configuración ([stub]) del módulo, para que dicho cambio sea persistente ante futuras actualizaciones del módulo por parte de Zentyal. Para ello, crearemos los directorios necesarios:
 
     ```bash
     sudo mkdir -vp /etc/zentyal/stubs/core
     ```
 
-4. Copiaremos la plantilla a modificar:
+3. Copiamos la plantilla a modificar:
 
     ```bash
     sudo cp -v /usr/share/zentyal/stubs/core/nginx.conf.mas /etc/zentyal/stubs/core/
     ```
 
-5. Modificaremos en la plantilla recién copiada los siguientes parámetros de configuración:
+4. Modificamos en la plantilla recién copiada los siguientes parámetros de configuración:
 
     ```text
     ## Custom certificates issued on 18-02-2023 by Daniel
@@ -182,7 +177,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     ssl_certificate_key /etc/letsencrypt/live/arthas.icecrown.es/privkey.pem;
     ```
 
-6. Opcionalmente, también modificaré los siguientes parámetros de configuración, cuyo valores ha han sido generados desde [esta](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
+5. Opcionalmente, también modificaré los siguientes parámetros de configuración, cuyo valores ha han sido generados desde [esta](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
 
     ```text
     ## Custom configuration applied on 18-02-2023 by Daniel
@@ -195,7 +190,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     ssl_prefer_server_ciphers off;
     ```
 
-7. Paramos el módulo del Webadmin, recargaremos Systemd y volvemos a iniciarlo para aplicar estos cambios:
+6. Paramos el módulo del Webadmin, recargaremos Systemd y volvemos a iniciarlo para aplicar estos cambios:
 
     ```bash
     sudo zs webadmin stop
@@ -203,22 +198,17 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     sudo zs webadmin restart
     ```
 
-8. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
+7. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
 
     ![Webadmin certificate verification](assets/images/zentyal/certificate-webadmin_login.png "Webadmin certificate verification")
 
+[stub]: https://doc.zentyal.org/en/appendix-c.html#stubs
+
 ## Mail y Webmail
 
-Para los módulos **Mail** y **Webmail** usaré el mismo certificado, es decir, el certificado será emitido con 2 subdominios en lugar de 1. Igual que para el módulo de webadmin, usaré el paquete `python3-certbot-apache`.
+Para los módulos **Mail** y **Webmail** usaré el mismo certificado, es decir, el certificado será emitido con 2 subdominios en lugar de 1.
 
-1. Instalamos el paquete `python3-certbot-apache`:
-
-    ```sh
-    sudo apt update
-    sudo apt install -y python3-certbot-apache
-    ```
-
-2. Generaremos el certificado:
+1. Generaremos el certificado:
 
     ```bash
     sudo certbot certonly \
@@ -342,7 +332,7 @@ Las acciones a realizar son:
     sudo zs mail restart
     ```
 
-6. Finalmente, confirmaremos que ambos servicios están usando correctamente el nuevo certificado. Para realizar dicha acción, podremos usar cliente de correo como Thunderbird o el comando `openssl` como será mi caso:
+6. Finalmente, confirmamos que ambos servicios están usando correctamente el nuevo certificado. Para realizar dicha acción, podremos usar cliente de correo como Thunderbird o el comando `openssl` como será mi caso:
 
     ```bash
     openssl s_client -starttls smtp -showcerts -connect mail.icecrown.es:465 -servername mail.icecrown.es

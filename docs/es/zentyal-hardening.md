@@ -1,6 +1,6 @@
 # Hardening
 
-En esta documentación se realizarán una serie de implementaciones en varios módulos cuya finalidad es incrementar su seguridad.
+En esta página se realizarán una serie de implementaciones en varios módulos cuya finalidad es incrementar su seguridad.
 
 Los módulos sobre los que aplicarán estas mejoras son:
 
@@ -18,9 +18,7 @@ Las configuraciones adicionales de seguridad que se implementarán en el módulo
 
 Vamos a establecer unas políticas de contraseñas mediante el comando `samba-tool domain passwordsettings` para los usuarios del dominio, de esta forma, reduciremos la posibilidad de que se usen contraseñas débiles.
 
-Mencionar adicionalmente que a partir de Samba 4.9 es posible definir políticas de contraseña más particulares como se explican en [este] enlace, no obstante, usar esta funcionalidad tiene un aumento de recursos, por lo que en mi caso concreto no haré uso de ella.
-
-[este]: (https://wiki.samba.org/index.php/Password_Settings_Objects)
+Mencionar adicionalmente que a partir de Samba 4.9 es posible definir políticas de contraseña más particulares como se explican en [este](https://wiki.samba.org/index.php/Password_Settings_Objects) enlace, no obstante, usar esta funcionalidad tiene un aumento de recursos tal y como se menciona en el enlace, por lo que en mi caso concreto no haré uso de eas funcionalidad concreta.
 
 Las políticas que definiré serán:
 
@@ -28,9 +26,9 @@ Las políticas que definiré serán:
 * Estableceré un mínimo de 8 los caracteres que deberán tener las contraseñas.
 * Una contraseña tendrá una vigencia máxima de 6 meses.
 
-Las acciones a realizar son:
+A continuación las acciones a realizar para aplicar dichas políticas:
 
-1. Verificamos las políticas por defecto:
+1. Verificamos las políticas en uso configuradas por defecto:
 
     ```sh
     sudo samba-tool domain passwordsettings show
@@ -185,7 +183,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 [DKIM]: https://www.dmarcanalyzer.com/es/dkim-3/
 
-1. Instalamos el paquete necesario para la implementación de DKIM:
+1. Instalamos los paquetes necesarios para la implementación de DKIM:
 
     ```bash
     sudo apt update
@@ -198,7 +196,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
     sudo mkdir -vp /etc/opendkim/keys
     ```
 
-3. Generamos la clave privada que será usada para firmar los correos electrónicos y como selector le daremos `mail`:
+3. Generamos la clave privada que será usada para firmar los correos electrónicos y establecemos como `mail`:
 
     ```bash
     sudo opendkim-genkey -s mail -d icecrown.es -D /etc/opendkim/keys
@@ -303,6 +301,10 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
     !["DNS record for DKIM in Route53"](assets/images/zentyal/mail-dkim_route53.png "DNS record for DKIM in Route53")
 
+    !!! warning
+
+        Deberemos de prestar atención a las comillas a la hora de crear el registro TXT.
+
 13. Comprobamos la resolución del nuevo registro tanto interna como externamente:
 
     ```bash
@@ -393,7 +395,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 ### DMARC
 
-La última implementación que realizaremos será [DMARC]. Este mecanismo de autenticación se integrará con SPF y DKIM, por lo que será necesario implementarlos previamente.
+La última implementación que realizaremos será [DMARC]. Este mecanismo de autenticación se integrará con SPF y DKIM, por lo que será necesario haberlos implementarlo previamente.
 
 [DMARC]: https://www.dmarcanalyzer.com/es/dmarc-3/
 
@@ -485,7 +487,8 @@ Por defecto, es posible obtener la versión de Ubuntu y Apache que usa el servic
 1. Modificamos los siguientes parámetros de configuración del archivo `/etc/apache2/conf-enabled/security.conf` para reducir la información del servicio:
 
     ```sh
-    sed -i -e 's/^ServerSignature.*/ServerSignature Off/' \
+    sed -i \
+        -e 's/^ServerSignature.*/ServerSignature Off/' \
         -e 's/^ServerTokens.*/ServerTokens Prod/' \
         /etc/apache2/conf-enabled/security.conf
     ```

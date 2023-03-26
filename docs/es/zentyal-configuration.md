@@ -1,6 +1,8 @@
 # Configuración de Zentyal
 
-En este documento se abordará la configuración del servidor Zentyal para que actúe como servidor de correo y compartición de ficheros.
+En esta página se abordará la configuración del servidor Zentyal para que actúe como servidor de correo y compartición de ficheros.
+
+## Objetivos
 
 Las objetivos que se realizarán serán:
 
@@ -30,7 +32,7 @@ Al término de este documento, el servidor Zentyal quedará listo para usarse, a
 
 ## Configuración opcional
 
-En esta sección se realizarán las configuraciones opcionales sobre el servidor Zentyal, por lo que se puede omitir e ir a la sección `Configuración previa`.
+En esta sección se realizarán diversas configuraciones opcionales sobre el servidor Zentyal, por lo que se puede omitir e ir a la sección 'Configuración previa'.
 
 ### Snap
 
@@ -153,10 +155,10 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
     El resultado que deberíamos obtener es:
 
-    ```sh
+    ```text
     ## Comando 'swapon'
-    Filename				Type		Size	Used	Priority
-    /swapfile1                             	file    	4194300	0	-2
+    Filename				Type		Size	  Used	  Priority
+    /swapfile1             	file    	4194300	     0	        -2
 
     ## comando 'free'
                     total        used        free      shared  buff/cache   available
@@ -180,7 +182,9 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi caso para los buzones de correo y recursos compartidos -, procederemos a configurarlos y montarlos en el servidor.
 
-**NOTA:** Para el punto de montaje de los recursos compartidos, podría usar `/home/samba/` en lugar de `/home/`. El motivo es que si un usuario quiere almacenar información en su directorio compartido personal (letra '*H*' por defecto), ésta información no se almacenaría en el volumen EBS adicional, ya que los directorios personales se crean en `/home/` y no en `/home/samba/`.
+!!! nota
+
+    Para el punto de montaje de los recursos compartidos, se podría usar `/home/samba/` en lugar de `/home/`. No obstante, usando `/home/samba/` los directorios personales de los usuarios del dominio (compartidos en letra '*H*' por defecto) no quedarían almacenados en el volumen EBS.
 
 1. Listamos los volúmenes con el comando:
 
@@ -190,7 +194,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```sh
+    ```text
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
         nvme0n1      259:1    0   30G  0 disk
@@ -208,7 +212,9 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     done
     ```
 
-    **NOTA:** '8e' estable como etiqueta 'Linux' a la partición.
+    !!! info
+
+        '8e' estable como etiqueta 'Linux' a la partición.
 
 3. Revisamos que se hayan creado las particiones correctamente:
 
@@ -218,7 +224,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```sh
+    ```text
         NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
         nvme1n1      259:0    0   10G  0 disk
         └─nvme1n1p1  259:7    0   10G  0 part
@@ -246,7 +252,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```sh
+    ```text
         NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
         nvme1n1
         └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
@@ -264,7 +270,25 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     sudo mkdir -v -m0775 /var/vmail
     ```
 
-7. Obtenemos el identificador (UUID) de los volúmenes:
+7. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
+
+    ```sh
+    sudo mount /dev/nvme2n1p1 /mnt
+    ```
+
+8. Copiamos el contenido del directorio `/home/` al directorio temporal donde hemos montado el volumen EBS:
+
+    ```sh
+    sudo cp -aR /home/* /mnt/
+    ```
+
+9. Desmontamos el volumen EBS:
+
+    ```sh
+    sudo umount /mnt
+    ```
+
+10. Obtenemos el identificador (UUID) de los volúmenes:
 
     ```sh
     sudo sudo blkid | egrep "nvme[12]n1p1"
@@ -277,25 +301,9 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
 
-    **NOTA:** Recordad que el volumen para los mailboxes fue montado primero, por lo que su punto de montaje es `/dev/nvme1n1p1`.
+    !!! warning
 
-8. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
-
-    ```sh
-    sudo mount /dev/nvme2n1p1 /mnt
-    ```
-
-9. Copiamos el contenido del directorio `/home/` al directorio temporal donde hemos montado el volumen EBS:
-
-    ```sh
-    sudo cp -aR /home/* /mnt/
-    ```
-
-10. Desmontamos el volumen EBS:
-
-    ```sh
-    sudo umount /mnt
-    ```
+        Recordad que el volumen para los mailboxes fue montado primero, por lo que su punto de montaje es `/dev/nvme1n1p1`.
 
 11. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
 
@@ -307,9 +315,11 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90 /home ext4 defaults,noexec,nodev,nosuid 0 2
     ```
 
-    **NOTA:** Tendréis que cambiar el valor del parámetro `UUID` por vuestro valor obtenido en el paso 7.
+    !!! warning
 
-12. Montamos los volúmenes manualmente para verificar que no hay errores de sintaxis en el archivo del paso anterior:
+        Tendréis que cambiar el valor del parámetro `UUID` por vuestro valor obtenido en el paso 7.
+
+12. Montamos los volúmenes para verificar que no hay errores de sintaxis en el archivo del paso anterior:
 
     ```sh
     sudo mount -a
@@ -344,11 +354,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 ### Quota
 
-Como Zentyal nos permite establecer quotas para limitar el uso de información que un usuario del dominio puede almacenar en el servidor, así como para el tamaño máximo del buzón de correo, es necesario instalar una serie de paquetes y habilitar su uso en el disco.
+Para poder hacer uso de las quotas que Zentyal permite establecer para limitar el uso de información que un usuario del dominio puede almacenar en el servidor, así como para el tamaño máximo del buzón de correo, es necesario instalar una serie de paquetes y habilitar su uso en el disco.
 
-**NOTA:** No es necesario habilitar la quota en el disco que contiene los buzones de correo, ya que se gestionan de otra forma, por lo tanto, sólo la habilitaremos para el disco duro que contiene el punto de montaje `/home/`.
+!!! nota
 
-1. Instalamos los siguientes paquetes requeridos para instances en AWS:
+    No es necesario habilitar la quota en el disco que contiene los buzones de correo, ya que Zentyal las gestiona de otra forma.
+
+1. Instalamos los siguientes paquetes requeridos para instancias de AWS:
 
     ```sh
     sudo apt update
@@ -362,7 +374,9 @@ Como Zentyal nos permite establecer quotas para limitar el uso de información q
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
 
-    **NOTA:** Las opciones añadidas son: `usrjquota`, `grpjquota` y `jqfmt`.
+    !!! info
+
+        Las opciones añadidas han sido: `usrjquota`, `grpjquota` y `jqfmt`.
 
 3. Reiniciamos el servidor para que nos cargue el último kernel y podamos habilitar de forma seguridad las quotas:
 
@@ -390,14 +404,14 @@ Como Zentyal nos permite establecer quotas para limitar el uso de información q
 
     El resultado que he obtenido en mi caso ha sido:
 
-    ```sh
+    ```text
     quotacheck: Scanning /dev/nvme1n1p1 [/home] done
     quotacheck: Checked 8 directories and 18 files
     ```
 
 ## Configuración de los módulos
 
-En esta sección se instalarán los módulos de Zentyal, configurarán y comprobarán.
+A partir de este momento, ya podremos instalar, configurar y comprobar los módulos de Zentyal.
 
 ### General
 
@@ -409,13 +423,15 @@ Lo primero de todo que debemos hacer es configurar la base de Zentyal desde el m
 
 2. Después, desde el mismo panel, establecemos el nombre del servidor y el dominio:
 
-    **NOTA:** En el momento que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
-
     ![Configuration of FQDN and domain](assets/images/zentyal/06-general-2.png "Configuration of FQDN and domain")
+
+    !!! warning
+
+        En el momento en que habilitemos el módulo de controlador de dominio, estos 2 valores no podrán cambiar.
 
 ### Módulo de Logs
 
-Inicialmente, habilitaremos los dos 'dominios' que hay disponibles, cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores:
+Inicialmente, habilitaremos los '*dominios*' que hay disponibles, cambiaremos el tiempo de retención a 30 días para el firewall y 90 para los cambios del panel de administración así como login de los administradores:
 
 ![Initial log configuration](assets/images/zentyal/logs_initial.png "Initial log configuration")
 
@@ -437,7 +453,8 @@ Quedando como resultado las siguientes reglas:
 **Consideraciones:**
 
 1. Es importante que la nueva regla vaya por encima de la regla que acepta la conexión SSH, de lo contrario nunca se ejecutará, ya que cuando una regla se cumple, no se siguen analizando el resto.
-2. Recordad que a parte de este firewall, también tenemos el de AWS (Security Group asociado a la instancia), por lo que tendremos que asegurarnos que ambos firewall tienen las mismas reglas, aunque también se podría configurar en uno de ellos que se permita todo y que el otro se haga cargo de las reglas.
+2. Recordad que a parte de este firewall, también tenemos el de AWS (Security Group asociado a la instancia), por lo que tendremos que asegurarnos que ambos firewall tienen las mismas reglas.
+3. Se podría configurar en el firewall de Zentyal que permita todo el tráfico y después, desde el security group ser más restrictivo, o viceversa, no obstante, es recomendable configurar ambos por igual.
 
 ### Módulo de Software
 
@@ -445,19 +462,23 @@ Con la finalidad de tener nuestro servidor actualizado, habilitaremos y establec
 
 1. Desde el menú `Software Management -> Settings`, establecemos las configuraciones de las actualizaciones automáticas:
 
-    **NOTA:** Es conveniente que la hora sea posterior a posibles snapshots del servidor, así tenemos un punto de restauración estable en caso de incidencia crítica causado por la actualización de un paquete.
-
     ![Automatic software updates](assets/images/zentyal/software_automatic-updates.png "Automatic software updates")
+
+    !!! nota
+
+        Es altamente recomendable establecer una hora que sea posterior a las copias de seguridad del servidor como snapshots, así tenemos un punto de restauración estable en caso de que una actualización cause una incidencia crítica.
 
 2. Después, desde el menú `Software Management -> Zentyal Components` procederemos a instalar **únicamente** los módulos que vamos a usar:
 
     ![Modules installation](assets/images/zentyal/software_installation.png "Modules installation")
 
-    **IMPORTANTE:** Tras instalarse los módulos, se crearán automáticamente múltiples reglas en la sección `Filtering rules from internal networks to Zentyal` del firewall para permitir el accesos a estos módulos.
+    !!! info
+
+        Tras instalarse los módulos, se crearán automáticamente múltiples reglas en la sección `Filtering rules from internal networks to Zentyal` del firewall para permitir el accesos a estos módulos.
 
 ### Módulo de NTP
 
-El primero de los módulos recién instalado que vamos a configurar es [NTP], en el estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente donde está ubicado el servidor.
+El primero de los módulos recién instalado que vamos a configurar es [NTP], en él estableceremos la zona horaria y los servidores NTP oficiales más próximos geográficamente donde está ubicado el servidor.
 
 [NTP]: https://doc.zentyal.org/es/ntp.html
 
@@ -479,29 +500,29 @@ El primero de los módulos recién instalado que vamos a configurar es [NTP], en
 
 ### Módulo de DNS
 
-El siguiente módulo que procederemos a configurar será el [DNS], el cual es crítico para el funcionamiento del módulo de controlador de dominio y por dependencia, el de correo también.
+El siguiente módulo que procederemos a configurar será el [DNS], el cual es crítico para el funcionamiento del módulo de controlador de dominio y por dependencia, también el de correo.
 
 [DNS]: https://doc.zentyal.org/es/dns.html
 
 La configuración que estableceremos será mínima, ya que la gestión de los registros DNS la gestionaremos desde el panel de administración donde tenemos contratado el dominio - Route 53 en mi caso -.
 
-1. Creamos el dominio, el cual debe ser el mismo que el que configuramos inicialmente desde `System -> General`. Para ello, desde el menú lateral seleccionamos `DNS`:
+1. Creamos el dominio, el cual debe coincidir con el creado en `System -> General`. Para ello, desde el menú lateral seleccionamos `DNS`:
 
     ![DNS new domain](assets/images/zentyal/dns-new_domain.png "DNS new domain")
 
-2. Después, comprobaremos que la IP del servidor se haya creado con éxito al dominio, para ello vamos al campo `Domain IP Addresses` del dominio recién creado:
+2. Después, comprobamos que la IP del servidor se haya registrado con éxito al dominio, para ello vamos al campo `Domain IP Addresses` del dominio recién creado:
 
     ![DNS domain record](assets/images/zentyal/dns-domain_record.png "DNS domain record")
 
-3. Lo siguiente que revisaremos será que la IP del nombre del servidor también haya sido creado con éxito. En este caso, el campo es `Hostnames -> IP Address`:
+3. También revisamos que la IP se haya registrado para el nombre del servidor. En este caso, el campo es `Hostnames -> IP Address`:
 
     ![DNS hostname record](assets/images/zentyal/dns-hostname_record.png "DNS hostname record")
 
-4. A continuación, crearemos los registros adicionales de tipo alias desde `Hostnames -> Alias`. En mi caso, crearé dos registros relativos al correo: `mail` y `webmail`.
+4. A continuación, creamos los registros adicionales de tipo alias desde `Hostnames -> Alias`. En mi caso, crearé dos registros relativos al correo: `mail` y `webmail`.
 
     ![DNS alias records](assets/images/zentyal/dns-alias.png "DNS alias records")
 
-5. Los servidores DNS forwarders que estableceré en mi caso serán los de [Cloudflare] y [Quad9]:
+5. Establecemos los servidores DNS forwarders, que en caso serán los de [Cloudflare] y [Quad9]:
 
     ![DNS forwarders](assets/images/zentyal/dns-forwarders.png "DNS forwarders")
 
@@ -509,7 +530,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     ![DNS enable](assets/images/zentyal/modules_dns.png "DNS enable")
 
-7. Finalmente, comprobaremos que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
+7. Finalmente, comprobamos que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
 
     ```sh
     ## Para el dominio
@@ -766,7 +787,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![DC enable](assets/images/zentyal/modules_dc.png "DC enable")
 
-5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio provisionado, comprobaremos que la estructura por defecto se creó con éxito. Para ello, vamos a `Users and Computers -> Manage`:
+5. Una vez que el módulo haya sido guardado y por ende, el controlador de dominio aprovisionado, comprobamos que la estructura de objetos por defecto se creó con éxito. Para ello, vamos a `Users and Computers -> Manage`:
 
     ![DC default structure](assets/images/zentyal/dc-default_structure.png "DC default structure")
 
@@ -778,7 +799,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
 Teniendo configurado el módulo de controlador de dominio, ya podremos configurar el módulo de [correo], ya que por dependencia requiere que el anterior esté habilitado previamente. En mi caso concreto, estableceré las siguientes configuraciones opcionales:
 
-* El usuario postmaster será 'postmaster@icecrown.es'.
+* El usuario postmaster será `postmaster@icecrown.es`.
 * Estableceré 1GB como quota por defecto para los buzones de correo.
 * El tamaño máximo de un mensaje aceptado será de 25MB.
 * Los emails eliminados en los buzones será purgados automáticamente pasados 90 días.
@@ -786,7 +807,7 @@ Teniendo configurado el módulo de controlador de dominio, ya podremos configura
 * La sincronización de cuentas de correo external mediante Fetchmail se harán cada 5 minutos.
 * Únicamente se permitirá los protocolos IMAPS y POP3S.
 * Fetchmail y Sieve estarán deshabilitados, ya que inicialmente no los usaré.
-* Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvío de los emails y 30 días como periodo de borrado de borrado de entradas.
+* Se habilitará la lista gris, además, se reducirán a 24 horas para el reenvío de los emails y 30 días como periodo de borrado.
 
 [correo]: https://doc.zentyal.org/es/mail.html
 
@@ -892,7 +913,9 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird setup server](assets/images/zentyal/mail-thunderbird_server.png "Thunderbird setup server")
 
-    **NOTA:** Hay que cambiar el tipo de autenticación a '**Normal password**', de lo contrario fallará la autenticación.
+    !!! warning
+
+        Hay que cambiar el tipo de autenticación a '**Normal password**', de lo contrario fallará la autenticación.
 
 3. Tras confirmar la configuración, nos saldrá el siguiente mensaje de advertencia por el certificado, el cual es normal, ya que es un certificado auto-firmado por Zentyal:
 
@@ -902,7 +925,11 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
     ![Thunderbird login](assets/images/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
-5. Enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo. Cuando tratemos de enviar el mensaje, recibiremos un error debido a que el certificado es autofirmado, por lo que tendremos que hacerlo también.
+5. Enviamos un email de prueba a nosotros mismos y otro a una cuenta externa para confirmar el funcionamiento del módulo.
+
+    !!! nota
+
+        Cuando tratemos de enviar el mensaje, volveremos a recibir un error debido a que el certificado es auto-firmado, por lo que tendremos que hacerlo también.
 
     ![Thunderbird sending error](assets/images/zentyal/mail-thunderbird_sending-error-1.png "Thunderbird sending error")
 
@@ -929,19 +956,21 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
     Feb 17 07:02:42 ip-10-0-1-200 postfix/qmgr[24894]: 958BDFEEFC: removed
     ```
 
-    **NOTA:** Como se puede ver, el status es `sent` para ambos emails.
+    !!! success
 
-Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, habrá otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
+        Como se puede ver, el status de ambos emails es `sent`.
 
-Mencionar también que si el servidor lo instalasteis en el proveedor cloud AWS, recordad que por defecto Amazon no permite enviar emails (revisar la última sección del apartado 'AWS').
+Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, hay otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
+
+Mencionar también que si el servidor está instalado en el proveedor cloud AWS, por defecto no se permite enviar emails (revisar la última sección del apartado 'AWS').
 
 ### Módulo de Webmail
 
-El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permitirá gestionar nuestra cuenta de correo y el cambio de contraseña del usuario en cuestión, desde un navegador web sin necesidad de usar un cliente de correo.
+El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permitirá gestionar nuestra cuenta de correo desde un navegador web . Además, desde el webmail un usuario podrá cambiar su contraseña.
 
 [Webmail]: https://doc.zentyal.org/es/mail.html#cliente-de-webmail
 
-1. Habilitamos el protocolo [ActiveSync] desde `Mail -> ActiveSync`:
+1. Habilitamos el protocolo [ActiveSync] desde `Mail -> ActiveSync` por si los usuarios quieren sincronizar sus dispositivos móviles:
 
     ![Webmail ActiveSync](assets/images/zentyal/webmail-activesync.png "Webmail ActiveSync")
 
@@ -951,19 +980,23 @@ El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permiti
 
 3. Comprobamos que podemos acceder a la página de login desde un navegador web con la URL: <https://arthas.icecrown.es/SOGo>:
 
-    **NOTA:** Nos mostrará un mensaje de advertencia por el certificado que usa el servicio, el cual eso auto-firmado:
+    !!! warning
+
+        Nos mostrará un mensaje de advertencia por el certificado que usa el servicio, lo cual es normal ya que es auto-firmado.
 
     ![Webmail unsafe message](assets/images/zentyal/webmail-access_unsafe.png "Webmail unsafe message")
 
-4. Una vez permitido el acceso a pesar del mensaje de advertencia, deberíamos de ver el login del Webmail:
+4. Una vez aceptada la excepción, deberemos poder visualizar la página de login:
 
     ![Webmail login webpage](assets/images/zentyal/webmail-access_login.png "Webmail login webpage")
 
-5. Nos logeamos con el usuario de prueba para confirmar que la autenticación funciona correctamente:
+5. Nos logeamos con el usuario de prueba para confirmar que la autenticación funciona correctamente y que podemos ver nuestro buzón:
 
     ![Webmail user login](assets/images/zentyal/webmail-access_user.png "Webmail user login")
 
-    **NOTA:** Si no vemos el buzón de correo, es posible que estemos experimentando un bug en el código. Ver el documento `bug fixing`.
+    !!! warning
+
+        Si no vemos el buzón de correo, es posible que estemos experimentando un bug existente, el cual se produce cuando no se tiene configurado los protocolos no seguros de correo y el certificado usado es auto-firmado. Para solucionarlo, ver en el apartado 'Webmail -> IMAPS' de la página 'bug fixing'.
 
 6. Finalmente, tratamos de enviar otro email a nosotros mismos para verificar la integración con el módulo de correo:
 
@@ -973,12 +1006,12 @@ El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permiti
 
 Llegados a este punto, el módulo es totalmente funcional, no obstante, estableceré las siguientes configuraciones opcionales:
 
-* Habilitaré la opción de mensajes automáticos para las vacaciones, ya que por defecto está deshabilitado.
+* Habilitaré la opción de mensajes automáticos para las vacaciones, ya que por defecto está deshabilitada.
 * Estableceré inicialmente a 8 el número de workers (procesos) que usará el módulo.
 
 A continuación las acciones a realizar para aplicar las configuraciones opcionales:
 
-1. Creamos el directorio que hará de los cambios sobre las plantillas de configuración (stubs) sean permanentes para el módulo:
+1. Creamos el directorio que hará de los cambios sobre las plantillas de configuración (stubs) sean persistentes ante actualizaciones del módulo:
 
     ```sh
     sudo mkdir -vp /etc/zentyal/stubs/sogo
@@ -1038,7 +1071,7 @@ A continuación las acciones a realizar para aplicar las configuraciones opciona
 
 ### Módulo de Antivirus
 
-El siguiente módulo que configuraremos será el [Antivirus]. Si bien es cierto que este módulo consume mucha RAM, es necesario para el análisis de los emails que gestiona el módulo de correo.
+El siguiente módulo que configuraremos será el [Antivirus]. Si bien es cierto que este módulo consume mucha RAM, es necesario para el análisis de los emails que gestiona el módulo de mailfilter.
 
 [Antivirus]: https://doc.zentyal.org/es/antivirus.html
 
@@ -1069,16 +1102,16 @@ En caso de usar una versión comercial, tendremos las siguientes funcionalidades
 
 ### Módulo de Mailfilter
 
-Tras tener habilitado el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre el servicio de correo de la organización.
+Tras habilitar el Antivirus, procederemos a configurar el módulo de [Mailfilter], el cual nos va a permitir incrementar considerablemente la seguridad sobre el servicio de correo de la organización.
 
 La configuración que aplicaré será:
 
-* Usaré la cuenta de correo 'issues@icecrown.es' para las notificaciones de correos problemáticos.
+* Usaré la cuenta de correo `issues@icecrown.es` para las notificaciones de correos problemáticos.
 * Estableceré en 5 el umbral de emails considerados SPAM.
-* También estaré a 5 el umbral de auto-learn.
+* También estableceré a 5 el umbral de auto-learn.
 * El dominio lo añadiré a la lista gris.
 * Salvo la política de cabeceras incorrectas, el resto serán denegadas.
-* Deshabilitaremos ciertas extensiones que pueden ocasionar distintos vectores de ataque.
+* Deshabilitaré ciertas extensiones que pueden suponer un riesgo de seguridad.
 
 [Mailfilter]: https://doc.zentyal.org/es/mailfilter.html
 
@@ -1096,7 +1129,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mailfilter Antispam configuration](assets/images/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
 
-4. Añadimos nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
+4. Opcionalmente, podemos añadir nuestro dominio a la lista blanca para que no sea procesado por el módulo de Mailfilter:
 
     ![Mailfilter whitelist](assets/images/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
 
@@ -1197,7 +1230,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mail confirmation](assets/images/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
-Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratarán en el documento llamado `Hardening`. Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra parte del proyecto, concretamente en el documento `Certificados`.
+Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratan en la página `Hardening`. Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra página del proyecto, concretamente en `Certificados`.
 
 ### Módulo de CA
 
@@ -1209,7 +1242,9 @@ Para poder hacer uso del módulo de OpenVPN, necesitaremos configurar previament
 
 2. Finalmente, guardamos cambios para que se cree nuestra CA.
 
-    **NOTA** Este módulo no tiene posibilidad de '*habilitarse*' como el resto.
+    !!! info
+
+        Este módulo no tiene posibilidad de '*habilitarse*' como el resto.
 
 Adicionalmente, es posible emitir certificados para los módulos que estamos usando con el CommonName correctos, no obstante, como vamos a emitir certificados reconocidos a través de Let's Encrypt, no haremos uso de tal funcionalidad. De querer usarse, habría que ir a `Certificate Authority -> Services` como se indica a continuación:
 
@@ -1226,7 +1261,7 @@ El último módulo que configuraremos será el de [OpenVPN]. La finalidad de usa
 Las configuraciones que estableceré serán:
 
 * Como medida de seguridad adicional, únicamente se permitirá el acceso usando certificados cuyo CommonName tengan el prefijo: `Icecrown-RC-`.
-* El certificado usado como prefijo para la conexión VPN, tendrá una validez de 120 días. **NOTA:** Definiendo ese valor nos forzará a tener que realizar tareas de mantenimiento cada 4 meses.
+* El certificado usado como prefijo para la conexión VPN, tendrá una validez de 120 días. No obstante, hay que tener en cuenta que definiendo ese valor nos forzará a tener que realizar tareas de mantenimiento cada 4 meses.
 * Se usará un puerto y dirección VPN distintas al por defecto.
 
 A continuación las acciones a realizar para configurar el módulo:
@@ -1257,7 +1292,9 @@ A continuación las acciones a realizar para configurar el módulo:
     ![OpenVPN network service](assets/images/zentyal/vpn-service-1.png "OpenVPN network service")
     ![OpenVPN network service port](assets/images/zentyal/vpn-service-2.png "OpenVPN network service port")
 
-    **NOTA:** Recordad que el protocolo es **UDP**.
+    !!! warning
+
+        Recordad que el protocolo es **UDP**.
 
 7. Finalmente, creamos una regla en el firewall de Zentyal que permita la conexión y guardamos cambios:
 
@@ -1282,7 +1319,9 @@ Con el módulo ya configurado, creamos un certificado, usuario y recurso compart
 
 5. Descargamos un bundle con la configuración de la conexión VPN para el cliente, para ello vamos a `VPN -> Servers -> Download client bundle`:
 
-    **NOTA:** Para este ejemplo concreto, para la máquina del cliente usaré un Windows 10 con OpenVPN ya instalado.
+    !!! nota
+
+        Para este ejemplo concreto, para la máquina del cliente usaré un Windows 10 con OpenVPN ya instalado.
 
     ![OpenVPN test bundle](assets/images/zentyal/vpn-test-bundle.png "OpenVPN test bundle")
 
@@ -1351,4 +1390,4 @@ Llegados a este punto, el servidor estaría listo para usarse en producción, no
 * Monitorizar el servidor.
 * Conocer y programar tareas de mantenimiento.
 
-Todos estas configuraciones serán explicadas en otros documentos del proyecto (ver menú superior).
+Todos estas configuraciones serán explicadas en otras páginas del proyecto (ver menú superior).

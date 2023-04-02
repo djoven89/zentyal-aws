@@ -25,9 +25,7 @@ The additional security configurations that will be implemented in the domain co
 
 We will establish password policies through the `samba-tool domain passwordsettings` command for domain users, in this way, we will reduce the possibility of weak passwords being used.
 
-Additionally, it should be mentioned that starting from Samba 4.9, it is possible to define more particular password policies as explained in [this] link. However, using this functionality has a resource increase as mentioned in the link, so I will not use this specific functionality in my particular case.
-
-[this]: ttps://wiki.samba.org/index.php/Password_Settings_Objects
+Additionally, it should be mentioned that starting from Samba 4.9, it is possible to define more particular password policies as explained in [this](https://wiki.samba.org/index.php/Password_Settings_Objects) link. However, using this functionality has a resource increase as mentioned in the link, so I will not use this specific functionality in my particular case.
 
 The policies that I will define are:
 
@@ -188,9 +186,9 @@ For this module, we will implement the following features to significantly incre
 
 ### DKIM
 
-[DKIM] will be the next security implementation we will carry out. The objective of DKIM is that the receiver can verify that the received email is legitimate. The necessary configuration steps have been taken from [here](https://doc.zentyal.org/es/mail.html#securizacion-del-servidor-de-correo).
+[DKIM] will be the next security implementation we will carry out. The objective of DKIM is that the receiver can verify that the received email is legitimate. The necessary configuration steps have been taken from [here](https://doc.zentyal.org/en/mail.html#securizacion-del-servidor-de-correo).
 
-[DKIM]: https://www.dmarcanalyzer.com/en/dkim-3/
+[DKIM]: https://www.mimecast.com/content/dkim/
 
 1. We install the necessary packages for the implementation of DKIM:
 

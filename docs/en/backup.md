@@ -22,9 +22,9 @@ There are several possibilities for implementing backups for this project:
 3. [Backup] module.
 4. Scripting.
 
-[AWS DLM]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
-[Backup de configuración]: https://doc.zentyal.org/es/backup-conf.html
-[Backup]: https://doc.zentyal.org/es/backup.html
+[AWS DLM]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
+[Backup de configuración]: https://doc.zentyal.org/en/backup-conf.html
+[Backup]: https://doc.zentyal.org/en/backup.html
 
 In my case, I will use the following options:
 
@@ -39,7 +39,7 @@ Through the [DLM] functionality of the EC2 service, we will take a daily snapsho
 
     Its use will involve an additional monthly cost, which we can see [here].
 
-[here]: https://aws.amazon.com/es/ebs/pricing/
+[here]: https://aws.amazon.com/en/ebs/pricing/
 
 The hours at which I will set up the snapshots are:
 
@@ -51,7 +51,7 @@ The hours at which I will set up the snapshots are:
 
     It is important that the system snapshot is taken before the Zentyal automatic updates (05:30 AM in my case).
 
-[DLM]: https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
+[DLM]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/snapshot-lifecycle.html
 
 ### DLM on the system volume
 

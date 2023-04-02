@@ -22,18 +22,19 @@ The objectives that will be accomplished are:
 * Configuration of additional EBS volumes.
 * Implementation of quotas in the file system.
 * Configuration of the following Zentyal modules:
-    * Logs
-    * Firewall
-    * Software
-    * NTP
-    * DNS
-    * Domain controller
-    * Mail
-    * Webmail
-    * Antivirus
-    * Mailfilter
-    * CA
-    * OpenVPN
+    * [Network](https://doc.zentyal.org/en/firststeps.html#network-configuration-with-zentyal)
+    * [Logs](https://doc.zentyal.org/en/logs.html)
+    * [Firewall](https://doc.zentyal.org/en/firewall.html)
+    * [Software](https://doc.zentyal.org/en/software.html)
+    * [NTP](https://doc.zentyal.org/en/ntp.html)
+    * [DNS](https://doc.zentyal.org/en/dns.html)
+    * [Controlador de dominio](https://doc.zentyal.org/en/directory.html)
+    * [Correo](https://doc.zentyal.org/en/mail.html)
+    * [Webmail](https://doc.zentyal.org/en/mail.html#cliente-de-webmail)
+    * [Antivirus](https://doc.zentyal.org/en/antivirus.html)
+    * [Mailfilter](https://doc.zentyal.org/en/mailfilter.html)
+    * [CA](https://doc.zentyal.org/en/ca.html)
+    * [OpenVPN](https://doc.zentyal.org/en/vpn.html)
 
 At the end of this document, the Zentyal server will be ready to use, although in subsequent documents we will continue to establish additional configurations such as the configuration of Let's Encrypt issued certificates or highly recommended options such as hardening of the mail service.
 
@@ -128,7 +129,7 @@ The previous configurations will be made before configuring the Zentyal modules.
 
 ### SWAP Partition
 
-It is highly recommended to configure a SWAP partition on the server to increase server availability in case of RAM-related spikes. The actions we will take are documented [here].
+It is highly recommended to configure a SWAP partition on the server to increase server availability in case of RAM-related spikes. The actions we will take are documented [here](https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/).
 
 1. Create an empty 4GB file, which will be the size of our SWAP partition:
 
@@ -163,7 +164,7 @@ It is highly recommended to configure a SWAP partition on the server to increase
 
     The result we should get is:
 
-        ```text
+    ```text
     ## Comando 'swapon'
     Filename				Type		Size	  Used	  Priority
     /swapfile1             	file    	4194300	     0	        -2
@@ -186,8 +187,6 @@ It is highly recommended to configure a SWAP partition on the server to increase
     sudo mount -a
     ```
 
-[here]: https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/
-
 ### Additional EBS volumes
 
 In case we have added additional EBS volumes - as in my case for mailboxes and shared resources -, we will proceed to configure and mount them on the server.
@@ -204,14 +203,14 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
     In my specific case, it shows the following result:
 
-        ```text
-        NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-        nvme1n1      259:0    0   10G  0 disk
-        nvme0n1      259:1    0   30G  0 disk
-        ├─nvme0n1p1  259:2    0 29.9G  0 part /
-        ├─nvme0n1p14 259:3    0    4M  0 part
-        └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
-        nvme2n1      259:5    0   10G  0 disk
+    ```text
+    NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    nvme1n1      259:0    0   10G  0 disk
+    nvme0n1      259:1    0   30G  0 disk
+    ├─nvme0n1p1  259:2    0 29.9G  0 part /
+    ├─nvme0n1p14 259:3    0    4M  0 part
+    └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+    nvme2n1      259:5    0   10G  0 disk
     ```
 
 2. Create a single partition that occupies the entire disk on the nvme1n1 and nvme2n1 volumes:
@@ -220,6 +219,7 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
     for disk in nvme1n1 nvme2n1; do
         echo -e 'n\np\n\n\n\nt\n8e\nw' | sudo fdisk /dev/$disk
     done
+    ```
 
     !!! info
 
@@ -484,7 +484,7 @@ In order to have our server updated, we will enable and set the time at which au
 
 The first of the newly installed modules that we are going to configure is [NTP]. We will set the time zone and the geographically
 
-[NTP]: https://doc.zentyal.org/es/ntp.html
+[NTP]: https://doc.zentyal.org/en/ntp.html
 
 1. Let's go to `System -> Date/Time` and set the time zone:
 
@@ -508,7 +508,7 @@ The first of the newly installed modules that we are going to configure is [NTP]
 
 The next module we will proceed to configure is the [DNS] module, which is critical for the functioning of the domain controller module and, by dependency, also the mail module.
 
-[DNS]: https://doc.zentyal.org/es/dns.html
+[DNS]: https://doc.zentyal.org/en/dns.html
 
 The configuration we will establish will be minimal, since we will manage the DNS record management from the administration panel where we have registered the domain - Route 53 in my case -.
 
@@ -779,7 +779,7 @@ With the domain controller module configured, we can now configure the [mail] mo
 * Fetchmail and Sieve will be disabled, as I won't be using them initially.
 * The greylist will be enabled, and forwarding time will be reduced to 24 hours, with a 30-day deletion period.
 
-[mail]: https://doc.zentyal.org/es/mail.html
+[mail]: https://doc.zentyal.org/en/mail.html
 
 Here are the steps to configure the module:
 
@@ -941,7 +941,7 @@ Also, note that if the server is installed in the AWS cloud provider, sending em
 
 The next module to configure will be the [Webmail] (Sogo), which will allow us to manage our email account from a web browser. Additionally, from the webmail, a user can change their password.
 
-[Webmail]: https://doc.zentyal.org/es/mail.html#cliente-de-webmail
+[Webmail]: https://doc.zentyal.org/en/mail.html#webmail
 
 1. We enable the [ActiveSync] protocol from Mail -> ActiveSync in case users want to synchronize their mobile devices.
 
@@ -975,7 +975,7 @@ The next module to configure will be the [Webmail] (Sogo), which will allow us t
 
     ![Webmail sending an email](assets/images/zentyal/webmail-sending_email.png "Webmail sending an email")
 
-[ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
+[ActiveSync]: https://doc.zentyal.org/en/mail.html#activesync-support
 
 At this point, the module is fully functional; however, I will set the following optional configurations:
 
@@ -1042,13 +1042,11 @@ The following actions should be taken to apply the optional configurations:
     sogo 24430 1 0 00:40 ? 00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
     ```
 
-### Módulo de Antivirus
-
-Antivirus Module
+### Antivirus Module
 
 The next module we will configure is the [Antivirus]. Although this module consumes a lot of RAM, it is necessary for the analysis of the emails managed by the mailfilter module.
 
-[Antivirus]: https://doc.zentyal.org/es/antivirus.html
+[Antivirus]: https://doc.zentyal.org/en/antivirus.html
 
 The configuration that we can define for this module from the Zentyal administration panel in the Development version is nonexistent. Therefore, we can only enable the module and verify that the signature database is up-to-date.
 
@@ -1073,7 +1071,7 @@ If using a commercial version, we will have the following additional functionali
 * System analysis.
 * Live monitoring of directories.
 
-[here]: https://doc.zentyal.org/es/antivirus.html#configuracion-del-modulo-antivirus
+[here]: https://doc.zentyal.org/en/antivirus.html#configuracion-del-modulo-antivirus
 
 ### Mailfilter module
 
@@ -1088,7 +1086,7 @@ The configuration that I will apply will be:
 * Except for the incorrect header policy, all other policies will be denied.
 * I will disable certain extensions that can pose a security risk.
 
-[Mailfilter]: https://doc.zentyal.org/es/mailfilter.html
+[Mailfilter]: https://doc.zentyal.org/en/mailfilter.html
 
 Here are the steps to configure the module:
 
@@ -1225,13 +1223,13 @@ Additionally, it is possible to issue certificates for the modules we are using 
 
 ![Certificates for services](assets/images/zentyal/ca-services.png "Certificates for services")
 
-[CA]: https://doc.zentyal.org/es/ca.html
+[CA]: https://doc.zentyal.org/en/ca.html
 
 ### OpenVPN Module
 
 The last module we will configure will be [OpenVPN]. The purpose of using this module is to allow domain users to securely access the shared resources configured in the domain controller module from any location.
 
-[OpenVPN]: https://doc.zentyal.org/es/vpn.html
+[OpenVPN]: https://doc.zentyal.org/en/vpn.html
 
 The settings I will establish are:
 

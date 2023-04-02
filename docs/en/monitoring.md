@@ -13,9 +13,9 @@ On this page, we will configure a monitoring system for our Zentyal server using
 
     Implementing these services will have an additional monthly cost.
 
-[Cloudwatch]: https://docs.aws.amazon.com/es_es/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html
-[Parameter Store]: https://docs.aws.amazon.com/es_es/systems-manager/latest/userguide/systems-manager-parameter-store.html
-[SNS]: https://docs.aws.amazon.com/es_es/sns/latest/dg/welcome.html
+[Cloudwatch]: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html
+[Parameter Store]: https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html
+[SNS]: https://docs.aws.amazon.com/sns/latest/dg/welcome.html
 
 ## SNS
 

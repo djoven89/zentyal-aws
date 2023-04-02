@@ -141,7 +141,7 @@ Para la implementación de esta funcionalidad definiremos una tarea programada, 
 
 Las acciones que realizaremos para la implementación son:
 
-1. Desde la CLI, probamos el comando que reliza la copia de seguridad y ejecutará la tarea programa:
+1. Desde la CLI, probamos el comando que realiza la copia de seguridad y ejecutará la tarea programa:
 
     ```sh
     sudo /usr/share/zentyal/make-backup --description "CLI backup on `date '+%d-%m-%Y'`"
@@ -153,7 +153,7 @@ Las acciones que realizaremos para la implementación son:
 
 3. Una vez confirmado su funcionamiento, creamos la tarea programada para que se ejecute diariamente a las 02:30 AM. Para ello, creamos el archivo de configuración en `/etc/cron.d/custom-backup_conf` con el siguiente contenido:
 
-    ```sh
+    ```text
     ## Configuration backup created on 12-02-2023 by Daniel
     30 02 * * * root /usr/share/zentyal/make-backup --description "Cronjob backup on `date '+\%d-\%m-\%Y'`" >/dev/null 2>&1
     ```

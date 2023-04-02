@@ -19,7 +19,7 @@ En esta página configuraremos un sistema de monitorización para nuestro servid
 
 ## SNS
 
-Para notificar cualquier alerta que se dispare en CloudWatch haremos uso del servicio SNS, el cual enviará un email a una cuenta de correo. En mi caso, usaré la cuenta creada de `it.infra@icecrown.es`.
+Para notificar cualquier alerta que se dispare en CloudWatch haremos uso del servicio SNS, el cual envíará un email a una cuenta de correo. En mi caso, usaré la cuenta creada de `it.infra@icecrown.es`.
 
 1. Vamos a `SNS` y creamos un *topic* llamado `Prod-Zentyal-Email-Alerting`:
 
@@ -335,39 +335,39 @@ Lo último que haremos sobre el sistema de monitorización será crear las alert
 * **Disco de sistema:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **Disco de los correos:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **Disco de de los recursos compartidos:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **DLM para el sistema:**
     * La comprobación se hará una vez al día.
     * El valor de la alerta para que se disparé será igual o superior a 1.
-    * Para que se envia una notificación, la alerta tendrá que producirse una única vez.
+    * Para que se envía una notificación, la alerta tendrá que producirse una única vez.
 * **DLM para el correo:**
     * La comprobación se hará una vez al día.
     * El valor de la alerta para que se disparé será igual o superior a 1.
-    * Para que se envia una notificación, la alerta tendrá que producirse una única vez.
+    * Para que se envía una notificación, la alerta tendrá que producirse una única vez.
 * **DLM para el recursos compartidos:**
     * La comprobación se hará una vez al día.
     * El valor de la alerta para que se disparé será igual o superior a 1.
-    * Para que se envia una notificación, la alerta tendrá que producirse una única vez.
+    * Para que se envía una notificación, la alerta tendrá que producirse una única vez.
 * **Comprobaciones fallidas de EC2:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **Comprobaciones fallidas de la instancia:**
     * La comprobación se hará cada minuto.
     * El valor de la alerta para que se disparé será superior a 80%.
-    * Para que se envia una notificación, la alerta tendrá que producirse 3 veces consecutivas.
+    * Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.
 * **Errores en el log de Zentyal:**
     * La comprobación se hará una vez al día.
     * El valor de la alerta para que se disparé será igual o superior a 1.
-    * Para que se envia una notificación, la alerta tendrá que producirse una única vez.
+    * Para que se envía una notificación, la alerta tendrá que producirse una única vez.
 
 #### CPU
 

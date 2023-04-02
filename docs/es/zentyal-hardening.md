@@ -227,19 +227,19 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 6. Creamos el archivo de configuración `/etc/opendkim/SigningTable` que contendrá el dominio a firmar por OpenDKIM:
 
-    ```bash
+    ```text
     *@icecrown.es mail._domainkey.icecrown.es
     ```
 
 7. Creamos el archivo de configuración `/etc/opendkim/KeyTable` que tendrá el nombre del selector y la ruta a la clave privada encargada de firmar los correos electrónicos:
 
-    ```bash
+    ```text
     mail._domainkey.icecrown.es icecrown.es:mail:/etc/opendkim/keys/mail.private
     ```
 
 8. Creamos el archivo de configuración principal llamado `/etc/opendkim.conf` y establecemos la configuración del servicio OpenDKIM:
 
-    ```bash
+    ```text
     Syslog			        yes
     LogWhy			        yes
     UMask			        007
@@ -264,7 +264,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 9. Establecemos la configuración del socket en el archivo de configuración `/etc/default/opendkim`:
 
-    ```bash
+    ```text
     ## Custom configuration created on 19-02-2023 by Daniel
     # SOCKET=local:$RUNDIR/opendkim.sock
     SOCKET=inet:8891@127.0.0.1
@@ -282,7 +282,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
     En mi caso, el contenido es:
 
-    ```bash
+    ```text
     mail._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; "
 	  "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn"
 	  "9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB" )  ; ----- DKIM key mail for icecrown.es
@@ -373,7 +373,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 15. Una vez confirmado el registro DNS, procederemos a configurar el servicio Postfix (SMTP) para que haga uso de este servicio. Para ello, añadimos las siguientes líneas al final del stub `/etc/zentyal/stubs/mail/main.cf.mas`:
 
-    ```bash
+    ```text
     ## DKIM Configuration created on 19-02-2023 by Daniel
     milter_protocol = 6
     milter_default_action = accept

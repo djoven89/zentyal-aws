@@ -202,13 +202,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     En mi caso concreto, me muestra el siguiente resultado:
 
     ```text
-        NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-        nvme1n1      259:0    0   10G  0 disk
-        nvme0n1      259:1    0   30G  0 disk
-        ├─nvme0n1p1  259:2    0 29.9G  0 part /
-        ├─nvme0n1p14 259:3    0    4M  0 part
-        └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
-        nvme2n1      259:5    0   10G  0 disk
+    NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    nvme1n1      259:0    0   10G  0 disk
+    nvme0n1      259:1    0   30G  0 disk
+    ├─nvme0n1p1  259:2    0 29.9G  0 part /
+    ├─nvme0n1p14 259:3    0    4M  0 part
+    └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+    nvme2n1      259:5    0   10G  0 disk
     ```
 
 2. En los volúmenes `nvme1n1` y `nvme2n1` creamos una única partición que ocupe todo el disco:
@@ -232,15 +232,15 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     En mi caso concreto, me muestra el siguiente resultado:
 
     ```text
-        NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
-        nvme1n1      259:0    0   10G  0 disk
-        └─nvme1n1p1  259:7    0   10G  0 part
-        nvme0n1      259:1    0   30G  0 disk
-        ├─nvme0n1p1  259:2    0 29.9G  0 part /
-        ├─nvme0n1p14 259:3    0    4M  0 part
-        └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
-        nvme2n1      259:5    0   10G  0 disk
-        └─nvme2n1p1  259:8    0   10G  0 part
+    NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+    nvme1n1      259:0    0   10G  0 disk
+    └─nvme1n1p1  259:7    0   10G  0 part
+    nvme0n1      259:1    0   30G  0 disk
+    ├─nvme0n1p1  259:2    0 29.9G  0 part /
+    ├─nvme0n1p14 259:3    0    4M  0 part
+    └─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+    nvme2n1      259:5    0   10G  0 disk
+    └─nvme2n1p1  259:8    0   10G  0 part
     ```
 
 4. Establecemos como sistema de archivos `ext4` a las nuevas particiones:
@@ -260,15 +260,15 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
     En mi caso concreto, me muestra el siguiente resultado:
 
     ```text
-        NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
-        nvme1n1
-        └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
-        nvme0n1
-        ├─nvme0n1p1  ext4   cloudimg-rootfs 418a4763-c829-4fb6-b538-9a38158da803   26.8G     7% /
-        ├─nvme0n1p14
-        └─nvme0n1p15 vfat   UEFI            CBF7-D252                              99.2M     5% /boot/efi
-        nvme2n1
-        └─nvme2n1p1  ext4                   e903ff6f-c431-4e3a-92a1-9f476c66b3be
+    NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
+    nvme1n1
+    └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
+    nvme0n1
+    ├─nvme0n1p1  ext4   cloudimg-rootfs 418a4763-c829-4fb6-b538-9a38158da803   26.8G     7% /
+    ├─nvme0n1p14
+    └─nvme0n1p15 vfat   UEFI            CBF7-D252                              99.2M     5% /boot/efi
+    nvme2n1
+    └─nvme2n1p1  ext4                   e903ff6f-c431-4e3a-92a1-9f476c66b3be
     ```
 
 6. Creamos el directorio donde se montará el volumen EBS para los buzones de correo:
@@ -341,7 +341,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```sh
+    ```text
     ## Comando 'mount'
     /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
     /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
@@ -1164,7 +1164,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
 8. Nos enviamos un email sencillo desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
 
-    ```sh
+    ```text
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: connect from mail-lj1-f176.google.com[209.85.208.176]
     Feb 18 11:18:57 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f176.google.com, client_address=209.85.208.176/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: A69DDFEF59: client=mail-lj1-f176.google.com[209.85.208.176]
@@ -1194,7 +1194,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
 9. Confirmado que los emails son correctamente recibidos, procederemos a comprobar mediante el envío de otro email con un archivo adjunto cuya extensión sea `.sh` - denegada en el paso 5 - desde una cuenta externa para confirmar el funcionamiento del módulo. A continuación los registros registrados en el log  `/var/log/mail.log` relativos al éxito del bloqueo:
 
-    ```sh
+    ```text
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: connect from mail-lj1-f171.google.com[209.85.208.171]
     Feb 18 11:31:30 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f171.google.com, client_address=209.85.208.171/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: 79C12FEF59: client=mail-lj1-f171.google.com[209.85.208.171]
@@ -1338,7 +1338,7 @@ Con el módulo ya configurado, creamos un certificado, usuario y recurso compart
 
 7. Establecemos la conexión desde el cliente de OpenVPN. Si todo fue bien, podremos ver en el archivo de log de la conexión VPN de Zentyal llamado `/var/log/openvpn/Icecrown-RecursosCompartidos.log` unos registros similares a:
 
-    ```sh
+    ```text
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 TLS: Initial packet from [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5), sid=7c56b72b 70d7b663
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=1, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown CA Authority Certificate
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY X509NAME OK: C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria

@@ -215,45 +215,45 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 Para los módulos **Mail** y **Webmail** usaré el mismo certificado, es decir, el certificado será emitido con 2 subdominios en lugar de 1.
 
-1. Generaremos el certificado:
+Generaremos el certificado:
 
-    ```bash
-    sudo certbot certonly \
-        --apache \
-        --preferred-challenges http \
-        -m it.infra@icecrown.es \
-        --agree-tos \
-        -d mail.icecrown.es \
-        -d webmail.icecrown.es
-    ```
+```bash
+sudo certbot certonly \
+    --apache \
+    --preferred-challenges http \
+    -m it.infra@icecrown.es \
+    --agree-tos \
+    -d mail.icecrown.es \
+    -d webmail.icecrown.es
+```
 
-    Un ejemplo del resultado:
+Un ejemplo del resultado:
 
-    ```text
-    Saving debug log to /var/log/letsencrypt/letsencrypt.log
-    Plugins selected: Authenticator apache, Installer apache
-    Obtaining a new certificate
-    Performing the following challenges:
-    http-01 challenge for mail.icecrown.es
-    http-01 challenge for webmail.icecrown.es
-    Enabled Apache rewrite module
-    Waiting for verification...
-    Cleaning up challenges
+```text
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Plugins selected: Authenticator apache, Installer apache
+Obtaining a new certificate
+Performing the following challenges:
+http-01 challenge for mail.icecrown.es
+http-01 challenge for webmail.icecrown.es
+Enabled Apache rewrite module
+Waiting for verification...
+Cleaning up challenges
 
-    IMPORTANT NOTES:
-    - Congratulations! Your certificate and chain have been saved at:
-    /etc/letsencrypt/live/mail.icecrown.es/fullchain.pem
-    Your key file has been saved at:
-    /etc/letsencrypt/live/mail.icecrown.es/privkey.pem
-    Your cert will expire on 2023-05-19. To obtain a new or tweaked
-    version of this certificate in the future, simply run certbot
-    again. To non-interactively renew *all* of your certificates, run
-    "certbot renew"
-    - If you like Certbot, please consider supporting our work by:
+IMPORTANT NOTES:
+- Congratulations! Your certificate and chain have been saved at:
+/etc/letsencrypt/live/mail.icecrown.es/fullchain.pem
+Your key file has been saved at:
+/etc/letsencrypt/live/mail.icecrown.es/privkey.pem
+Your cert will expire on 2023-05-19. To obtain a new or tweaked
+version of this certificate in the future, simply run certbot
+again. To non-interactively renew *all* of your certificates, run
+"certbot renew"
+- If you like Certbot, please consider supporting our work by:
 
-    Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
-    Donating to EFF:                    https://eff.org/donate-le
-    ```
+Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+Donating to EFF:                    https://eff.org/donate-le
+```
 
 Con el certificado correctamente generado, procederé a configurar los ambos módulos para que hagan uso de el.
 

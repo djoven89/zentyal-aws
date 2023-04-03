@@ -29,7 +29,7 @@ theme:
   name: material
   # custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
   # logo: assets/images/logo.png                    # The logo is shared by all languages
-  # favicon: assets/images/favicon.ico              # The favicon is shared by all languages
+  favicon: assets/favicon.ico              # The favicon is shared by all languages
   features:
     - navigation.tracking
     - navigation.tabs

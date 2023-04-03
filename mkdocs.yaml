@@ -5,7 +5,7 @@
 
 site_author: Daniel Joven
 site_name: Zentyal & AWS
-site_url: https://zentyal.projects.djoven.es
+site_url: https://zentyal-aws.projects.djoven.es
 docs_dir: 'docs'
 site_dir: '/generated'
 

@@ -421,11 +421,11 @@ First of all, what we need to do is configure the Zentyal base from the `System 
 
 1. We will set the language of the administration panel and the port on which the webadmin module will listen:
 
-    ![Configuration of language and GUI port](assets/images/zentyal/05-general-1.png "Configuration of language and GUI port")
+    ![Configuration of language and GUI port](assets/zentyal/05-general-1.png "Configuration of language and GUI port")
 
 2. Then, from the same panel, we set the server name and domain:
 
-    ![Configuration of FQDN and domain](assets/images/zentyal/06-general-2.png "Configuration of FQDN and domain")
+    ![Configuration of FQDN and domain](assets/zentyal/06-general-2.png "Configuration of FQDN and domain")
 
     !!! warning
 
@@ -435,7 +435,7 @@ First of all, what we need to do is configure the Zentyal base from the `System 
 
 Initially, we will enable the available 'domains', change the retention time to 30 days for the firewall and 90 for the administration panel changes as well as administrator logins:
 
-![Initial log configuration](assets/images/zentyal/logs_initial.png "Initial log configuration")
+![Initial log configuration](assets/zentyal/logs_initial.png "Initial log configuration")
 
 ### Firewall module
 
@@ -446,11 +446,11 @@ For our network configuration (internal) and the modules we will use, the firewa
 
 The default policies in both firewall sections are secure; however, we will add a `LOG` rule for SSH connections as it is always a good idea to have as much information as possible about this critical service. To do this, we will go to F`irewall -> Packet Filter -> Filtering rules from internal networks to Zentyal` and add the following rule:
 
-![Firewall SSH rule 1](assets/images/zentyal/firewall_initial-ssh-1.png "Firewall SSH rule 1")
+![Firewall SSH rule 1](assets/zentyal/firewall_initial-ssh-1.png "Firewall SSH rule 1")
 
 Resulting in the following rules:
 
-![Firewall SSH rule 2](assets/images/zentyal/firewall_initial-ssh-2.png "Firewall SSH rule 2")
+![Firewall SSH rule 2](assets/zentyal/firewall_initial-ssh-2.png "Firewall SSH rule 2")
 
 **Considerations:**
 
@@ -464,7 +464,7 @@ In order to have our server updated, we will enable and set the time at which au
 
 1. From the `Software Management -> Settings` menu, we set the automatic update configurations:
 
-    ![Automatic software updates](assets/images/zentyal/software_automatic-updates.png "Automatic software updates")
+    ![Automatic software updates](assets/zentyal/software_automatic-updates.png "Automatic software updates")
 
     !!! nota
 
@@ -473,7 +473,7 @@ In order to have our server updated, we will enable and set the time at which au
 
 2. Then, from the `Software Management -> Zentyal Components` menu, we will proceed to install **only** the modules we are going to use:
 
-    ![Modules installation](assets/images/zentyal/software_installation.png "Modules installation")
+    ![Modules installation](assets/zentyal/software_installation.png "Modules installation")
 
     !!! info
 
@@ -488,19 +488,19 @@ The first of the newly installed modules that we are going to configure is [NTP]
 
 1. Let's go to `System -> Date/Time` and set the time zone:
 
-    ![NTP timezone](assets/images/zentyal/ntp_timezone.png "NTP timezone")
+    ![NTP timezone](assets/zentyal/ntp_timezone.png "NTP timezone")
 
 2. Enable the option that allows syncing time with external servers:
 
-    ![NTP sync option](assets/images/zentyal/ntp_sync.png "NTP sync option")
+    ![NTP sync option](assets/zentyal/ntp_sync.png "NTP sync option")
 
 3. Modify the default NTP servers to the official ones we have available on [this] website:
 
-    ![NTP servers](assets/images/zentyal/ntp_servers.png "NTP servers")
+    ![NTP servers](assets/zentyal/ntp_servers.png "NTP servers")
 
 4. Finalmente, habilitamos el módulo de NTP desde `Modules Status`:
 
-    ![NTP enable](assets/images/zentyal/modules_ntp.png "NTP enable")
+    ![NTP enable](assets/zentyal/modules_ntp.png "NTP enable")
 
 [this]: https://www.pool.ntp.org/en
 
@@ -514,27 +514,27 @@ The configuration we will establish will be minimal, since we will manage the DN
 
 1. We create the domain, which must match the one created in `System -> General`. To do this, from the side menu we select `DNS`:
 
-    ![DNS new domain](assets/images/zentyal/dns-new_domain.png "DNS new domain")
+    ![DNS new domain](assets/zentyal/dns-new_domain.png "DNS new domain")
 
 2. Next, we check that the server's IP address has been successfully registered to the domain, by going to the `Domain IP Addresses` field of the newly created domain:
 
-    ![DNS domain record](assets/images/zentyal/dns-domain_record.png "DNS domain record")
+    ![DNS domain record](assets/zentyal/dns-domain_record.png "DNS domain record")
 
 3. We also check that the IP has been registered for the server name. In this case, the field is `Hostnames -> IP Address`:
 
-    ![DNS hostname record](assets/images/zentyal/dns-hostname_record.png "DNS hostname record")
+    ![DNS hostname record](assets/zentyal/dns-hostname_record.png "DNS hostname record")
 
 4. Next, we create additional alias records from `Hostnames -> Alias`. In my case, I will create two records related to email: **mail** and **webmail**.
 
-    ![DNS alias records](assets/images/zentyal/dns-alias.png "DNS alias records")
+    ![DNS alias records](assets/zentyal/dns-alias.png "DNS alias records")
 
 5. We set the DNS forwarders, which in this case will be those of [Cloudflare] and [Quad9]:
 
-    ![DNS forwarders](assets/images/zentyal/dns-forwarders.png "DNS forwarders")
+    ![DNS forwarders](assets/zentyal/dns-forwarders.png "DNS forwarders")
 
 6. Once the module configuration has been established, we proceed to enable it from `Modules Status`:
 
-    ![DNS enable](assets/images/zentyal/modules_dns.png "DNS enable")
+    ![DNS enable](assets/zentyal/modules_dns.png "DNS enable")
 
 7. Finally, we check that we can resolve the configured DNS records from the server itself. To do this, we will run the following commands:
 
@@ -652,7 +652,7 @@ At this point, the module would be configured in Zentyal. However, we still need
 
 1. Go to `Route 53 -> Hosted zones -> domain` and create the same records as in Zentyal but with the public IP:
 
-    ![DNS Route53 domain records](assets/images/zentyal/dns-route53_records.png "DNS Route53 domain records")
+    ![DNS Route53 domain records](assets/zentyal/dns-route53_records.png "DNS Route53 domain records")
 
 2. We wait a few minutes for them to replicate globally.
 
@@ -785,27 +785,27 @@ Here are the steps to configure the module:
 
 1. Create the virtual mail domain, which will be the same as the domain configured in the DNS module. From the left-hand side menu, go to `Mail -> Virtual Mail Domains`:
 
-    ![Mail new virtual domain](assets/images/zentyal/mail-new_domain.png "Mail new virtual domain")
+    ![Mail new virtual domain](assets/zentyal/mail-new_domain.png "Mail new virtual domain")
 
 2. Establish the optional restrictive configurations mentioned from `Mail -> General`:
 
-    ![Mail additional configuration](assets/images/zentyal/mail-additional_conf.png "Mail additional configuration")
+    ![Mail additional configuration](assets/zentyal/mail-additional_conf.png "Mail additional configuration")
 
 3. Disable Fetchmail and Sieve:
 
-    ![Mail services](assets/images/zentyal/mail-services.png "Mail services")
+    ![Mail services](assets/zentyal/mail-services.png "Mail services")
 
 4. Enable the greylist from `Mail -> Greylist`:
 
-    ![Mail greylist](assets/images/zentyal/mail-greylist.png "Mail greylist")
+    ![Mail greylist](assets/zentyal/mail-greylist.png "Mail greylist")
 
 5. Enable the module:
 
-    ![Mail enable](assets/images/zentyal/modules_mail.png "Mail enable")
+    ![Mail enable](assets/zentyal/modules_mail.png "Mail enable")
 
 6. Create the `MX` type record in the domain. In my case, I will do it from Route53:
 
-    ![Mail DNS record](assets/images/zentyal/mail-dns_record.png "Mail DNS record")
+    ![Mail DNS record](assets/zentyal/mail-dns_record.png "Mail DNS record")
 
 
     Additionally, I will also create it in Zentyal, but as it is an alias, it will have to be done using the CLI:
@@ -870,18 +870,18 @@ Here are the steps to configure the module:
 
 8. Create the `postmaster@icecrown.es` user specified in step 2 and also a test user, which in my case will be named `test.djoven`. To do this, go to `Users and Computers -> Manage`:
 
-    ![Mail postmaster user](assets/images/zentyal/mail-user_postmaster.png "Mail postmaster user")
-    ![Mail test account](assets/images/zentyal/mail-test_account.png "Mail test account")
+    ![Mail postmaster user](assets/zentyal/mail-user_postmaster.png "Mail postmaster user")
+    ![Mail test account](assets/zentyal/mail-test_account.png "Mail test account")
 
 Finally, we will test with a mail client (Thunderbird in my case) that we can configure the account of the test user created:
 
 1. Configure a new account in Thunderbird:
 
-    ![Thunderbird setup new account](assets/images/zentyal/mail-thunderbird_new-account.png "Thunderbird setup new account")
+    ![Thunderbird setup new account](assets/zentyal/mail-thunderbird_new-account.png "Thunderbird setup new account")
 
 2. Set the connection data with the SMTPS and IMAPS service:
 
-    ![Thunderbird setup server](assets/images/zentyal/mail-thunderbird_server.png "Thunderbird setup server")
+    ![Thunderbird setup server](assets/zentyal/mail-thunderbird_server.png "Thunderbird setup server")
 
     !!! warning
 
@@ -890,11 +890,11 @@ Finally, we will test with a mail client (Thunderbird in my case) that we can co
 
 3. After confirming the configuration, the following warning message about the certificate will appear, which is normal, as it is a self-signed certificate by Zentyal:
 
-    ![Thunderbird setup certificate warning](assets/images/zentyal/mail-thunderbird_certificate_warning.png "Thunderbird setup certificate warning")
+    ![Thunderbird setup certificate warning](assets/zentyal/mail-thunderbird_certificate_warning.png "Thunderbird setup certificate warning")
 
 4. Once the security exception is confirmed, we should be able to see the email account:
 
-    ![Thunderbird login](assets/images/zentyal/mail-thunderbird_login.png "Thunderbird login")
+    ![Thunderbird login](assets/zentyal/mail-thunderbird_login.png "Thunderbird login")
 
 5. Send a test email to ourselves and another to an external account to confirm the module's operation.
 
@@ -903,9 +903,9 @@ Finally, we will test with a mail client (Thunderbird in my case) that we can co
         When we try to send the message, we will receive an error again due to the self-signed certificate, so we will have to confirm it again.
 
 
-    ![Thunderbird sending error](assets/images/zentyal/mail-thunderbird_sending-error-1.png "Thunderbird sending error")
+    ![Thunderbird sending error](assets/zentyal/mail-thunderbird_sending-error-1.png "Thunderbird sending error")
 
-    ![Thunderbird accepting certificate](assets/images/zentyal/mail-thunderbird_sending-error-2.png "Thunderbird accepting certificate")
+    ![Thunderbird accepting certificate](assets/zentyal/mail-thunderbird_sending-error-2.png "Thunderbird accepting certificate")
 
 6. If everything went well, we should have received the email both internally and externally, and also in the `/var/log/mail.log` log we should see similar records as:
 
@@ -945,11 +945,11 @@ The next module to configure will be the [Webmail] (Sogo), which will allow us t
 
 1. We enable the [ActiveSync] protocol from Mail -> ActiveSync in case users want to synchronize their mobile devices.
 
-    ![Webmail ActiveSync](assets/images/zentyal/webmail-activesync.png "Webmail ActiveSync")
+    ![Webmail ActiveSync](assets/zentyal/webmail-activesync.png "Webmail ActiveSync")
 
 2. We enable the module.
 
-    ![Webmail enable](assets/images/zentyal/modules_webmail.png "Webmail enable")
+    ![Webmail enable](assets/zentyal/modules_webmail.png "Webmail enable")
 
 3. We check that we can access the login page from a web browser with the URL: https://arthas.icecrown.es/SOGo:
 
@@ -957,15 +957,15 @@ The next module to configure will be the [Webmail] (Sogo), which will allow us t
 
         It will show a warning message due to the certificate used by the service, which is normal since it is self-signed.
 
-    ![Webmail unsafe message](assets/images/zentyal/webmail-access_unsafe.png "Webmail unsafe message")
+    ![Webmail unsafe message](assets/zentyal/webmail-access_unsafe.png "Webmail unsafe message")
 
 4. Once we accept the exception, we should be able to see the login page:
 
-    ![Webmail login webpage](assets/images/zentyal/webmail-access_login.png "Webmail login webpage")
+    ![Webmail login webpage](assets/zentyal/webmail-access_login.png "Webmail login webpage")
 
 5. We log in with the test user to confirm that authentication works correctly and that we can see our mailbox.
 
-    ![Webmail user login](assets/images/zentyal/webmail-access_user.png "Webmail user login")
+    ![Webmail user login](assets/zentyal/webmail-access_user.png "Webmail user login")
 
     !!! warning
 
@@ -973,7 +973,7 @@ The next module to configure will be the [Webmail] (Sogo), which will allow us t
 
 6. Finally, we try to send another email to ourselves to verify integration with the email module.
 
-    ![Webmail sending an email](assets/images/zentyal/webmail-sending_email.png "Webmail sending an email")
+    ![Webmail sending an email](assets/zentyal/webmail-sending_email.png "Webmail sending an email")
 
 [ActiveSync]: https://doc.zentyal.org/en/mail.html#activesync-support
 
@@ -1010,7 +1010,7 @@ The following actions should be taken to apply the optional configurations:
 
 5. We log in to the Webadmin again and verify that the option is now available under `Preferences -> Mail`.
 
-    ![Webmail vacations](assets/images/zentyal/webmail-vacactions.png "Webmail vacations")
+    ![Webmail vacations](assets/zentyal/webmail-vacactions.png "Webmail vacations")
 
 6. We set the value of prefork in the configuration file `/etc/zentyal/sogo.conf`.
 
@@ -1052,7 +1052,7 @@ The configuration that we can define for this module from the Zentyal administra
 
 1. We enable the module.
 
-    ![Antivirus enable](assets/images/zentyal/modules_antivirus.png "Antivirus enable")
+    ![Antivirus enable](assets/zentyal/modules_antivirus.png "Antivirus enable")
 
 2. We update the signature database.
 
@@ -1092,19 +1092,19 @@ Here are the steps to configure the module:
 
 1. We enable the services of this module and set an email address for non-spam problematic emails from `Mail filter -> SMTP Mail Filter`:
 
-    ![Mailfilter services](assets/images/zentyal/mailfilter-general.png "Mailfilter services")
+    ![Mailfilter services](assets/zentyal/mailfilter-general.png "Mailfilter services")
 
 2. We set the default policies regarding the behavior of the module in response to certain events:
 
-    ![Mailfilter event policies](assets/images/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
+    ![Mailfilter event policies](assets/zentyal/mailfilter-filter_policies.png "Mailfilter event policies")
 
 3. We set the antispam policies from `Mail Filter -> Antispam`:
 
-    ![Mailfilter Antispam configuration](assets/images/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
+    ![Mailfilter Antispam configuration](assets/zentyal/mailfilter-antispam_configuration.png "Mailfilter Antispam configuration")
 
 4. Optionally, we can add our domain to the whitelist so that it is not processed by the Mailfilter module:
 
-    ![Mailfilter whitelist](assets/images/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
+    ![Mailfilter whitelist](assets/zentyal/mailfilter-antispam_senders.png "Mailfilter whitelist")
 
 5. We disable the following extensions from `Mail Filter -> Files ACL -> File extensions`:
 
@@ -1118,15 +1118,15 @@ Here are the steps to configure the module:
     * reg
     * sh
 
-    ![Mailfilter file extensions](assets/images/zentyal/mailfilter-files_extensions.png "Mailfilter file extensions")
+    ![Mailfilter file extensions](assets/zentyal/mailfilter-files_extensions.png "Mailfilter file extensions")
 
 6. We enable the module:
 
-    ![Mailfilter enable](assets/images/zentyal/modules_mailfilter.png "Mailfilter enable")
+    ![Mailfilter enable](assets/zentyal/modules_mailfilter.png "Mailfilter enable")
 
 7. We create the email account that we established in step 1 from `Users and Computers -> Manage`:
 
-    ![Mail account for issues](assets/images/zentyal/mailfilter-issues_account.png "Mail account for issues")
+    ![Mail account for issues](assets/zentyal/mailfilter-issues_account.png "Mail account for issues")
 
 8. We send a simple email from an external domain and check in the log file `/var/log/mail.log` that the module has analyzed it through the Amavis service:
 
@@ -1201,7 +1201,7 @@ Here are the steps to configure the module:
 
 10. Finally, we confirm that the `issues@icecrown.es` account has an email with our latest test.
 
-    ![Mail confirmation](assets/images/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
+    ![Mail confirmation](assets/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
 At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least **SPF** and **DKIM**, and ideally, **DMARC**. These security configurations are discussed on the `Hardening` page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in `Certificates`.
 
@@ -1211,7 +1211,7 @@ In order to use the OpenVPN module, we need to configure the [CA] module beforeh
 
 1. We create our certification entity from `Certificate Authority -> General`:
 
-    ![CA creation](assets/images/zentyal/ca-creation.png "CA Creation")
+    ![CA creation](assets/zentyal/ca-creation.png "CA Creation")
 
 2. Finally, we save changes for our CA to be created.
 
@@ -1221,7 +1221,7 @@ In order to use the OpenVPN module, we need to configure the [CA] module beforeh
 
 Additionally, it is possible to issue certificates for the modules we are using with the correct CommonName, however, since we are going to issue certificates recognized through Let's Encrypt, we will not use such functionality. If you want to use it, you would have to go to `Certificate Authority -> Services` as indicated below:
 
-![Certificates for services](assets/images/zentyal/ca-services.png "Certificates for services")
+![Certificates for services](assets/zentyal/ca-services.png "Certificates for services")
 
 [CA]: https://doc.zentyal.org/en/ca.html
 
@@ -1241,29 +1241,29 @@ The following steps need to be performed to configure the module:
 
 1. Create the certificate that we will use as the name. To do this, go to `Certificate Authority -> General`:
 
-    ![CA prefix certificate](assets/images/zentyal/ca-prefix-certificate.png "CA prefix certificate")
+    ![CA prefix certificate](assets/zentyal/ca-prefix-certificate.png "CA prefix certificate")
 
 2. Create the VPN connection from `VPN -> Servers`:
 
-    ![OpenVPN server](assets/images/zentyal/vpn-server.png "OpenVPN server")
+    ![OpenVPN server](assets/zentyal/vpn-server.png "OpenVPN server")
 
 3. Configure the connection from `VPN -> Servers -> Configuration`:
 
-    ![OpenVPN configuration 1](assets/images/zentyal/vpn-configuration-1.png "OpenVPN configuration 1")
-    ![OpenVPN configuration 2](assets/images/zentyal/vpn-configuration-2.png "OpenVPN configuration 2")
+    ![OpenVPN configuration 1](assets/zentyal/vpn-configuration-1.png "OpenVPN configuration 1")
+    ![OpenVPN configuration 2](assets/zentyal/vpn-configuration-2.png "OpenVPN configuration 2")
 
 4. Confirm that the server's internal network is configured in the VPN connection by going to `VPN -> Servers -> Advertised networks`:
 
-    ![OpenVPN network configuration](assets/images/zentyal/vpn-network-configuration.png "OpenVPN network configuration")
+    ![OpenVPN network configuration](assets/zentyal/vpn-network-configuration.png "OpenVPN network configuration")
 
 5. Enable the module:
 
-    ![OpenVPN enable](assets/images/zentyal/modules_openvpn.png "OpenVPN enable")
+    ![OpenVPN enable](assets/zentyal/modules_openvpn.png "OpenVPN enable")
 
 6. Create a network service with the defined VPN connection port:
 
-    ![OpenVPN network service](assets/images/zentyal/vpn-service-1.png "OpenVPN network service")
-    ![OpenVPN network service port](assets/images/zentyal/vpn-service-2.png "OpenVPN network service port")
+    ![OpenVPN network service](assets/zentyal/vpn-service-1.png "OpenVPN network service")
+    ![OpenVPN network service port](assets/zentyal/vpn-service-2.png "OpenVPN network service port")
 
     !!! warning
 
@@ -1271,22 +1271,22 @@ The following steps need to be performed to configure the module:
 
 7. Finally, create a rule in the Zentyal firewall that allows the connection and save changes:
 
-    ![OpenVPN firewall rule](assets/images/zentyal/vpn-firewall.png "OpenVPN firewall rule")
+    ![OpenVPN firewall rule](assets/zentyal/vpn-firewall.png "OpenVPN firewall rule")
 
 With the module now configured, we create a certificate, user, and shared resource to confirm the full functionality of this module. To do so, follow these steps:
 
 1. Create a certificate:
 
-    ![OpenVPN test certificate](assets/images/zentyal/vpn-test-certificate.png "OpenVPN test certificate")
+    ![OpenVPN test certificate](assets/zentyal/vpn-test-certificate.png "OpenVPN test certificate")
 
 2. Create a domain user:
 
-    ![OpenVPN test user](assets/images/zentyal/vpn-test-user.png "OpenVPN test user")
+    ![OpenVPN test user](assets/zentyal/vpn-test-user.png "OpenVPN test user")
 
 3. Create a shared folder with read and write permissions for the test user:
 
-    ![OpenVPN test share](assets/images/zentyal/vpn-test-share-1.png "OpenVPN test share")
-    ![OpenVPN test share permissions](assets/images/zentyal/vpn-test-share-2.png "OpenVPN test share permissions")
+    ![OpenVPN test share](assets/zentyal/vpn-test-share-1.png "OpenVPN test share")
+    ![OpenVPN test share permissions](assets/zentyal/vpn-test-share-2.png "OpenVPN test share permissions")
 
 4. Save changes.
 
@@ -1296,11 +1296,11 @@ With the module now configured, we create a certificate, user, and shared resour
 
         For this specific example, I will use a Windows 10 machine with OpenVPN already installed for the client.
 
-    ![OpenVPN test bundle](assets/images/zentyal/vpn-test-bundle.png "OpenVPN test bundle")
+    ![OpenVPN test bundle](assets/zentyal/vpn-test-bundle.png "OpenVPN test bundle")
 
 6. Copy the bundle to the client from where you want to establish the VPN connection and configure the OpenVPN client:
 
-    ![OpenVPN client configuration](assets/images/zentyal/vpn-client-configuration.png "OpenVPN client configuration")
+    ![OpenVPN client configuration](assets/zentyal/vpn-client-configuration.png "OpenVPN client configuration")
 
 7. Establish the connection from the OpenVPN client. If everything went well, we should be able to see similar logs in the Zentyal VPN connection log file called `/var/log/openvpn/Icecrown-RecursosCompartidos.log`:
 
@@ -1338,11 +1338,11 @@ With the module now configured, we create a certificate, user, and shared resour
 
 8. Once the connection is established, from the file browser, we will set the server URL, which in my case is: `\\arthas.icecrown.es`. Then, it will ask us for the user credentials.
 
-    ![OpenVPN client log in credentials](assets/images/zentyal/vpn-client-credentials.png "OpenVPN client log in credentials")
+    ![OpenVPN client log in credentials](assets/zentyal/vpn-client-credentials.png "OpenVPN client log in credentials")
 
 9. After logging in, we should see the user's personal directory and shared resources.
 
-    ![OpenVPN client view](assets/images/zentyal/vpn-client-shares.png "OpenVPN client view")
+    ![OpenVPN client view](assets/zentyal/vpn-client-shares.png "OpenVPN client view")
 
 10. Add a file to the `Maria` and `rrhh` resources and verify its creation from the Zentyal server CLI:
 

@@ -91,7 +91,7 @@ The following are the actions to be performed to apply these policies:
 
 4. Finally, we try to create a user with a weak password to confirm that the policies are in operation:
 
-    ![User with weak password](assets/images/zentyal/hardening-dc_password.png "User with weak password")
+    ![User with weak password](assets/zentyal/hardening-dc_password.png "User with weak password")
 
 ## Mail module
 
@@ -110,17 +110,17 @@ For this module, we will implement the following features to significantly incre
 
 1. Through [this](https://www.spfwizard.net/) website, we will generate the necessary DNS record to implement this authentication method:
 
-    ![SPF generator](assets/images/zentyal/mail-spf.png "SPF generator")
+    ![SPF generator](assets/zentyal/mail-spf.png "SPF generator")
 
 2. We create the `TXT` record both in the DNS module and in the DNS provider - in my case, Route53 -:
 
     For Zentyal, we go to `DNS -> Domains -> TXT records`:
 
-    ![SPF Zentyal record](assets/images/zentyal/mail-spf_zentyal.png "SPF Zentyal record")
+    ![SPF Zentyal record](assets/zentyal/mail-spf_zentyal.png "SPF Zentyal record")
 
     For Route 53:
 
-    ![SPF Route53 record](assets/images/zentyal/mail-spf_route53.png "SPF Route53 record")
+    ![SPF Route53 record](assets/zentyal/mail-spf_route53.png "SPF Route53 record")
 
 3. We check the resolution of the new record both internally and externally:
 
@@ -178,11 +178,11 @@ For this module, we will implement the following features to significantly incre
 
 4. We will also use [MXtoolbox](https://mxtoolbox.com/spf.aspx) to check the record:
 
-    ![SPF check](assets/images/zentyal/mail-spf_mxtoolbox.png "SPF check")
+    ![SPF check](assets/zentyal/mail-spf_mxtoolbox.png "SPF check")
 
 5. Finally, we will send an email to an external account - GMail in my case - and verify the headers:
 
-    ![SPF sending check](assets/images/zentyal/mail-spf_test-email.png "SPF sending check")
+    ![SPF sending check](assets/zentyal/mail-spf_test-email.png "SPF sending check")
 
 ### DKIM
 
@@ -306,7 +306,7 @@ For this module, we will implement the following features to significantly incre
 
     For Route53:
 
-    !["DNS record for DKIM in Route53"](assets/images/zentyal/mail-dkim_route53.png "DNS record for DKIM in Route53")
+    !["DNS record for DKIM in Route53"](assets/zentyal/mail-dkim_route53.png "DNS record for DKIM in Route53")
 
     !!! warning
 
@@ -369,7 +369,7 @@ For this module, we will implement the following features to significantly incre
 
 14. We will also use [MXtoolbox] to check the record:
 
-    ![MXtoolbox](assets/images/zentyal/mail-dkim_mxtoolbox.png "DKIM check")
+    ![MXtoolbox](assets/zentyal/mail-dkim_mxtoolbox.png "DKIM check")
 
 15. Once the DNS record is confirmed, we will proceed to configure the Postfix (SMTP) service to make use of this service. To do this, we add the following lines at the end of the stub `/etc/zentyal/stubs/mail/main.cf.mas`.
 
@@ -396,7 +396,7 @@ For this module, we will implement the following features to significantly incre
 
 17. Finally, we will send an email to an external account - GMail in my case - and verify the headers.
 
-    ![DKIM headers](assets/images/zentyal/mail-dkim-test-email.png "DKIM headers")
+    ![DKIM headers](assets/zentyal/mail-dkim-test-email.png "DKIM headers")
 
 [MXtoolbox]: https://mxtoolbox.com/dkim.aspx
 
@@ -408,18 +408,18 @@ The last implementation we will perform will be [DMARC]. This authentication mec
 
 1. Through [this](https://mxtoolbox.com/DMARCRecordGenerator.aspx) website, we will generate the necessary DNS record to implement this authentication method:
 
-    ![DMARC generator 1](assets/images/zentyal/mail-dmarc-generator_1.png "DMARC generator 1")
-    ![DMARC generator 2](assets/images/zentyal/mail-dmarc-generator_2.png "DMARC generator 2")
+    ![DMARC generator 1](assets/zentyal/mail-dmarc-generator_1.png "DMARC generator 1")
+    ![DMARC generator 2](assets/zentyal/mail-dmarc-generator_2.png "DMARC generator 2")
 
 2. We create the DNS record of type `TXT` on both the Zentyal server and the DNS provider:
 
     For the Zentyal server, we go to `DNS -> Domains -> TXT records`:
 
-    !["DNS record for DMARC in Zentyal"](assets/images/zentyal/mail-dmarc_zentyal.png "DNS record for DMARC in Zentyal")
+    !["DNS record for DMARC in Zentyal"](assets/zentyal/mail-dmarc_zentyal.png "DNS record for DMARC in Zentyal")
 
     For Route53:
 
-    !["DNS record for DMARC in Route53"](assets/images/zentyal/mail-dmarc_route53.png "DNS record for DMARC in Route53")
+    !["DNS record for DMARC in Route53"](assets/zentyal/mail-dmarc_route53.png "DNS record for DMARC in Route53")
 
 3. We check the resolution of the new record both internally and externally:
 
@@ -477,11 +477,11 @@ The last implementation we will perform will be [DMARC]. This authentication mec
 
 4. We will also use [MXtoolbox](https://mxtoolbox.com/DMARC.aspx) to check the record:
 
-    ![DMARC check](assets/images/zentyal/mail-dmarc_mxtoolbox.png "DMARC check")
+    ![DMARC check](assets/zentyal/mail-dmarc_mxtoolbox.png "DMARC check")
 
 5. Finally, we will send an email to an external account - Gmail in my case - and verify the headers:
 
-    ![DMARC sending email](assets/images/zentyal/mail-dmarc-test_email.png "DMARC sending email")
+    ![DMARC sending email](assets/zentyal/mail-dmarc-test_email.png "DMARC sending email")
 
 ## Webmail module
 

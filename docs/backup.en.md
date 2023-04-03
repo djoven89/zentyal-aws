@@ -65,17 +65,17 @@ Below are the actions to implement the DLM rule:
 1. From the EC2 service, we go to `Elastic Block Store -> Lifecycle Manager`.
 2. We create a policy of type `EBS snapshot policy`:
 
-    ![DLM for system - Target](assets/images/aws/backup-dlm-system_target.png "DLM for system - Target")
-    ![DLM for system - Tags](assets/images/aws/backup-dlm-system_tags.png "DLM for system - Tags")
-    ![DLM for system - Schedule](assets/images/aws/backup-dlm-system_schedule.png "DLM for system - Schedule")
+    ![DLM for system - Target](assets/aws/backup-dlm-system_target.png "DLM for system - Target")
+    ![DLM for system - Tags](assets/aws/backup-dlm-system_tags.png "DLM for system - Tags")
+    ![DLM for system - Schedule](assets/aws/backup-dlm-system_schedule.png "DLM for system - Schedule")
 
     Summary of the configuration:
 
-    ![DLM for system - Summary](assets/images/aws/backup-dlm-system_summary.png "DLM for system - Summary")
+    ![DLM for system - Summary](assets/aws/backup-dlm-system_summary.png "DLM for system - Summary")
 
 3. Finally, we confirm its operation. To do this, from the EC2 service, we go to `Elastic Block Store -> Snapshots`:
 
-    ![DLM for system - Snapshot](assets/images/aws/backup-dlm-system_snapshot.png "DLM for system - Snapshot")
+    ![DLM for system - Snapshot](assets/aws/backup-dlm-system_snapshot.png "DLM for system - Snapshot")
 
 ### DLM on the email volume
 
@@ -89,17 +89,17 @@ Below are the actions to implement the DLM rule:
 1. From the EC2 service, we go to `Elastic Block Store -> Lifecycle Manager`.
 2. We create a policy of type `EBS snapshot policy`:
 
-    ![DLM for mail - Target](assets/images/aws/backup-dlm-mail_target.png "DLM for mail - Target")
-    ![DLM for mail - Tags](assets/images/aws/backup-dlm-mail_tags.png "DLM for mail - Tags")
-    ![DLM for mail - Schedule](assets/images/aws/backup-dlm-mail_schedule.png "DLM for mail - Schedule")
+    ![DLM for mail - Target](assets/aws/backup-dlm-mail_target.png "DLM for mail - Target")
+    ![DLM for mail - Tags](assets/aws/backup-dlm-mail_tags.png "DLM for mail - Tags")
+    ![DLM for mail - Schedule](assets/aws/backup-dlm-mail_schedule.png "DLM for mail - Schedule")
 
     Summary of the configuration:
 
-    ![DLM for mail - Summary](assets/images/aws/backup-dlm-mail_summary.png "DLM for mail - Summary")
+    ![DLM for mail - Summary](assets/aws/backup-dlm-mail_summary.png "DLM for mail - Summary")
 
 3. Finally, we confirm its operation. To do this, from the EC2 service, we go to `Elastic Block Store -> Snapshots`:
 
-    ![DLM for mail - Snapshot](assets/images/aws/backup-dlm-mail_snapshot.png "DLM for mail - Snapshot")
+    ![DLM for mail - Snapshot](assets/aws/backup-dlm-mail_snapshot.png "DLM for mail - Snapshot")
 
 ### DLM on the shared resource volume
 
@@ -113,17 +113,17 @@ Below are the steps to implement the DLM rule:
 1. From the EC2 service, go to `Elastic Block Store -> Lifecycle Manager`.
 2. Create an `EBS snapshot policy`:
 
-    ![DLM for shares - Target](assets/images/aws/backup-dlm-shares_target.png "DLM for shares - Target")
-    ![DLM for shares - Tags](assets/images/aws/backup-dlm-shares_tags.png "DLM for shares - Tags")
-    ![DLM for shares - Schedule](assets/images/aws/backup-dlm-shares_schedule.png "DLM for shares - Schedule")
+    ![DLM for shares - Target](assets/aws/backup-dlm-shares_target.png "DLM for shares - Target")
+    ![DLM for shares - Tags](assets/aws/backup-dlm-shares_tags.png "DLM for shares - Tags")
+    ![DLM for shares - Schedule](assets/aws/backup-dlm-shares_schedule.png "DLM for shares - Schedule")
 
     Summary of the configuration:
 
-    ![DLM for shares - Summary](assets/images/aws/backup-dlm-shares_summary.png "DLM for shares - Summary")
+    ![DLM for shares - Summary](assets/aws/backup-dlm-shares_summary.png "DLM for shares - Summary")
 
 3. Finally, confirm its operation by going to `Elastic Block Store -> Snapshots` from the EC2 service:
 
-    ![DLM for shares - Snapshot](assets/images/aws/backup-dlm-shares_snapshot.png "DLM for shares - Snapshot")
+    ![DLM for shares - Snapshot](assets/aws/backup-dlm-shares_snapshot.png "DLM for shares - Snapshot")
 
 ## Configuration backup functionality
 
@@ -149,7 +149,7 @@ The steps to implement it are:
 
 2. Once it has finished, log in to the Zentyal GUI and go to `System -> Configuration Backup` to confirm that the backup is detected by Zentyal and can be downloaded.
 
-    ![Configuration backup from CLI](assets/images/zentyal/backup-zentyal_conf.png "Configuration backup from CLI")
+    ![Configuration backup from CLI](assets/zentyal/backup-zentyal_conf.png "Configuration backup from CLI")
 
 3. Once its operation is confirmed, create the scheduled task to run daily at 02:30 AM. To do this, create the configuration file in `/etc/cron.d/custom-backup_conf` with the following content:
 
@@ -160,7 +160,7 @@ The steps to implement it are:
 
 4. Finally, check the scheduled task:
 
-    ![Configuration backup from Cronjob](assets/images/zentyal/backup-zentyal_conf-cronjob.png "Configuration backup from Cronjob")
+    ![Configuration backup from Cronjob](assets/zentyal/backup-zentyal_conf-cronjob.png "Configuration backup from Cronjob")
 
     !!! note
 

@@ -23,7 +23,7 @@ To follow this document, you will need the following:
 
 Before starting to create resources, we need to know which is the best region to use. To do this, we will use [this] website, where we can see which region has better latency from our location.
 
-![Regions](assets/images/aws/aws-01-latency.png "Regions")
+![Regions](assets/aws/aws-01-latency.png "Regions")
 
 As seen in the image, in my specific case, I have selected all the European regions since I am in Spain. The displayed result indicates that **Paris** is the region with the best latency, therefore, this will be the region where I will deploy the environment.
 
@@ -51,7 +51,7 @@ We will create a VPC with the following configuration:
 
 Below is an image with the configuration.
 
-![VPC creation](assets/images/aws/aws-02-vpc_vpc.png "VPC creation")
+![VPC creation](assets/aws/aws-02-vpc_vpc.png "VPC creation")
 
 Once it has been created, we can optionally enable the following options:
 
@@ -76,7 +76,7 @@ The subnet configuration will be:
 
 Below is an image with the configuration.
 
-![Subnet creation](assets/images/aws/aws-03-vpc_subnet-1.png "Subnet creation")
+![Subnet creation](assets/aws/aws-03-vpc_subnet-1.png "Subnet creation")
 
 ### Gateway
 
@@ -93,11 +93,11 @@ The Internet gateway will be configured as follows:
 
 Here is an image of the configuration:
 
-![Internet gateway creation](assets/images/aws/aws-04-vpc_gateway-1.png "Internet gateway creation")
+![Internet gateway creation](assets/aws/aws-04-vpc_gateway-1.png "Internet gateway creation")
 
 Finally, we will associate the newly created resource with our VPC.
 
-![Internet gateway attach](assets/images/aws/aws-05-vpc_gateway-2.png "Internet gateway attach")
+![Internet gateway attach](assets/aws/aws-05-vpc_gateway-2.png "Internet gateway attach")
 
 ### Routes
 
@@ -110,15 +110,15 @@ For this case, we will have to edit the existing resource and perform the follow
 
 1. Create the tags as shown in the image:
 
-    ![Route tags](assets/images/aws/aws-06-vpc_route-1.png "Route tags")
+    ![Route tags](assets/aws/aws-06-vpc_route-1.png "Route tags")
 
 2. Ensure that the subnet is associated:
 
-    ![Route subnets](assets/images/aws/aws-07-vpc_route-2.png "Route subnets")
+    ![Route subnets](assets/aws/aws-07-vpc_route-2.png "Route subnets")
 
 3. Set the gateway to resolve the rest of the network ranges.
 
-    ![Route gateway](assets/images/aws/aws-08-vpc_route-3.png "Route gateway")
+    ![Route gateway](assets/aws/aws-08-vpc_route-3.png "Route gateway")
 
 ### Network ACL
 
@@ -130,19 +130,19 @@ Once again, AWS creates a default network ACL for us, which we will modify as fo
 
 1. Create the tags as shown in the image:
 
-    ![NACL tags](assets/images/aws/aws-09-vpc_nacl-1.png "NACL tags")
+    ![NACL tags](assets/aws/aws-09-vpc_nacl-1.png "NACL tags")
 
 2. Ensure that the subnet is associated:
 
-    ![Route subnets](assets/images/aws/aws-10-vpc_nacl-2.png "Route subnets")
+    ![Route subnets](assets/aws/aws-10-vpc_nacl-2.png "Route subnets")
 
 3. Verify that all inbound traffic is allowed:
 
-    ![Route Inbound](assets/images/aws/aws-11-vpc_nacl-3.png "Route Inbound")
+    ![Route Inbound](assets/aws/aws-11-vpc_nacl-3.png "Route Inbound")
 
 4. Verify that all outbound traffic is allowed:
 
-    ![Route Outbound](assets/images/aws/aws-12-vpc_nacl-4.png "Route Outbound")
+    ![Route Outbound](assets/aws/aws-12-vpc_nacl-4.png "Route Outbound")
 
 ### Security Group
 
@@ -154,7 +154,7 @@ For this specific resource, we will do 2 things:
 
 1. We will modify the tags of the resource that AWS created by default when we created the VPC.
 
-    ![Default Security Group](assets/images/aws/aws-13-vpc_securityGroup-1.png "Default Security Group")
+    ![Default Security Group](assets/aws/aws-13-vpc_securityGroup-1.png "Default Security Group")
 
 2. We will create a new resource, which will contain the ports that we will allow public access to, which are:
 
@@ -173,7 +173,7 @@ For this specific resource, we will do 2 things:
 
     The result should be as follows:
 
-    ![Security Group for Zentyal](assets/images/aws/aws-14-vpc_securityGroup-2.png "Security Group for Zentyal")
+    ![Security Group for Zentyal](assets/aws/aws-14-vpc_securityGroup-2.png "Security Group for Zentyal")
 
     In addition, we will also set the following tags:
 
@@ -208,7 +208,7 @@ The configuration we will set up is:
     * **Name**: GP-Prod-1
     * **Env**: Production
 
-![Group Placement creation](assets/images/aws/aws-17-ec2_groupPlacement.png "Group Placement creation")
+![Group Placement creation](assets/aws/aws-17-ec2_groupPlacement.png "Group Placement creation")
 
 ### Key Pair
 
@@ -232,7 +232,7 @@ The configuration we will set up is:
     * **Env**: Production
     * **Host:** arthas.icecrown.es
 
-![Key Pair creation](assets/images/aws/aws-18-ec2_keypair.png "Key Pair creation")
+![Key Pair creation](assets/aws/aws-18-ec2_keypair.png "Key Pair creation")
 
 ### Network interface
 
@@ -251,8 +251,8 @@ The configuration we will set up is:
     * **Env**: Production
     * **Host:** arthas.icecrown.es
 
-![Network interface creation 1](assets/images/aws/aws-19-ec2_network-1.png "Network interface creation 1")
-![Network interface creation 2](assets/images/aws/aws-20-ec2_network-2.png "Network interface creation 2")
+![Network interface creation 1](assets/aws/aws-19-ec2_network-1.png "Network interface creation 1")
+![Network interface creation 2](assets/aws/aws-20-ec2_network-2.png "Network interface creation 2")
 
 ### Instance
 
@@ -266,7 +266,7 @@ Once we have created all the above resources in the EC2 service, we will proceed
 * For the project's testing purposes, I have opted for the most economical instance possible, which is of the general type and is called [t3a.medium].
 * The instance price can be obtained from [here].
     * In my specific case, the cost per hour (if running) will be '**$0.04**'.
-        ![Instance price](assets/images/aws/aws-ec2_price.png "Instance price")
+        ![Instance price](assets/aws/aws-ec2_price.png "Instance price")
     * Instance price
 * I will use 3 EBS (hard disks) volumes to establish the following partitioning:
     * System EBS of 30GB.
@@ -311,11 +311,11 @@ Therefore, the configuration we will define in the service will be:
     * **Env**: Production
     * **Host:** arthas.icecrown.es
 
-![Instance creation 1](assets/images/aws/aws-21-ec2_ec2-1.png "Instance creation 1")
-![Instance creation 2](assets/images/aws/aws-22-ec2_ec2-2.png "Instance creation 2")
-![Instance creation 3](assets/images/aws/aws-23-ec2_ec2-3.png "Instance creation 3")
-![Instance creation 4](assets/images/aws/aws-24-ec2_ec2-4.png "Instance creation 4")
-![Instance creation 5](assets/images/aws/aws-25-ec2_ec2-5.png "Instance creation 5")
+![Instance creation 1](assets/aws/aws-21-ec2_ec2-1.png "Instance creation 1")
+![Instance creation 2](assets/aws/aws-22-ec2_ec2-2.png "Instance creation 2")
+![Instance creation 3](assets/aws/aws-23-ec2_ec2-3.png "Instance creation 3")
+![Instance creation 4](assets/aws/aws-24-ec2_ec2-4.png "Instance creation 4")
+![Instance creation 5](assets/aws/aws-25-ec2_ec2-5.png "Instance creation 5")
 
 ### Volumes
 
@@ -330,7 +330,7 @@ Before proceeding to create the additional volumes, we will set the tags for the
 
 [volumes]: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volumes.html
 
-![Volumen root modification](assets/images/aws/aws-26-ec2_volume-1.png "Volumen root modification")
+![Volumen root modification](assets/aws/aws-26-ec2_volume-1.png "Volumen root modification")
 
 Next, we create the additional volumes:
 
@@ -354,8 +354,8 @@ Next, we create the additional volumes:
     * **Host:** arthas.icecrown.es
     * **Type:** Mail
 
-![Mail volume creation 1](assets/images/aws/aws-27-ec2_volume-2.png "Mail volume creation 1")
-![Mail volume creation 2](assets/images/aws/aws-28-ec2_volume-3.png "Mail volume creation 2")
+![Mail volume creation 1](assets/aws/aws-27-ec2_volume-2.png "Mail volume creation 1")
+![Mail volume creation 2](assets/aws/aws-28-ec2_volume-3.png "Mail volume creation 2")
 
 **For personal directories and shared resources:**
 
@@ -373,13 +373,13 @@ Next, we create the additional volumes:
     * **Host:** arthas.icecrown.es
     * **Type:** Shares
 
-![Shares volume creation 1](assets/images/aws/aws-29-ec2_volume-4.png "Shares volume creation 1")
-![Shares volume creation 2](assets/images/aws/aws-30-ec2_volume-5.png "Shares volume creation 2")
+![Shares volume creation 1](assets/aws/aws-29-ec2_volume-4.png "Shares volume creation 1")
+![Shares volume creation 2](assets/aws/aws-30-ec2_volume-5.png "Shares volume creation 2")
 
 Finally, we will associate both volumes with the EC2 instance.
 
-![Mail volume attach](assets/images/aws/aws-31-ec2_volume-6.png "Mail volume attach")
-![Shares volume attach](assets/images/aws/aws-32-ec2_volume-7.png "Shares volume attach")
+![Mail volume attach](assets/aws/aws-31-ec2_volume-6.png "Mail volume attach")
+![Shares volume attach](assets/aws/aws-32-ec2_volume-7.png "Shares volume attach")
 
 ### Elastic IP
 
@@ -393,11 +393,11 @@ The tags we will define for the resource are:
 * **Env**: Production
 * **Host:** arthas.icecrown.es
 
-![Elastic IP creation](assets/images/aws/aws-33-ec2_eip-1.png "Elastic IP creation")
+![Elastic IP creation](assets/aws/aws-33-ec2_eip-1.png "Elastic IP creation")
 
 Finally, we associate the newly created resource with the instance.
 
-![Elastic IP attach](assets/images/aws/aws-34-ec2_eip-2.png "Elastic IP attach")
+![Elastic IP attach](assets/aws/aws-34-ec2_eip-2.png "Elastic IP attach")
 
 ## Route 53
 
@@ -405,7 +405,7 @@ The next necessary action is to create the DNS record in the domain to point to 
 
 [Route 53]: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html
 
-![DNS record](assets/images/aws/aws-35-ec2_route53-1.png "DNS record")
+![DNS record](assets/aws/aws-35-ec2_route53-1.png "DNS record")
 
 ## Request email sending
 

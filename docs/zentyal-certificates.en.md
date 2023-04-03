@@ -5,46 +5,46 @@ tags:
 
 ---
 
-# Certificados
+# Certificates
 
-Zentyal por defecto uso certificados auto firmados para sus módulos, incluyendo el uso del módulo de CA. Esta situación provoca que se muestren warning como por ejemplo, usando clientes de correo o al acceder al webadmin o webmail. Es por esto que en esta página se mostrará como generar certificados reconocidos emitidos por Let's Encrypt.
+By default, Zentyal uses self-signed certificates for its modules, including the use of the CA module. This situation causes warnings to be displayed, for example, when using mail clients or when accessing the webadmin or webmail. Therefore, this page will show how to generate recognized certificates issued by Let's Encrypt.
 
-Las acciones que realizaré para el proyecto serán:
+The actions I will take for the project are:
 
-1. Emitiré 2 certificados, teniendo uno de ellos dos subdominios:
-    * Módulo de webadmin: `arthas.icecrown.es`
-    * Módulo de correo y webmail: `mail.icecrown.es` y `webmail.icecrown.es`
-2. Usaré el [challenge] de tipo HTTP.
-3. Usaré la cuenta de correo `it.infra@icecrown.es` como cuenta de correo para la recepción de notificaciones por parte de Let's Encrypt.
+1. I will issue 2 certificates, with one of them having two subdomains:
+    * Webadmin module: `arthas.icecrown.es`
+    * Mail and webmail module: `mail.icecrown.es` and `webmail.icecrown.es`
+2. I will use the HTTP challenge type.
+3. I will use the email account `it.infra@icecrown.es` as the email address to receive notifications from Let's Encrypt.
 
 [challenge]: https://letsencrypt.org/docs/challenge-types/
 
-A continuación se indican las acciones a realizar antes de proceder a la generación de los certificados.
+Here are the actions to be performed before generating the certificates:
 
-1. Instalamos los paquetes necesarios para la generación de los certificados:
+1. Install the necessary packages for generating certificates.
 
     ```bash
     sudo apt update
     sudo apt install -y certbot python3-certbot-apache
     ```
 
-2. Creamos una regla temporal en el firewall de Zentyal como en el security group de AWS que permita el protocolo HTTP para que el certificado pueda expedirse:
+2. Create a temporary rule in the Zentyal firewall and AWS security group that allows the HTTP protocol so that the certificate can be issued:
 
-    Para el firewall de Zentyal:
-    ![Firewall rule in Zentyal](assets/images/zentyal/certificates_firewall-zentyal.png "Firewall rule in Zentyal")
+    For the Zentyal firewall:
+    ![Firewall rule in Zentyal](assets/zentyal/certificates_firewall-zentyal.png "Firewall rule in Zentyal")
 
-    Para el security group de AWS:
-    ![Firewall rule in AWS](assets/images/zentyal/certificates_firewall-aws.png "Firewall rule in AWS")
+    For the AWS security group:
+    ![Firewall rule in AWS](assets/zentyal/certificates_firewall-aws.png "Firewall rule in AWS")
 
     !!! nota
 
-        Podremos eliminar esta regla una vez hayamos emitidos los certificados o la mantendremos para evitar tener que volver a establecerla cuando toque la renovación de los certificados.
+        We can remove this rule once we have issued the certificates or keep it to avoid having to re-establish it when it is time to renew the certificates.
 
-3. Creamos la cuenta de correo que recibirá las notificaciones:
+3. Create the email account that will receive notifications.
 
-    ![Mail account for notifications](assets/images/zentyal/certificates-email_account.png "Mail account for notifications")
+    ![Mail account for notifications](assets/zentyal/certificates-email_account.png "Mail account for notifications")
 
-4. Comprobaremos que desde el exterior podemos resolver los subdominios en cuestión:
+4. Verify that we can resolve the subdomains in question from the outside:
 
     ```bash
     dig arthas.icecrown.es @8.8.8.8
@@ -52,7 +52,7 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
     dig webmail.icecrown.es @8.8.8.8
     ```
 
-    El resultado que obtengo en mi caso es:
+    The result I obtained in my case is:
 
     ```text
     ## Webadmin
@@ -122,9 +122,9 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 
 ## Webadmin
 
-Para generar el certificado para el **Webadmin (panel de administración)** usaremos el paquete `python3-certbot-apache` en lugar de `python3-certbot-nginx` debido a que Zentyal ejecuta Nginx de forma personalizada, lo que provoca errores a la hora de generar certificados.
+To generate the certificate for the **Webadmin** (administration panel), we will use the package `python3-certbot-apache` instead of `python3-certbot-nginx` because Zentyal runs Nginx in a customized way, which causes errors when generating certificates.
 
-1. Generaremos el certificado:
+1. Generate the certificate:
 
     ```bash
     sudo certbot certonly \
@@ -135,7 +135,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
         -d arthas.icecrown.es
     ```
 
-    Un ejemplo del resultado:
+    An example of the result:
 
     ```text
     Saving debug log to /var/log/letsencrypt/letsencrypt.log
@@ -162,19 +162,19 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     Donating to EFF:                    https://eff.org/donate-le
     ```
 
-2. Con el certificado generado, tendremos que modificar la plantilla de configuración ([stub]) del módulo, para que dicho cambio sea persistente ante futuras actualizaciones del módulo por parte de Zentyal. Para ello, crearemos los directorios necesarios:
+2. With the generated certificate, we will need to modify the configuration template ([stub]) of the module so that this change persists in future updates of the module by Zentyal. To do this, we will create the necessary directories:
 
     ```bash
     sudo mkdir -vp /etc/zentyal/stubs/core
     ```
 
-3. Copiamos la plantilla a modificar:
+3. Copy the template to modify:
 
     ```bash
     sudo cp -v /usr/share/zentyal/stubs/core/nginx.conf.mas /etc/zentyal/stubs/core/
     ```
 
-4. Modificamos en la plantilla recién copiada los siguientes parámetros de configuración:
+4. Modify the following configuration parameters in the newly copied template:
 
     ```text
     ## Custom certificates issued on 18-02-2023 by Daniel
@@ -184,7 +184,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     ssl_certificate_key /etc/letsencrypt/live/arthas.icecrown.es/privkey.pem;
     ```
 
-5. Opcionalmente, también modificaré los siguientes parámetros de configuración, cuyo valores ha han sido generados desde [esta](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
+5. Optionally, I will also modify the following configuration parameters, whose values have been generated from [this] website.
 
     ```text
     ## Custom configuration applied on 18-02-2023 by Daniel
@@ -197,7 +197,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     ssl_prefer_server_ciphers off;
     ```
 
-6. Paramos el módulo del Webadmin, recargaremos Systemd y volvemos a iniciarlo para aplicar estos cambios:
+6. Stop the Webadmin module, reload Systemd, and then restart it to apply these changes.
 
     ```bash
     sudo zs webadmin stop
@@ -205,17 +205,18 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
     sudo zs webadmin restart
     ```
 
-7. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
+7. Finally, access the webadmin to confirm that the certificate is correct.
 
-    ![Webadmin certificate verification](assets/images/zentyal/certificate-webadmin_login.png "Webadmin certificate verification")
+    ![Webadmin certificate verification](assets/zentyal/certificate-webadmin_login.png "Webadmin certificate verification")
 
 [stub]: https://doc.zentyal.org/en/appendix-c.html#stubs
+[this]: https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6
 
 ## Mail y Webmail
 
-Para los módulos **Mail** y **Webmail** usaré el mismo certificado, es decir, el certificado será emitido con 2 subdominios en lugar de 1.
+For the **Mail** and **Webmail** modules, I will use the same certificate, meaning that the certificate will be issued with 2 subdomains instead of 1.
 
-Generaremos el certificado:
+We will generate the certificate:
 
 ```bash
 sudo certbot certonly \
@@ -227,7 +228,7 @@ sudo certbot certonly \
     -d webmail.icecrown.es
 ```
 
-Un ejemplo del resultado:
+An example of the result:
 
 ```text
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
@@ -255,13 +256,13 @@ Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
 Donating to EFF:                    https://eff.org/donate-le
 ```
 
-Con el certificado correctamente generado, procederé a configurar los ambos módulos para que hagan uso de el.
+With the certificate correctly generated, I will proceed to configure both modules to use it.
 
 ### Webmail
 
-Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/en/appendix-c.html#stubs), sino que simplemente habrá que modificar el archivo de configuración de Apache.
+For this module, it will not be necessary to edit a stub, but instead we will simply need to modify the Apache configuration file.
 
-1. Modificamos el archivo de configuración `/etc/apache2/sites-available/default-ssl.conf`:
+1. We modify the configuration file `/etc/apache2/sites-available/default-ssl.conf`:
 
     ```text
     ## Custom certificates issued on 18-02-2023 by Daniel
@@ -271,7 +272,7 @@ Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/e
     SSLCertificateKeyFile /etc/letsencrypt/live/mail.icecrown.es/privkey.pem
     ```
 
-2. Opcionalmente, también añadiré los siguientes parámetros de configuración al final del archivo de configuración. Los valores de los parámetros han sido generados desde [esta](https://ssl-config.mozilla.org/#server=apache&version=2.4.41&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
+2. Optionally, I will also add the following configuration parameters to the end of the configuration file. The values of the parameters have been generated from [this] website.
 
     ```text
     ## Custom configuration applied on 18-02-2023 by Daniel
@@ -282,38 +283,41 @@ Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/e
     SSLSessionTickets       off
     ```
 
-3. Reiniciamos el servicio de Apache:
+3. We restart the Apache service:
 
     ```sh
     sudo systemctl restart apache2
     ```
 
-4. Finalmente, accedemos al webadmin para confirmar que el certificado es correcto:
+4. Finally, we access the webadmin to confirm that the certificate is correct:
 
-    ![Webmail certificate verification](assets/images/zentyal/certificate-webmail.png "Webmail certificate verification")
+    ![Webmail certificate verification](assets/zentyal/certificate-webmail.png "Webmail certificate verification")
+
+[stub]: https://doc.zentyal.org/en/appendix-c.html#stubs
+[this]: https://ssl-config.mozilla.org/#server=apache&version=2.4.41&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6
 
 ### Mail
 
-Para este módulo habrá que modificar dos plantillas ([stubs](https://doc.zentyal.org/en/appendix-c.html#stubs)), una para el servicio SMTP (Postfix) y otra para IMAP/POP3 (Dovecot):
+For this module, we will need to modify two templates ([stubs]), one for the SMTP service (Postfix) and another for IMAP/POP3 (Dovecot):
 
 * main.cf.mas
 * dovecot.conf.mas
 
-Las acciones a realizar son:
+The actions to be performed are:
 
-1. Creamos el directorio donde ubicaremos las plantillas:
+1. We create the directory where we will place the templates:
 
     ```bash
     sudo mkdir -vp /etc/zentyal/stubs/mail
     ```
 
-2. Copiaremos las plantillas a modificar:
+2. We will copy the templates to be modified:
 
     ```bash
     sudo sudo cp -v /usr/share/zentyal/stubs/mail/{main.cf,dovecot.conf}.mas /etc/zentyal/stubs/mail/
     ```
 
-3. Modificamos la plantilla `main.cf.mas` para el servicio Postfix (SMTP):
+3. We modify the `main.cf.mas` template for the Postfix service (SMTP):
 
     ```text
     ## Custom certificates issued on 18-02-2023 by Daniel
@@ -323,7 +327,7 @@ Las acciones a realizar son:
     smtpd_tls_cert_file = /etc/letsencrypt/live/mail.icecrown.es/fullchain.pem
     ```
 
-4. Modificamos la otra plantilla `dovecot.conf.mas` para el servicio Dovecot (IMAP/POP3):
+4. We modify the other `dovecot.conf.mas` template for the Dovecot service (IMAP/POP3):
 
     ```text
     ## Custom certificates issued on 18-02-2023 by Daniel
@@ -333,20 +337,20 @@ Las acciones a realizar son:
     ssl_cert =</etc/letsencrypt/live/mail.icecrown.es/fullchain.pem
     ```
 
-5. Reiniciamos el módulo de correo para que se apliquen los cambios:
+5. We restart the mail module to apply the changes:
 
     ```sh
     sudo zs mail restart
     ```
 
-6. Finalmente, confirmamos que ambos servicios están usando correctamente el nuevo certificado. Para realizar dicha acción, podremos usar cliente de correo como Thunderbird o el comando `openssl` como será mi caso:
+6. Finally, we confirm that both services are correctly using the new certificate. To perform this action, we can use a mail client like Thunderbird or the `openssl` command as in my case:
 
     ```bash
     openssl s_client -starttls smtp -showcerts -connect mail.icecrown.es:465 -servername mail.icecrown.es
     openssl s_client -showcerts -connect mail.icecrown.es:993 -servername mail.icecrown.es
     ```
 
-    El resultado obtenido en mi caso ha sido:
+    The result obtained in my case has been:
 
     ```text
     ## Para SMTP
@@ -376,3 +380,5 @@ Las acciones a realizar son:
     0 s:CN = mail.icecrown.es
     i:C = US, O = Let's Encrypt, CN = R3
     ```
+
+[stub]: https://doc.zentyal.org/en/appendix-c.html#stubs

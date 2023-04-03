@@ -1,6 +1,4 @@
 .vscode/*
-generated/es/*
-!generated/es/.gitkeep
-generated/en/*
-!generated/en/.gitkeep
-!generated/index.html
+generated/*
+!generated/.gitkeep
+tasks/*

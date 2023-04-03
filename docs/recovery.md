@@ -24,17 +24,17 @@ Para simular la pérdida del documento importante, simplemente me conectaré con
 
 1. Con el usuario comprobamos la existencia del documento en el recurso compartido:
 
-    !["Check pdf file"](assets/images/aws/recovery-shares_disaster-1.png "Check pdf file")
+    !["Check pdf file"](assets/aws/recovery-shares_disaster-1.png "Check pdf file")
 
 2. Eliminamos el recurso:
 
-    !["Removing the pdf"](assets/images/aws/recovery-shares_disaster-2.png "Removing the pdf")
+    !["Removing the pdf"](assets/aws/recovery-shares_disaster-2.png "Removing the pdf")
 
 Con el desastre simulado, procederemos a su recuperación.
 
 1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
-    !["Getting the latest snapshot"](assets/images/aws/recovery-shares_snapshot-1.png "Getting the latest snapshot")
+    !["Getting the latest snapshot"](assets/aws/recovery-shares_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen temporal:
 
@@ -42,16 +42,16 @@ Con el desastre simulado, procederemos a su recuperación.
 
         Deberá crearse en la misma zona de disponibilidad.
 
-    !["Creating the volume 1"](assets/images/aws/recovery-shares_snapshot-2.png "Creating the volume 1")
-    !["Creating the volume 2"](assets/images/aws/recovery-shares_snapshot-3.png "Creating the volume 2")
+    !["Creating the volume 1"](assets/aws/recovery-shares_snapshot-2.png "Creating the volume 1")
+    !["Creating the volume 2"](assets/aws/recovery-shares_snapshot-3.png "Creating the volume 2")
 
 3. Verificamos que el volumen haya sido creado con éxito y que esté disponible:
 
-    !["Verifying the volume"](assets/images/aws/recovery-shares_snapshot-4.png "Verifying the volume")
+    !["Verifying the volume"](assets/aws/recovery-shares_snapshot-4.png "Verifying the volume")
 
 4. Asociamos el volumen a la instancia, para ello, vamos a `Actions -> Attach volume`:
 
-    !["Attaching the volume"](assets/images/aws/recovery-shares_snapshot-5.png "Attaching the volume")
+    !["Attaching the volume"](assets/aws/recovery-shares_snapshot-5.png "Attaching the volume")
 
 5. Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:
 
@@ -111,7 +111,7 @@ Con el desastre simulado, procederemos a su recuperación.
 
 10. Desde el usuario, comprobaremos que el archivo fue recuperado y que es accesible:
 
-    !["Confirming the email recovery"](assets/images/aws/recovery-shares_restoration.png "Confirming the email recovery")
+    !["Confirming the email recovery"](assets/aws/recovery-shares_restoration.png "Confirming the email recovery")
 
 11. Una vez hayamos confirmado la restauración del fichero, procedemos a desmontar el disco y eliminar el directorio temporal creado:
 
@@ -122,11 +122,11 @@ Con el desastre simulado, procederemos a su recuperación.
 
 12. Desvinculamos el volumen EBS de la instancia, para ello, vamos a `Actions -> Detach volume`:
 
-    !["Detaching the volumen"](assets/images/aws/recovery-shares_detach.png "Detaching the volumen")
+    !["Detaching the volumen"](assets/aws/recovery-shares_detach.png "Detaching the volumen")
 
 13. Finalmente, eliminamos el volumen EBS desde `Actions -> Delete volume`:
 
-    !["Removing the volumen"](assets/images/aws/recovery-shares_volumen-remove.png "Removing the volumen")
+    !["Removing the volumen"](assets/aws/recovery-shares_volumen-remove.png "Removing the volumen")
 
 ## Correos
 
@@ -143,18 +143,18 @@ Para simular la pérdida de un email importante, usaré el webmail para verifica
 
 1. Nos logeamos con el usuario y verificamos el email:
 
-    !["Check the email"](assets/images/aws/recovery-mail_disaster-1.png "Check the email")
+    !["Check the email"](assets/aws/recovery-mail_disaster-1.png "Check the email")
 
 2. Eliminamos el email:
 
-    !["Removing the email 1"](assets/images/aws/recovery-mail_disaster-2.png "Removing the email 1")
-    !["Removing the email 2"](assets/images/aws/recovery-mail_disaster-3.png "Removing the email 2")
+    !["Removing the email 1"](assets/aws/recovery-mail_disaster-2.png "Removing the email 1")
+    !["Removing the email 2"](assets/aws/recovery-mail_disaster-3.png "Removing the email 2")
 
 Ahora que tenemos simulado el desastre, procederemos a realizar las acciones necesarias para recuperar el email.
 
 1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
-    !["Getting the latest snapshot"](assets/images/aws/recovery-mail_snapshot-1.png "Getting the latest snapshot")
+    !["Getting the latest snapshot"](assets/aws/recovery-mail_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen temporal:
 
@@ -162,16 +162,16 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
         Deberá crearse en la misma zona de disponibilidad.
 
-    !["Creating the volume 1"](assets/images/aws/recovery-mail_snapshot-2.png "Creating the volume 1")
-    !["Creating the volume 2"](assets/images/aws/recovery-mail_snapshot-3.png "Creating the volume 2")
+    !["Creating the volume 1"](assets/aws/recovery-mail_snapshot-2.png "Creating the volume 1")
+    !["Creating the volume 2"](assets/aws/recovery-mail_snapshot-3.png "Creating the volume 2")
 
 3. Verificamos que el volumen haya sido creado con éxito y que esté disponible:
 
-    !["Verifying the volume"](assets/images/aws/recovery-mail_snapshot-4.png "Verifying the volume")
+    !["Verifying the volume"](assets/aws/recovery-mail_snapshot-4.png "Verifying the volume")
 
 4. Asociamos el volumen a la instancia, para ello, vamos a `Actions -> Attach volume`:
 
-    !["Attaching the volume"](assets/images/aws/recovery-mail_snapshot-5.png "Attaching the volume")
+    !["Attaching the volume"](assets/aws/recovery-mail_snapshot-5.png "Attaching the volume")
 
 5. Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:
 
@@ -238,8 +238,8 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 10. Desde la cuenta del usuario de correo, verificamos que lo hemos recuperado junto con su adjunto.
 
-    !["Confirming the email recovery"](assets/images/aws/recovery-mail_restoration.png "Confirming the email recovery")
-    !["Confirming the email recovery"](assets/images/aws/recovery-mail_restoration-2.png "Confirming the email recovery")
+    !["Confirming the email recovery"](assets/aws/recovery-mail_restoration.png "Confirming the email recovery")
+    !["Confirming the email recovery"](assets/aws/recovery-mail_restoration-2.png "Confirming the email recovery")
 
 11. Una vez restaurado con éxito el email, procedemos a desmontar el disco y eliminar el directorio temporal creado:
 
@@ -250,11 +250,11 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 12. Desvinculamos el volumen EBS de la instancia, para ello, vamos a `Actions -> Detach volume`:
 
-    !["Detaching the volumen"](assets/images/aws/recovery-mail_detach.png "Detaching the volumen")
+    !["Detaching the volumen"](assets/aws/recovery-mail_detach.png "Detaching the volumen")
 
 13. Finalmente, eliminamos el volumen EBS desde `Actions -> Delete volume`:
 
-    !["Removing the volumen"](assets/images/aws/recovery-mail_volumen-remove.png "Removing the volumen")
+    !["Removing the volumen"](assets/aws/recovery-mail_volumen-remove.png "Removing the volumen")
 
 ## Sistema
 
@@ -324,7 +324,7 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
 1. Desde `EC2 -> Elastic Block Store -> Snapshots -> Create volume from snapshot` seleccionamos la última snapshot y creamos un volumen:
 
-    !["Getting the latest snapshot"](assets/images/aws/recovery-system_snapshot-1.png "Getting the latest snapshot")
+    !["Getting the latest snapshot"](assets/aws/recovery-system_snapshot-1.png "Getting the latest snapshot")
 
 2. Configuramos el volumen:
 
@@ -332,29 +332,29 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
         Deberá crearse en la misma zona de disponibilidad.
 
-    !["Creating the volume 1"](assets/images/aws/recovery-system_snapshot-2.png "Creating the volume 1")
-    !["Creating the volume 2"](assets/images/aws/recovery-system_snapshot-3.png "Creating the volume 2")
+    !["Creating the volume 1"](assets/aws/recovery-system_snapshot-2.png "Creating the volume 1")
+    !["Creating the volume 2"](assets/aws/recovery-system_snapshot-3.png "Creating the volume 2")
 
 3. Verificamos que el volumen haya sido creado con éxito y que esté disponible:
 
-    !["Verifying the volume"](assets/images/aws/recovery-mail_snapshot-4.png "Verifying the volume")
+    !["Verifying the volume"](assets/aws/recovery-mail_snapshot-4.png "Verifying the volume")
 
 4. Paramos la instancia EC2, para ello, vamos a `EC2 -> Instances -> Instance state`:
 
-    !["Stopping the instance"](assets/images/aws/recovery-system_shutdown.png "Stopping the instance")
+    !["Stopping the instance"](assets/aws/recovery-system_shutdown.png "Stopping the instance")
 
 5. Una vez parada, obtenemos el punto de montaje del volumen del sistema desde `EC2 -> Elastic Block Store -> Volumes` (opción **Attached instances**):
 
-    !["Getting the system volume ID"](assets/images/aws/recovery-system_volume-id.png "Getting the system volume ID")
+    !["Getting the system volume ID"](assets/aws/recovery-system_volume-id.png "Getting the system volume ID")
 
 6. Desvinculamos el EBS del sistema desde `Actions -> Detach volume`:
 
-    !["Detach the system volume"](assets/images/aws/recovery-system_volume-detach.png "Detach the system volume")
+    !["Detach the system volume"](assets/aws/recovery-system_volume-detach.png "Detach the system volume")
 
 7. Asociamos el volumen creado en el paso 2 desde `Actions -> Detach volume`:
 
-    !["Attach the new system volume 1"](assets/images/aws/recovery-system_volume-attach_1.png "Attach the new system volume 1")
-    !["Attach the new system volume 2"](assets/images/aws/recovery-system_volume-attach_2.png "Attach the new system volume 2")
+    !["Attach the new system volume 1"](assets/aws/recovery-system_volume-attach_1.png "Attach the new system volume 1")
+    !["Attach the new system volume 2"](assets/aws/recovery-system_volume-attach_2.png "Attach the new system volume 2")
 
     !!! warning
 
@@ -362,7 +362,7 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
 8. Iniciamos la instancia desde `EC2 -> Instances -> Instance state`:
 
-    !["Starting the instance"](assets/images/aws/recovery-system_start.png "Starting the instance")
+    !["Starting the instance"](assets/aws/recovery-system_start.png "Starting the instance")
 
 9. Nos conectamos a la instancia y verificamos que volvemos a tener los paquetes correctamente instalados:
 
@@ -390,9 +390,9 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
 10. Eliminamos el volumen EBS inestable, para ello vamos a `EC2 -> Elastic Block Store -> Volumes -> Delete volume`:
 
-    !["Removing the old volume"](assets/images/aws/recovery-system_volume-remove.png "Removing the old volume")
+    !["Removing the old volume"](assets/aws/recovery-system_volume-remove.png "Removing the old volume")
 
 11. Finalmente, modificamos la etiqueta `Name` del nuevo volumen desde `Tags -> Manage tags`:
 
-    !["Tagging the new volume 1"](assets/images/aws/recovery-system_volume-tags_1.png "Tagging the new volume 1")
-    !["Tagging the new volume 2"](assets/images/aws/recovery-system_volume-tags_2.png "Tagging the new volume 2")
+    !["Tagging the new volume 1"](assets/aws/recovery-system_volume-tags_1.png "Tagging the new volume 1")
+    !["Tagging the new volume 2"](assets/aws/recovery-system_volume-tags_2.png "Tagging the new volume 2")

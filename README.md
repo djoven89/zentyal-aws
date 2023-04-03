@@ -1,1 +1,1 @@
-# Zentyal en AWS
+# Zentyal & AWS

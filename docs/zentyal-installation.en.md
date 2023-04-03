@@ -126,7 +126,7 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
 
 4. Once the script has finished, we log in to the Zentyal administration panel: https://arthas.icecrown.es:8443
 
-    ![Initial wizard - Packages](assets/images/zentyal/01-wizard_packages.png "Initial wizard - Packages")
+    ![Initial wizard - Packages](assets/zentyal/01-wizard_packages.png "Initial wizard - Packages")
 
     !!! info
 
@@ -138,8 +138,8 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
 
 7. We configure the network card as internal and static:
 
-    ![Initial wizard - Network 1](assets/images/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
-    ![Initial wizard - Network 2](assets/images/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
+    ![Initial wizard - Network 1](assets/zentyal/02-wizard_network-1.png "Initial wizard - Network 1")
+    ![Initial wizard - Network 2](assets/zentyal/03-wizard_network-2.png "Initial wizard - Network 2")
 
     !!! warning
 
@@ -147,7 +147,7 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
 
 8. Once changes have been saved, we can start managing Zentyal through the dashboard.
 
-    ![Zentyal initial dashboard](assets/images/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
+    ![Zentyal initial dashboard](assets/zentyal/04-dashboard_initial.png "Zentyal initial dashboard")
 
 9. Finally, before proceeding to configure the server, we will perform the following checks to confirm the stability of the server:
 

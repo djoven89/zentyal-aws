@@ -3,15 +3,34 @@
 ## Plantilla base
 #####
 
+site_author: Daniel Joven
+site_name: Zentyal & AWS
+site_url: https://zentyal.projects.djoven.es
+docs_dir: 'docs'
+site_dir: '/generated'
+
+nav:
+  - Home: 'index.md'
+  - AWS: 'aws-configuration.md'
+  - Instalación: 'zentyal-installation.md'
+  - Configuración: 'zentyal-configuration.md'
+  - Certificados: 'zentyal-certificates.md'
+  - Hardening: 'zentyal-hardening.md'
+  - Backup: 'backup.md'
+  - Monitorización: 'monitoring.md'
+  - Mantenimiento: 'maintenance.md'
+  - Recovery: 'recovery.md'
+  - Bug fixing: 'zentyal-bug-fixing.md'
+  - Sobre mi: 'about.md'
+
 ## https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#configuration
 
 theme:
   name: material
-  custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
+  # custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
   # logo: assets/images/logo.png                    # The logo is shared by all languages
   # favicon: assets/images/favicon.ico              # The favicon is shared by all languages
   features:
-    - navigation.instant
     - navigation.tracking
     - navigation.tabs
     - navigation.sections
@@ -38,28 +57,28 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-
   font:
     text: Roboto
     code: Roboto Mono
 
-extra:             # Language Selection
-  alternate:
-    # Switch to Spanish
-    - name: Spanish
-      link: http://zentyal-aws.djoven.lan/es/
-      lang: es
-
-    # Switch to English
-    - name: English
-      link: http://zentyal-aws.djoven.lan/en/
-      lang: en
-
 plugins:
   - search:
-      lang: {}     # Set language for search
-  - tags:
-      enabled: true
+      lang:
+        - es
+        - en
+  - tags
+  ## https://github.com/ultrabug/mkdocs-static-i18n
+  - i18n:
+      default_language: es
+      docs_structure: suffix
+      languages:
+        es:
+          name: Spanish
+          build: true
+        en:
+          name: English
+          build: true
+      material_alternate: true
 
 markdown_extensions:
   - pymdownx.highlight:

@@ -6,22 +6,23 @@
 site_author: Daniel Joven
 site_name: Zentyal & AWS
 site_url: https://zentyal-aws.projects.djoven.es
+repo_url: https://github.com/djoven89/zentyal-aws
 docs_dir: 'docs'
 site_dir: '/generated'
 
 nav:
   - Home: 'index.md'
   - AWS: 'aws-configuration.md'
-  - Instalación: 'zentyal-installation.md'
-  - Configuración: 'zentyal-configuration.md'
-  - Certificados: 'zentyal-certificates.md'
+  - Install: 'zentyal-installation.md'
+  - Configuration: 'zentyal-configuration.md'
+  - Certificates: 'zentyal-certificates.md'
   - Hardening: 'zentyal-hardening.md'
   - Backup: 'backup.md'
-  - Monitorización: 'monitoring.md'
-  - Mantenimiento: 'maintenance.md'
+  - Monitoring: 'monitoring.md'
+  - Maintenance: 'maintenance.md'
   - Recovery: 'recovery.md'
   - Bug fixing: 'zentyal-bug-fixing.md'
-  - Sobre mi: 'about.md'
+  - About me: 'about.md'
 
 ## https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#configuration
 
@@ -60,6 +61,8 @@ theme:
   font:
     text: Roboto
     code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/github
 
 plugins:
   - search:
@@ -79,6 +82,12 @@ plugins:
           name: English
           build: true
       material_alternate: true
+  ## https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+  ## https://github.com/blueswen/mkdocs-glightbox
+  - glightbox:
 
 markdown_extensions:
   - pymdownx.highlight:

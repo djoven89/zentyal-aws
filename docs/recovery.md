@@ -55,13 +55,13 @@ Con el desastre simulado, procederemos a su recuperación.
 
 5. Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     En mi entorno, el volumen ha sido montado como `nvme3n1p1`:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme0n1      259:0    0   30G  0 disk
     ├─nvme0n1p1  259:2    0 29.9G  0 part /
@@ -77,31 +77,31 @@ Con el desastre simulado, procederemos a su recuperación.
 
 6. Creamos un directorio temporal donde montaremos el nuevo disco:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v /mnt/shares-recovery
     ```
 
 7. Montamos el volumen:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme3n1p1 /mnt/shares-recovery
     ```
 
 8. Buscamos el documento en el recurso compartido `rrhh` en el directorio donde hemos montado el disco temporal:
 
-    ```sh
+    ```sh linenums="1"
     sudo find /mnt/shares-recovery/samba/shares/rrhh/ -type f -exec ls -l {} \;
     ```
 
     Ejemplo en mi servidor:
 
-    ```text
+    ```text linenums="1"
     -rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 21377 Feb 27 20:57 '/mnt/shares-recovery/samba/shares/rrhh/Nominas 2023.pdf'
     ```
 
 9. Una vez identificado el archivo, procedemos a su restauración:
 
-    ```sh
+    ```sh linenums="1"
     cp -vp /mnt/shares-recovery/samba/shares/rrhh/Nominas\ 2023.pdf /home/samba/shares/rrhh/
     ```
 
@@ -115,7 +115,7 @@ Con el desastre simulado, procederemos a su recuperación.
 
 11. Una vez hayamos confirmado la restauración del fichero, procedemos a desmontar el disco y eliminar el directorio temporal creado:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount -v /mnt/shares-recovery
     sudo rmdir -v /mnt/shares-recovery
     ```
@@ -175,13 +175,13 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 5. Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     En mi entorno, el volumen ha sido montado como `nvme3n1p1`:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     └─nvme1n1p1  259:1    0   10G  0 part /var/vmail
@@ -197,25 +197,25 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 6. Creamos un directorio temporal donde montaremos el nuevo disco:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v /mnt/mail-recovery
     ```
 
 7. Montamos el volumen:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme3n1p1 /mnt/mail-recovery
     ```
 
 8. Buscamos el correo del usuario `maria` en el directorio donde hemos montado el disco temporal:
 
-    ```sh
+    ```sh linenums="1"
     sudo find /mnt/mail-recovery/icecrown.es/maria/ -type f -exec ls -l {} \;
     ```
 
     Ejemplo en mi servidor:
 
-    ```text
+    ```text linenums="1"
     -rw------- 1 ebox ebox 2180 Feb 27 21:36 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.index.cache
     -rw------- 1 ebox ebox 384 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.list.index.log
     -rw------- 1 ebox ebox 8 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot-uidvalidity
@@ -228,7 +228,7 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 9. Una vez identificado el correo, procedemos a su restauración:
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -vp '/mnt/mail-recovery/icecrown.es/maria/Maildir/cur/1677530165.M104169P13132.arthas,S=31900,W=32366:2,S' /var/vmail/icecrown.es/maria/Maildir/cur/
     ```
 
@@ -243,7 +243,7 @@ Ahora que tenemos simulado el desastre, procederemos a realizar las acciones nec
 
 11. Una vez restaurado con éxito el email, procedemos a desmontar el disco y eliminar el directorio temporal creado:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount -v /mnt/mail-recovery
     sudo rmdir -v /mnt/mail-recovery
     ```
@@ -270,13 +270,13 @@ Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
 
 1. Nos logeamos en el servidor a través de SSH y comprobamos el estado de los paquetes de Zentyal:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
     El resultado obtenido en mi caso:
 
-    ```text
+    ```text linenums="1"
     ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     ii  zentyal-core                          7.0.5                             all          Zentyal - Core
@@ -294,17 +294,17 @@ Para simular el desastre, lo que haré será eliminar el paquete `zentyal-core`.
 
 2. Eliminamos el paquete `zentyal-core` para causar la inestabilidad:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt remove -y zentyal-core
     ```
 
 3. Finalmente, confirmamos que los módulos se han desinstalado, dejando el servidor ha quedado inoperativo:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
-    ```text
+    ```text linenums="1"
     rc  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     rc  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     rc  zentyal-core                          7.0.5                             all          Zentyal - Core
@@ -366,13 +366,13 @@ Con el desastre correctamente implementado, procederemos a restaurarlo a través
 
 9. Nos conectamos a la instancia y verificamos que volvemos a tener los paquetes correctamente instalados:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
     El resultado obtenido en mi caso:
 
-    ```text
+    ```text linenums="1"
     ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     ii  zentyal-core                          7.0.5                             all          Zentyal - Core

@@ -35,7 +35,7 @@ To temporarily solve the issue, do the following:
 
 2. Restart the Webadmin module:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs webadmin restart
     ```
 
@@ -61,13 +61,13 @@ If we want to apply the first option, we need to perform the following actions:
 
 1. In the file `/usr/share/perl5/EBox/SOGo.pm`, edit line **265** and set the following content:
 
-    ```sh
+    ```sh linenums="1"
     my $imapServer = ($mail->imap() ? '127.0.0.1:143' : '"imaps://127.0.0.1:993/?tlsVerifyMode=allowInsecureLocalhost"');
     ```
 
 2. Restart the modules: Webmail and Sogo:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs webadmin restart
     sudo zs sogo restart
     ```

@@ -43,27 +43,27 @@ Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
 
 1. Nos conectamos a la instancia a través de SSH usando la clave privada que nos hemos descargado cuando creamos el Key pair:
 
-    ```bash
+    ```sh linenums="1"
     ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
     ```
 
 2. Establecemos una contraseña para los usuarios: `root` y `ubuntu`:
 
-    ```bash
+    ```sh linenums="1"
     sudo passwd root
     sudo passwd ubuntu
     ```
 
 3. Actualizamos los paquetes del servidor:
 
-    ```bash
+    ```sh linenums="1"
     sudo apt update
     sudo apt dist-upgrade -y
     ```
 
 4. Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal desde la interfaz de administración:
 
-    ```bash
+    ```sh linenums="1"
     sudo useradd -m -d /home/djoven -G sudo -s /bin/bash -c 'Sysadmin' djoven
     sudo passwd djoven
     ```
@@ -74,13 +74,13 @@ Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
 
 5. Nos logeamos con el usuario recién creado:
 
-    ```bash
+    ```sh linenums="1"
     su - djoven
     ```
 
 6. Creamos el directorio y el archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH:
 
-    ```bash
+    ```sh linenums="1"
     mkdir -v .ssh
     touch .ssh/authorized_keys
     ```
@@ -93,20 +93,20 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
 
 1. Creamos un directorio donde almacenaremos el script de instalación de Zentyal:
 
-    ```bash
+    ```sh linenums="1"
     sudo mkdir /opt/zentyal-install
     ```
 
 2. Nos descargamos el script y le damos los permisos adecuados:
 
-    ```bash
+    ```sh linenums="1"
     sudo wget -O /opt/zentyal-install/zentyal_installer.sh https://zentyal.com/zentyal_installer.sh
     sudo chmod 0750 /opt/zentyal-install/zentyal_installer.sh
     ```
 
 3. Instalamos Zentyal a través del script:
 
-    ```bash
+    ```sh linenums="1"
     sudo bash /opt/zentyal-install/zentyal_installer.sh
     ```
 
@@ -154,14 +154,14 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
     1. Nos aseguramos que todos los módulos estén habilitados (`Modules Status`).
     2. Que la máquina tenga acceso a Internet.
 
-        ```bash
+        ```sh linenums="1"
         ping -c4 8.8.8.8
         ping -c4 google.es
         ```
 
     3. Que no haya habido ningún error en el log `/var/log/zentyal/zentyal.log`. A continuación un ejemplo del logs sin ningún error:
 
-        ```bash
+        ```sh linenums="1"
         2022/10/23 08:17:51 DEBUG> PAM.pm:83 Authen::Simple::PAM::check - Successfully authenticated user 'djoven' using service 'zentyal'.
         2022/10/23 08:20:29 INFO> install-packages:61 main:: - Starting package installation process
         2022/10/23 08:20:39 INFO> Base.pm:256 EBox::Module::Base::saveConfig - Saving config for module: network
@@ -196,7 +196,7 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
 
     4. Reiniciamos el servidor para asegurarnos de que es capaz de iniciar sin ningún tipo de problema de red.
 
-        ```bash
+        ```sh linenums="1"
         sudo reboot
         ```
 

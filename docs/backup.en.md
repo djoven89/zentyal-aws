@@ -143,7 +143,7 @@ The steps to implement it are:
 
 1. From the CLI, test the command that performs the backup and executes the scheduled task:
 
-    ```sh
+    ```sh linenums="1"
     sudo /usr/share/zentyal/make-backup --description "CLI backup on `date '+%d-%m-%Y'`"
     ```
 
@@ -153,7 +153,7 @@ The steps to implement it are:
 
 3. Once its operation is confirmed, create the scheduled task to run daily at 02:30 AM. To do this, create the configuration file in `/etc/cron.d/custom-backup_conf` with the following content:
 
-    ```text
+    ```text linenums="1"
     ## Configuration backup created on 12-02-2023 by Daniel
     30 02 * * * root /usr/share/zentyal/make-backup --description "Cronjob backup on `date '+\%d-\%m-\%Y'`" >/dev/null 2>&1
     ```

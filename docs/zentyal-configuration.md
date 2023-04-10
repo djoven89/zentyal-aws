@@ -47,19 +47,19 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 
 1. Paramos el servicio:
 
-    ```sh
+    ```sh linenums="1"
     sudo systemctl stop snapd snapd.socket
     ```
 
 2. Eliminamos el paquete:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt remove --purge -y snapd
     ```
 
 3. Eliminamos los directorios que quedan en el sistema de archivos:
 
-    ```sh
+    ```sh linenums="1"
     sudo rm -rf /root/snap/
     ```
 
@@ -67,7 +67,7 @@ Como Zentyal no usa Snap, procederemos a su desinstalación.
 
 Para mejorar la experiencia de usuario cuando realizamos tareas desde la CLI, procederemos a habilitar el color del prompt para los usuarios locales existentes y futuros.
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel/; do
     sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc
 done
@@ -77,7 +77,7 @@ done
 
 Con la finalidad de almacenar más información en el historial personal de los usuarios y que además, haya un timestamp que indique la fecha y hora en la que fue ejecutado determinado comando, añadiremos una serie de opciones adicionales a los usuarios locales tanto existentes como futuros.
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel/; do
 
 sudo tee -a $user/.bashrc &>/dev/null <<EOF
@@ -106,7 +106,7 @@ Añadiremos una configuración personalizada sencilla para el editor de textos `
 
 Para establecer la configuración, simplemente habrá que crear un archivo llamado `.vimrc` en el directorio personal de los usuarios.
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel; do
 
 sudo tee -a $user/.vimrc &>/dev/null <<EOF
@@ -131,38 +131,38 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 1. Creamos un archivo vacío de 4GB, que será el tamaño de nuestra partición SWAP:
 
-    ```sh
+    ```sh linenums="1"
     sudo dd if=/dev/zero of=/swapfile1 bs=128M count=32
     ```
 
 2. Establecemos los permisos para el archivo:
 
-    ```sh
+    ```sh linenums="1"
     sudo chmod 0600 /swapfile1
     ```
 
 3. Establecemos el archivo como una área de SWAP:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkswap /swapfile1
     ```
 
 4. Habilitamos la partición SWAP de forma temporal:
 
-    ```sh
+    ```sh linenums="1"
     sudo swapon /swapfile1
     ```
 
 5. Verificamos que el sistema reconoce la nueva partición SWAP ejecutando los siguientes comandos:
 
-    ```sh
+    ```sh linenums="1"
     sudo swapon -s
     sudo free -m
     ```
 
     El resultado que deberíamos obtener es:
 
-    ```text
+    ```text linenums="1"
     ## Comando 'swapon'
     Filename				Type		Size	  Used	  Priority
     /swapfile1             	file    	4194300	     0	        -2
@@ -175,13 +175,13 @@ Es altamente recomendable configurar una partición SWAP en el servidor para inc
 
 6. Establecemos la partición en el archivo de configuración `/etc/fstab` para que persista ante el reinicio del servidor:
 
-    ```sh
+    ```sh linenums="1"
     echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' | sudo tee -a /etc/fstab
     ```
 
 7. Finalmente, comprobamos que la nueva entrada en el archivo no contenga errores de sintaxis:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount -a
     ```
 
@@ -195,13 +195,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 1. Listamos los volúmenes con el comando:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     nvme0n1      259:1    0   30G  0 disk
@@ -213,7 +213,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 2. En los volúmenes `nvme1n1` y `nvme2n1` creamos una única partición que ocupe todo el disco:
 
-    ```sh
+    ```sh linenums="1"
     for disk in nvme1n1 nvme2n1; do
         echo -e 'n\np\n\n\n\nt\n8e\nw' | sudo fdisk /dev/$disk
     done
@@ -225,13 +225,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 3. Revisamos que se hayan creado las particiones correctamente:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     └─nvme1n1p1  259:7    0   10G  0 part
@@ -245,7 +245,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 4. Establecemos como sistema de archivos `ext4` a las nuevas particiones:
 
-    ```sh
+    ```sh linenums="1"
     for disk in nvme1n1p1 nvme2n1p1; do
         sudo mkfs -t ext4 /dev/$disk
     done
@@ -253,13 +253,13 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 5. Volvemos a revisar que todo haya ido bien con el comando:
 
-    ```sh
+    ```sh linenums="1"
     lsblk -f
     ```
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```text
+    ```text linenums="1"
     NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
     nvme1n1
     └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
@@ -273,37 +273,37 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 6. Creamos el directorio donde se montará el volumen EBS para los buzones de correo:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v -m0775 /var/vmail
     ```
 
 7. Montamos temporalmente el volumen EBS que contendrá los recursos compartidos:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme2n1p1 /mnt
     ```
 
 8. Copiamos el contenido del directorio `/home/` al directorio temporal donde hemos montado el volumen EBS:
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -aR /home/* /mnt/
     ```
 
 9. Desmontamos el volumen EBS:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount /mnt
     ```
 
 10. Obtenemos el identificador (UUID) de los volúmenes:
 
-    ```sh
+    ```sh linenums="1"
     sudo sudo blkid | egrep "nvme[12]n1p1"
     ```
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```sh
+    ```sh linenums="1"
     /dev/nvme2n1p1: UUID="28e5471e-8fc1-48b5-8729-778c56a19b90" TYPE="ext4" PARTUUID="558dd3b7-01"
     /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
@@ -314,7 +314,7 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 11. Establecemos en el archivo `/etc/fstab` el montaje de los volúmenes EBS:
 
-    ```sh
+    ```sh linenums="1"
     ## AWS EBS - Mailboxes
     UUID=e903ff6f-c431-4e3a-92a1-9f476c66b3be /var/vmail ext4 defaults,noexec,nodev,nosuid 0 2
 
@@ -328,20 +328,20 @@ En caso de que hayamos añadido volúmenes EBS adicionales - como ha sido mi cas
 
 12. Montamos los volúmenes para verificar que no hay errores de sintaxis en el archivo del paso anterior:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount -a
     ```
 
 13. Finalmente, confirmamos que se hayan montado bien ejecutando los siguientes comandos:
 
-    ```sh
+    ```sh linenums="1"
     mount | egrep 'nvme[12]n1p1'
     df -h
     ```
 
     En mi caso concreto, me muestra el siguiente resultado:
 
-    ```text
+    ```text linenums="1"
     ## Comando 'mount'
     /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
     /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
@@ -369,14 +369,14 @@ Para poder hacer uso de las quotas que Zentyal permite establecer para limitar e
 
 1. Instalamos los siguientes paquetes requeridos para instancias de AWS:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt update
     sudo apt install -y quota quotatool linux-modules-extra-aws
     ```
 
 2. Establecemos las opciones de montaje adicionales en el volumen EBS de los recursos compartidos, para ello, editamos el archivo de configuración `/etc/fstab`:
 
-    ```sh
+    ```sh linenums="1"
     ## AWS EBS - Shares
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
@@ -387,31 +387,31 @@ Para poder hacer uso de las quotas que Zentyal permite establecer para limitar e
 
 3. Reiniciamos el servidor para que nos cargue el último kernel y podamos habilitar de forma seguridad las quotas:
 
-    ```sh
+    ```sh linenums="1"
     sudo reboot
     ```
 
 4. Añadimos el módulo de Quota al kernel:
 
-    ```sh
+    ```sh linenums="1"
     sudo modprobe quota_v2
     ```
 
 5. Persistimos el cambio anterior:
 
-    ```sh
+    ```sh linenums="1"
     echo 'quota_v2' | sudo tee -a /etc/modules
     ```
 
 6. Dejamos que el sistema compruebe las quotas y cree los archivos pertinentes:
 
-    ```sh
+    ```sh linenums="1"
     sudo quotacheck -vugmf /home
     ```
 
     El resultado que he obtenido en mi caso ha sido:
 
-    ```text
+    ```text linenums="1"
     quotacheck: Scanning /dev/nvme1n1p1 [/home] done
     quotacheck: Checked 8 directories and 18 files
     ```
@@ -539,7 +539,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
 7. Finalmente, comprobamos que podemos resolver los registros DNS configurados desde el propio servidor. Para ello, ejecutaremos los siguientes comandos:
 
-    ```sh
+    ```sh linenums="1"
     ## Para el dominio
     dig icecrown.es
 
@@ -553,7 +553,7 @@ La configuración que estableceremos será mínima, ya que la gestión de los re
 
     A continuación, los resultados que he obtenido:
 
-    ```text
+    ```text linenums="1"
     ## Para el dominio
     ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
     ;; global options: +cmd
@@ -659,7 +659,7 @@ Llegados a este punto, el módulo estaría configurado en Zentyal, no obstante, 
 
 3. Finalmente, comprobamos la resolución de los registros:
 
-    ```sh
+    ```sh linenums="1"
     ## Para el dominio
     dig @8.8.8.8 icecrown.es
 
@@ -673,7 +673,7 @@ Llegados a este punto, el módulo estaría configurado en Zentyal, no obstante, 
 
     A continuación, los resultados que he obtenido:
 
-    ```text
+    ```text linenums="1"
     ## Para el dominio
     ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 icecrown.es
     ; (1 server found)
@@ -847,20 +847,20 @@ A continuación las acciones a realizar para configurar el módulo:
 
     Adicionalmente, también lo crearé en Zentyal, no obstante, al ser un alias habrá que hacerlo usando la CLI:
 
-    ```sh
+    ```sh linenums="1"
     sudo samba-tool dns add 127.0.0.1 icecrown.es icecrown.es MX "mail.icecrown.es 10" -U zenadmin
     ```
 
 7. Comprobamos el nuevo registro DNS tanto interna como externamente:
 
-    ```sh
+    ```sh linenums="1"
     dig MX icecrown.es
     dig @8.8.8.8 MX icecrown.es
     ```
 
     En resultado que obtengo:
 
-    ```text
+    ```text linenums="1"
     ## Consulta interna
     ; <<>> DiG 9.16.1-Ubuntu <<>> MX icecrown.es
     ;; global options: +cmd
@@ -944,7 +944,7 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
 6. Si todo fue bien, deberíamos de haber recibido el email tanto en la cuenta interna como externa y además, en el log `/var/log/mail.log` deberíamos de ver registros similares a:
 
-    ```text
+    ```text linenums="1"
     Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: connect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36]
     Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: 958BDFEEFC: client=36.red-45-4-127.staticip.rima-tde.net[88.6.127.36], sasl_method=PLAIN, sasl_username=test.
     djoven@icecrown.es
@@ -1020,25 +1020,25 @@ A continuación las acciones a realizar para aplicar las configuraciones opciona
 
 1. Creamos el directorio que hará de los cambios sobre las plantillas de configuración (stubs) sean persistentes ante actualizaciones del módulo:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -vp /etc/zentyal/stubs/sogo
     ```
 
 2. Copiamos la plantilla de configuración de Sogo `sogo.conf.mas`:
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -v /usr/share/zentyal/stubs/sogo/sogo.conf.mas /etc/zentyal/stubs/sogo/
     ```
 
 3. Establecemos el parámetro `SOGoVacationEnabled` a `YES` en la plantilla recién copiada:
 
-    ```sh
+    ```sh linenums="1"
     sudo sed -i 's/SOGoVacationEnabled.*/SOGoVacationEnabled = YES;/' /etc/zentyal/stubs/sogo/sogo.conf.mas
     ```
 
 4. Reiniciamos el módulo de Webmail para aplicar el cambio:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs sogo restart
     ```
 
@@ -1048,31 +1048,31 @@ A continuación las acciones a realizar para aplicar las configuraciones opciona
 
 6. Establecemos el valor del prefork en el archivo de configuración `/etc/zentyal/sogo.conf`:
 
-    ```sh
+    ```sh linenums="1"
     sed -i 's/#sogod_prefork.*/sogod_prefork=8/' /etc/zentyal/sogo.conf
     ```
 
     Si tenemos muchos usuarios concurrentes usando el módulo, es posible que Sogo no pueda gestionar bien todas las peticiones, por lo que será necesario incrementar este valor. Para detectar esta casuística, simplemente habrá que buscar registros en el log de Sogo ubicado en `/var/log/sogo/sogo.log` similares a la siguiente:
 
-    ```sh
+    ```sh linenums="1"
     sogod [3252]: [ERROR] <0x0x55c9db827250[WOWatchDog]> No child available to handle incoming request!
     ```
 
 7. Reiniciamos el módulo de Webmail para aplicar el cambio:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs sogo restart
     ```
 
 8. Finalmente, comprobamos que el servicio se levanto con el nuevo valor aplicado:
 
-    ```sh
+    ```sh linenums="1"
     ps -ef | grep sogod | head -1
     ```
 
     En mi caso, el resultado obtenido del comando ha sido:
 
-    ```sh
+    ```sh linenums="1"
     sogo 24430 1 0 00:40 ? 00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
     ```
 
@@ -1090,13 +1090,13 @@ La configuración que podemos definir a este módulo desde el panel de administr
 
 2. Actualizamos la base de datos de firmas:
 
-    ```sh
+    ```sh linenums="1"
     sudo freshclam -v
     ```
 
 3. Confirmamos que el módulo esté activo:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs antivirus status
     ```
 
@@ -1164,7 +1164,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
 8. Nos enviamos un email sencillo desde un dominio externo y revisamos en el archivo de log `/var/log/mail.log` que el módulo lo haya analizado a través del servicio Amavis:
 
-    ```text
+    ```text linenums="1" hl_lines="15"
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: connect from mail-lj1-f176.google.com[209.85.208.176]
     Feb 18 11:18:57 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f176.google.com, client_address=209.85.208.176/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: A69DDFEF59: client=mail-lj1-f176.google.com[209.85.208.176]
@@ -1194,7 +1194,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
 9. Confirmado que los emails son correctamente recibidos, procederemos a comprobar mediante el envío de otro email con un archivo adjunto cuya extensión sea `.sh` - denegada en el paso 5 - desde una cuenta externa para confirmar el funcionamiento del módulo. A continuación los registros registrados en el log  `/var/log/mail.log` relativos al éxito del bloqueo:
 
-    ```text
+    ```text linenums="1" hl_lines="25 30"
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: connect from mail-lj1-f171.google.com[209.85.208.171]
     Feb 18 11:31:30 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f171.google.com, client_address=209.85.208.171/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: 79C12FEF59: client=mail-lj1-f171.google.com[209.85.208.171]
@@ -1237,7 +1237,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mail confirmation](assets/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
-Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratan en la página `Hardening`. Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra página del proyecto, concretamente en `Certificados`.
+Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratan en la página [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/). Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra página del proyecto, concretamente en [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/).
 
 ### Módulo de CA
 
@@ -1338,7 +1338,7 @@ Con el módulo ya configurado, creamos un certificado, usuario y recurso compart
 
 7. Establecemos la conexión desde el cliente de OpenVPN. Si todo fue bien, podremos ver en el archivo de log de la conexión VPN de Zentyal llamado `/var/log/openvpn/Icecrown-RecursosCompartidos.log` unos registros similares a:
 
-    ```text
+    ```text linenums="1"
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 TLS: Initial packet from [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5), sid=7c56b72b 70d7b663
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=1, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown CA Authority Certificate
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY X509NAME OK: C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
@@ -1380,7 +1380,7 @@ Con el módulo ya configurado, creamos un certificado, usuario y recurso compart
 
 10. Añadimos un archivo a los recursos `Maria` y `rrhh` y verificamos su creación desde la CLI del servidor Zentyal:
 
-    ```sh
+    ```sh linenums="1"
     ls -l /home/maria/test-file-1.txt
         -rwxrwx--x+ 1 ICECROWN\maria ICECROWN\domain users 0 Feb  4 20:56 /home/maria/test-file-1.txt
 

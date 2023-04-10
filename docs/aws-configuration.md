@@ -428,7 +428,7 @@ Para poder enviar emails desde el servidor Zentyal a través de la IP estática 
 
 Un ejemplo del mensaje:
 
-```text
+```text linenums="1"
 Hi Support team,
 
 We have deployed a new EC2 instance that acts as a Mail server using Zentyal operating system.

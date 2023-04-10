@@ -86,10 +86,10 @@ The next thing we'll do is configure an [Internet gateway] for our VPC, so that 
 
 The Internet gateway will be configured as follows:
 
-**Name:** GW-Prod-1
-**Tags:**
-    **Env:** Production
-    **Name:** GW-Prod-1
+* **Name:** GW-Prod-1
+* **Tags:**
+    * **Env:** Production
+    * **Name:** GW-Prod-1
 
 Here is an image of the configuration:
 
@@ -158,7 +158,7 @@ For this specific resource, we will do 2 things:
 
 2. We will create a new resource, which will contain the ports that we will allow public access to, which are:
 
-    * **ICMP-IPv4 echo request** -> Permite poder hacer un `ping` al servidor.
+    * **ICMP-IPv4 echo request** -> `ping`
     * **22/TCP** -> SSH.
     * **25/TCP** -> SMTP.
     * **53/UDP** -> DNS.
@@ -424,7 +424,7 @@ To be able to send emails from the Zentyal server through the associated static 
 
 An example of the message:
 
-```text
+```text linenums="1"
 Hi Support team,
 
 We have deployed a new EC2 instance that acts as a Mail server using Zentyal operating system.
@@ -443,4 +443,4 @@ Kind regards, Daniel.
 
 Once the server has been created, configured, and thoroughly tested, it is highly recommended to purchase the instance using [Saving Plans], as it will allow us to significantly reduce the cost of using the deployed EC2 instance.
 
-[Saving Plans]: https://aws.amazon.com/es/savingsplans/?nc1=h_ls
+[Saving Plans]: https://aws.amazon.com/savingsplans/?nc1=h_ls

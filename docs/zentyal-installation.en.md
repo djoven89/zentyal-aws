@@ -11,7 +11,7 @@ On this page, we will explain how to install Zentyal 7.0 on an Ubuntu Server 20.
 
 For the installation, we will use [this] script available from Zentyal. It is worth mentioning that we will install Zentyal without a graphical environment, as we want to reduce the resource usage needed by the server.
 
-[this]: https://doc.zentyal.org/en/installation.html#instalacion-sobre-ubuntu-20-04-lts-server-o-desktop
+[this]: https://doc.zentyal.org/en/installation.html#installation-on-top-of-ubuntu-20-04-lts-server-or-desktop
 
 The environment data for the project will be:
 
@@ -43,27 +43,27 @@ Before proceeding to install Zentyal, we will perform the following actions:
 
 1. We connect to the instance through SSH using the private key that we downloaded when creating the Key pair:
 
-    ```bash
+    ```sh linenums="1"
     ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
     ```
 
 2. We set a password for the users; `root` and `ubuntu`:
 
-    ```bash
+    ```sh linenums="1"
     sudo passwd root
     sudo passwd ubuntu
     ```
 
 3. We update the server packages:
 
-    ```bash
+    ```sh linenums="1"
     sudo apt update
     sudo apt dist-upgrade -y
     ```
 
 4. We create an additional administrative user, which we will use to manage Zentyal from the administration interface:
 
-    ```bash
+    ```sh linenums="1"
     sudo useradd -m -d /home/djoven -G sudo -s /bin/bash -c 'Sysadmin' djoven
     sudo passwd djoven
     ```
@@ -74,13 +74,13 @@ Before proceeding to install Zentyal, we will perform the following actions:
 
 5. We log in with the newly created user:
 
-    ```bash
+    ```sh linenums="1"
     su - djoven
     ```
 
 6. We create the necessary directory and file to host our public key to be able to connect via SSH:
 
-    ```bash
+    ```sh linenums="1"
     mkdir -v .ssh
     touch .ssh/authorized_keys
     ```
@@ -93,20 +93,20 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
 
 1. Create a directory where we will store the Zentyal installation script:
 
-    ```bash
+    ```sh linenums="1"
     sudo mkdir /opt/zentyal-install
     ```
 
 2. Download the script and give it the appropriate permissions:
 
-    ```bash
+    ```sh linenums="1"
     sudo wget -O /opt/zentyal-install/zentyal_installer.sh https://zentyal.com/zentyal_installer.sh
     sudo chmod 0750 /opt/zentyal-install/zentyal_installer.sh
     ```
 
 3. Install Zentyal through the script:
 
-    ```bash
+    ```sh linenums="1"
     sudo bash /opt/zentyal-install/zentyal_installer.sh
     ```
 
@@ -154,14 +154,14 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
     1. We ensure that all modules are enabled (Modules Status).
     2. The machine has access to the Internet:
 
-        ```bash
+        ```sh linenums="1"
         ping -c4 8.8.8.8
         ping -c4 google.es
         ```
 
     3. There have been no errors in the log `/var/log/zentyal/zentyal.log`. Here is an example of the logs without any errors:
 
-        ```bash
+        ```sh linenums="1"
         2022/10/23 08:17:51 DEBUG> PAM.pm:83 Authen::Simple::PAM::check - Successfully authenticated user 'djoven' using service 'zentyal'.
         2022/10/23 08:20:29 INFO> install-packages:61 main:: - Starting package installation process
         2022/10/23 08:20:39 INFO> Base.pm:256 EBox::Module::Base::saveConfig - Saving config for module: network
@@ -196,12 +196,12 @@ From now on, the server will be ready to install Zentyal 7.0. Here are the steps
 
     4. We restart the server to ensure that it is able to start without any network problems.
 
-        ```bash
+        ```sh linenums="1"
         sudo reboot
         ```
 
     5. We verify that we can connect through SSH and to the Zentyal administration interface.
 
 [firewall]: https://doc.zentyal.org/en/firewall.html
-[network]: https://doc.zentyal.org/en/firststeps.html#configuracion-basica-de-red-en-zentyal
+[network]: https://doc.zentyal.org/en/firststeps.html#network-configuration-with-zentyal
 [here]: https://github.com/zentyal/zentyal/issues/2100

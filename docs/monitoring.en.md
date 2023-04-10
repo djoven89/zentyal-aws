@@ -232,45 +232,45 @@ Once we have the AWS environment ready, we will proceed to install and configure
 
 1. Download the CloudWatch agent `.deb` package to our Zentyal server:
 
-    ```sh
+    ```sh linenums="1"
     sudo curl "https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb" -o "/opt/amazon-cloudwatch-agent.deb"
     ```
 
 2. Install the package:
 
-    ```sh
+    ```sh linenums="1"
     sudo dpkg -i -E /opt/amazon-cloudwatch-agent.deb
     ```
 
 3. Descargamos también el archivo comprimido que contiene el binario de AWS para la CLI:
 
-    ```sh
+    ```sh linenums="1"
     sudo curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/opt/awscliv2.zip"
     ```
 
 4. Install the unzip package to `unzip` the file:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt update
     sudo apt install -y unzip
     ```
 
 5. Unzip the file and install it:
 
-    ```sh
+    ```sh linenums="1"
     sudo unzip /opt/awscliv2.zip -d /opt/aws/
     sudo /opt/aws/aws/install
     ```
 
 6. Configure the CloudWatch agent:
 
-    ```sh
+    ```sh linenums="1"
     sudo amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:/zentyal/prod/cloudwatch-config
     ```
 
 7. Confirm that the service is active:
 
-    ```sh
+    ```sh linenums="1"
     sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a status
     ```
 

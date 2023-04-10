@@ -37,13 +37,13 @@ A continuación las acciones a realizar para aplicar dichas políticas:
 
 1. Verificamos las políticas en uso configuradas por defecto:
 
-    ```sh
+    ```sh linenums="1"
     sudo samba-tool domain passwordsettings show
     ```
 
     El resultado obtenido en mi caso es:
 
-    ```text
+    ```text linenums="1"
     Password information for domain 'DC=icecrown,DC=es'
 
     Password complexity: off
@@ -59,7 +59,7 @@ A continuación las acciones a realizar para aplicar dichas políticas:
 
 2. Establecemos las nuevas políticas:
 
-    ```sh
+    ```sh linenums="1"
     sudo samba-tool domain passwordsettings \
         set \
         --complexity=on \
@@ -69,13 +69,13 @@ A continuación las acciones a realizar para aplicar dichas políticas:
 
 3. Volvemos a mostrar la configuración para cerciorarnos que se aplicaron las políticas:
 
-    ```sh
+    ```sh linenums="1"
     sudo samba-tool domain passwordsettings show
     ```
 
     El resultado obtenido en mi caso es:
 
-    ```text
+    ```text linenums="1"
     Password information for domain 'DC=icecrown,DC=es'
 
     Password complexity: on
@@ -124,14 +124,14 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 3. Comprobamos la resolución del nuevo registro tanto interna como externamente:
 
-    ```bash
+    ```sh linenums="1"
     dig TXT icecrown.es
     dig @8.8.8.8 icecrown.es
     ```
 
     El resultado obtenido en mi caso:
 
-    ```text
+    ```text linenums="1"
     ## Consulta interna (desde Zentyal)
     ; <<>> DiG 9.16.1-Ubuntu <<>> TXT icecrown.es
     ;; global options: +cmd
@@ -192,33 +192,33 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 1. Instalamos los paquetes necesarios para la implementación de DKIM:
 
-    ```bash
+    ```sh linenums="1"
     sudo apt update
     sudo apt install -y opendkim opendkim-tools
     ```
 
 2. Creamos el directorio donde se almacenarán las claves de OpenDKIM:
 
-    ```bash
+    ```sh linenums="1"
     sudo mkdir -vp /etc/opendkim/keys
     ```
 
 3. Generamos la clave privada que será usada para firmar los correos electrónicos y establecemos como `mail`:
 
-    ```bash
+    ```sh linenums="1"
     sudo opendkim-genkey -s mail -d icecrown.es -D /etc/opendkim/keys
     ```
 
 4. Establecemos los permisos correctos a los archivos generados por el anterior comando:
 
-    ```bash
+    ```sh linenums="1"
     sudo chown -R opendkim:opendkim /etc/opendkim/
     sudo chmod 0640 /etc/opendkim/keys/*.private
     ```
 
 5. Creamos el archivo de configuración `/etc/opendkim/TrustedHosts` y establecemos en él el dominio y direcciones IP confiables:
 
-    ```bash
+    ```sh linenums="1"
     127.0.0.1
     localhost
     15.237.168.75/32
@@ -227,19 +227,19 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 6. Creamos el archivo de configuración `/etc/opendkim/SigningTable` que contendrá el dominio a firmar por OpenDKIM:
 
-    ```text
+    ```text linenums="1"
     *@icecrown.es mail._domainkey.icecrown.es
     ```
 
 7. Creamos el archivo de configuración `/etc/opendkim/KeyTable` que tendrá el nombre del selector y la ruta a la clave privada encargada de firmar los correos electrónicos:
 
-    ```text
+    ```text linenums="1"
     mail._domainkey.icecrown.es icecrown.es:mail:/etc/opendkim/keys/mail.private
     ```
 
 8. Creamos el archivo de configuración principal llamado `/etc/opendkim.conf` y establecemos la configuración del servicio OpenDKIM:
 
-    ```text
+    ```text linenums="1"
     Syslog			        yes
     LogWhy			        yes
     UMask			        007
@@ -264,7 +264,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 9. Establecemos la configuración del socket en el archivo de configuración `/etc/default/opendkim`:
 
-    ```text
+    ```text linenums="1"
     ## Custom configuration created on 19-02-2023 by Daniel
     # SOCKET=local:$RUNDIR/opendkim.sock
     SOCKET=inet:8891@127.0.0.1
@@ -272,7 +272,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 10. Habilitamos, reiniciamos y comprobamos el servicio de OpenDKIM:
 
-    ```bash
+    ```sh linenums="1"
     sudo systemctl enable opendkim
     sudo systemctl restart opendkim
     sudo systemctl status opendkim
@@ -282,7 +282,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
     En mi caso, el contenido es:
 
-    ```text
+    ```text linenums="1"
     mail._domainkey	IN	TXT	( "v=DKIM1; h=sha256; k=rsa; "
 	  "p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu2kM2TmbrV6DNQR37F3EZ4YSgfRWV+XLI7Fi02pSqNuPeIwKIRBpoHRj7FU2ff4fHN8fg7iO3qkGbH5vwY8RgLM46pYE4pth0Zl7prFy3YJU6Kz4kzA9JKKAypU7+Z5ji+t+5zKGIJ49CQzIm8czRjnCYdI8ZjTBvUOo36lkVEO2qn43vAoL1a4gFJh3ZdSAqBdGMqVqcgINyn"
 	  "9ss6+JNE3kbdsbztcR+IeU+6PJZDGTr7VLJ1dXi3NM8HH+R1phgWXKjIScEX4sM3okzPnXZoKSFpNORLVfHf/LwwWF3VLNEpI2zjGYVjc7/jEqZCqZmk/8VNYkUA7vcMyColzJAwIDAQAB" )  ; ----- DKIM key mail for icecrown.es
@@ -292,7 +292,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
     Para el servidor Zentyal tendremos que hacer uso de la CLI debido a la limitación de caracteres de Zentyal en el entorno gráfico:
 
-    ```bash
+    ```sh linenums="1"
     sudo samba-tool dns add \
         127.0.0.1 \
         icecrown.es \
@@ -314,14 +314,14 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 13. Comprobamos la resolución del nuevo registro tanto interna como externamente:
 
-    ```bash
+    ```sh linenums="1"
     dig TXT mail._domainkey.icecrown.es
     dig @8.8.8.8 TXT mail._domainkey.icecrown.es
     ```
 
     El resultado obtenido en mi caso:
 
-    ```text
+    ```text linenums="1"
     ## Consulta interna (desde Zentyal)
     ; <<>> DiG 9.16.1-Ubuntu <<>> TXT mail._domainkey.icecrown.es
     ;; global options: +cmd
@@ -373,7 +373,7 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
 15. Una vez confirmado el registro DNS, procederemos a configurar el servicio Postfix (SMTP) para que haga uso de este servicio. Para ello, añadimos las siguientes líneas al final del stub `/etc/zentyal/stubs/mail/main.cf.mas`:
 
-    ```text
+    ```text linenums="1"
     ## DKIM Configuration created on 19-02-2023 by Daniel
     milter_protocol = 6
     milter_default_action = accept
@@ -383,14 +383,14 @@ Para este módulo vamos a implementar las siguientes funcionalidades para increm
 
     En caso de no tener dicho archivo, tendremos que ejecutar los siguientes comandos:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v /etc/zentyal/stubs/mail/
     sudo cp -v /usr/share/zentyal/stubs/mail/main.cf.mas /etc/zentyal/stubs/mail/main.cf.mas
     ```
 
 16. Reiniciamos el módulo de correo para que se apliquen los cambios:
 
-    ```bash
+    ```sh linenums="1"
     sudo zs mail restart
     ```
 
@@ -423,14 +423,14 @@ La última implementación que realizaremos será [DMARC]. Este mecanismo de aut
 
 3. Comprobamos la resolución del nuevo registro tanto interna como externamente:
 
-    ```bash
+    ```sh linenums="1"
     dig TXT _DMARC.icecrown.es
     dig @8.8.8.8 TXT _DMARC.icecrown.es
     ```
 
     El resultado obtenido en mi caso:
 
-    ```text
+    ```text linenums="1"
     ## Consulta interna (desde Zentyal)
     ; <<>> DiG 9.16.1-Ubuntu <<>> TXT _DMARC.novadevs.com
     ;; global options: +cmd
@@ -493,7 +493,7 @@ Por defecto, es posible obtener la versión de Ubuntu y Apache que usa el servic
 
 1. Modificamos los siguientes parámetros de configuración del archivo `/etc/apache2/conf-enabled/security.conf` para reducir la información del servicio:
 
-    ```sh
+    ```sh linenums="1"
     sed -i \
         -e 's/^ServerSignature.*/ServerSignature Off/' \
         -e 's/^ServerTokens.*/ServerTokens Prod/' \
@@ -502,12 +502,12 @@ Por defecto, es posible obtener la versión de Ubuntu y Apache que usa el servic
 
 2. Reiniciamos el servicio para que se apliquen los cambios:
 
-    ```sh
+    ```sh linenums="1"
     sudo systemctl restart apache2
     ```
 
 3. Finalmente, modificamos el index por defecto:
 
-    ```sh
+    ```sh linenums="1"
     echo '<h1>Website not found</h1>' | sudo tee /var/www/html/index.html
     ```

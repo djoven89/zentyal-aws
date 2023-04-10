@@ -23,7 +23,7 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 
 1. Instalamos los paquetes necesarios para la generación de los certificados:
 
-    ```bash
+    ```sh linenums="1"
     sudo apt update
     sudo apt install -y certbot python3-certbot-apache
     ```
@@ -46,7 +46,7 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 
 4. Comprobaremos que desde el exterior podemos resolver los subdominios en cuestión:
 
-    ```bash
+    ```sh linenums="1"
     dig arthas.icecrown.es @8.8.8.8
     dig mail.icecrown.es @8.8.8.8
     dig webmail.icecrown.es @8.8.8.8
@@ -54,7 +54,7 @@ A continuación se indican las acciones a realizar antes de proceder a la genera
 
     El resultado que obtengo en mi caso es:
 
-    ```text
+    ```text linenums="1"
     ## Webadmin
     ; <<>> DiG 9.16.1-Ubuntu <<>> arthas.icecrown.es @8.8.8.8
     ;; global options: +cmd
@@ -126,7 +126,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 1. Generaremos el certificado:
 
-    ```bash
+    ```sh linenums="1"
     sudo certbot certonly \
         --apache \
         --preferred-challenges http \
@@ -137,7 +137,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
     Un ejemplo del resultado:
 
-    ```text
+    ```text linenums="1"
     Saving debug log to /var/log/letsencrypt/letsencrypt.log
     Plugins selected: Authenticator apache, Installer apache
     Obtaining a new certificate
@@ -164,19 +164,19 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 2. Con el certificado generado, tendremos que modificar la plantilla de configuración ([stub]) del módulo, para que dicho cambio sea persistente ante futuras actualizaciones del módulo por parte de Zentyal. Para ello, crearemos los directorios necesarios:
 
-    ```bash
+    ```sh linenums="1"
     sudo mkdir -vp /etc/zentyal/stubs/core
     ```
 
 3. Copiamos la plantilla a modificar:
 
-    ```bash
+    ```sh linenums="1"
     sudo cp -v /usr/share/zentyal/stubs/core/nginx.conf.mas /etc/zentyal/stubs/core/
     ```
 
 4. Modificamos en la plantilla recién copiada los siguientes parámetros de configuración:
 
-    ```text
+    ```text linenums="1"
     ## Custom certificates issued on 18-02-2023 by Daniel
     # ssl_certificate <% $zentyalconfdir %>ssl/ssl.pem;
     # ssl_certificate_key <% $zentyalconfdir %>ssl/ssl.pem;
@@ -186,7 +186,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 5. Opcionalmente, también modificaré los siguientes parámetros de configuración, cuyo valores ha han sido generados desde [esta](https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
 
-    ```text
+    ```text linenums="1"
     ## Custom configuration applied on 18-02-2023 by Daniel
     ## https://ssl-config.mozilla.org/#server=nginx&version=1.17.7&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6
     # ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -199,7 +199,7 @@ Para generar el certificado para el **Webadmin (panel de administración)** usar
 
 6. Paramos el módulo del Webadmin, recargaremos Systemd y volvemos a iniciarlo para aplicar estos cambios:
 
-    ```bash
+    ```sh linenums="1"
     sudo zs webadmin stop
     sudo systemctl daemon-reload
     sudo zs webadmin restart
@@ -217,7 +217,7 @@ Para los módulos **Mail** y **Webmail** usaré el mismo certificado, es decir, 
 
 Generaremos el certificado:
 
-```bash
+```sh linenums="1"
 sudo certbot certonly \
     --apache \
     --preferred-challenges http \
@@ -229,7 +229,7 @@ sudo certbot certonly \
 
 Un ejemplo del resultado:
 
-```text
+```text linenums="1"
 Saving debug log to /var/log/letsencrypt/letsencrypt.log
 Plugins selected: Authenticator apache, Installer apache
 Obtaining a new certificate
@@ -263,17 +263,17 @@ Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/e
 
 1. Modificamos el archivo de configuración `/etc/apache2/sites-available/default-ssl.conf`:
 
-    ```text
+    ```text linenums="1"
     ## Custom certificates issued on 18-02-2023 by Daniel
-    #SSLCertificateFile	/etc/ssl/certs/ssl-cert-snakeoil.pem
-    #SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
+    # SSLCertificateFile	/etc/ssl/certs/ssl-cert-snakeoil.pem
+    # SSLCertificateKeyFile /etc/ssl/private/ssl-cert-snakeoil.key
     SSLCertificateFile  /etc/letsencrypt/live/mail.icecrown.es/fullchain.pem
     SSLCertificateKeyFile /etc/letsencrypt/live/mail.icecrown.es/privkey.pem
     ```
 
 2. Opcionalmente, también añadiré los siguientes parámetros de configuración al final del archivo de configuración. Los valores de los parámetros han sido generados desde [esta](https://ssl-config.mozilla.org/#server=apache&version=2.4.41&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6) página web.
 
-    ```text
+    ```text linenums="1"
     ## Custom configuration applied on 18-02-2023 by Daniel
     ## https://ssl-config.mozilla.org/#server=apache&version=2.4.41&config=intermediate&openssl=1.1.1k&hsts=false&ocsp=false&guideline=5.6
     SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
@@ -284,7 +284,7 @@ Para este módulo, no será necesario editar un [stub](https://doc.zentyal.org/e
 
 3. Reiniciamos el servicio de Apache:
 
-    ```sh
+    ```sh linenums="1"
     sudo systemctl restart apache2
     ```
 
@@ -303,19 +303,19 @@ Las acciones a realizar son:
 
 1. Creamos el directorio donde ubicaremos las plantillas:
 
-    ```bash
+    ```sh linenums="1"
     sudo mkdir -vp /etc/zentyal/stubs/mail
     ```
 
 2. Copiaremos las plantillas a modificar:
 
-    ```bash
+    ```sh linenums="1"
     sudo sudo cp -v /usr/share/zentyal/stubs/mail/{main.cf,dovecot.conf}.mas /etc/zentyal/stubs/mail/
     ```
 
 3. Modificamos la plantilla `main.cf.mas` para el servicio Postfix (SMTP):
 
-    ```text
+    ```text linenums="1"
     ## Custom certificates issued on 18-02-2023 by Daniel
     # smtpd_tls_key_file  = <% $keyFile  %>
     # smtpd_tls_cert_file = <% $certFile %>
@@ -325,7 +325,7 @@ Las acciones a realizar son:
 
 4. Modificamos la otra plantilla `dovecot.conf.mas` para el servicio Dovecot (IMAP/POP3):
 
-    ```text
+    ```text linenums="1"
     ## Custom certificates issued on 18-02-2023 by Daniel
     # ssl_cert =</etc/dovecot/private/dovecot.pem
     # ssl_key =</etc/dovecot/private/dovecot.pem
@@ -335,20 +335,20 @@ Las acciones a realizar son:
 
 5. Reiniciamos el módulo de correo para que se apliquen los cambios:
 
-    ```sh
+    ```sh linenums="1"
     sudo zs mail restart
     ```
 
 6. Finalmente, confirmamos que ambos servicios están usando correctamente el nuevo certificado. Para realizar dicha acción, podremos usar cliente de correo como Thunderbird o el comando `openssl` como será mi caso:
 
-    ```bash
+    ```sh linenums="1"
     openssl s_client -starttls smtp -showcerts -connect mail.icecrown.es:465 -servername mail.icecrown.es
     openssl s_client -showcerts -connect mail.icecrown.es:993 -servername mail.icecrown.es
     ```
 
     El resultado obtenido en mi caso ha sido:
 
-    ```text
+    ```text linenums="1"
     ## Para SMTP
     CONNECTED(00000003)
     depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1

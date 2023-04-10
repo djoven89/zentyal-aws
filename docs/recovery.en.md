@@ -55,13 +55,13 @@ With the simulated disaster, we will proceed with its recovery.
 
 5. We connect via SSH to the server and verify that the operating system detects the new volume:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     In my environment, the volume has been mounted as `nvme3n1p1`:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme0n1      259:0    0   30G  0 disk
     ├─nvme0n1p1  259:2    0 29.9G  0 part /
@@ -77,31 +77,31 @@ With the simulated disaster, we will proceed with its recovery.
 
 6. We create a temporary directory where we will mount the new disk:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v /mnt/shares-recovery
     ```
 
 7. We mount the volume:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme3n1p1 /mnt/shares-recovery
     ```
 
 8. We search for the document in the shared resource `rrhh` in the directory where we mounted the temporary disk:
 
-    ```sh
+    ```sh linenums="1"
     sudo find /mnt/shares-recovery/samba/shares/rrhh/ -type f -exec ls -l {} \;
     ```
 
     Example on my server:
 
-    ```text
+    ```text linenums="1"
     -rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 21377 Feb 27 20:57 '/mnt/shares-recovery/samba/shares/rrhh/Nominas 2023.pdf'
     ```
 
 9. Once the file has been identified, we proceed with its restoration:
 
-    ```sh
+    ```sh linenums="1"
     cp -vp /mnt/shares-recovery/samba/shares/rrhh/Nominas\ 2023.pdf /home/samba/shares/rrhh/
     ```
 
@@ -116,7 +116,7 @@ With the simulated disaster, we will proceed with its recovery.
 
 11. Once we have confirmed the restoration of the file, we proceed to unmount the disk and delete the temporary directory created:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount -v /mnt/shares-recovery
     sudo rmdir -v /mnt/shares-recovery
     ```
@@ -176,13 +176,13 @@ Now that we have simulated the disaster, we will proceed to perform the necessar
 
 5. We connect via SSH to the server and check that the operating system detects the new volume:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     In my environment, the volume has been mounted as `nvme3n1p1`:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     └─nvme1n1p1  259:1    0   10G  0 part /var/vmail
@@ -198,25 +198,25 @@ Now that we have simulated the disaster, we will proceed to perform the necessar
 
 6. We create a temporary directory where we will mount the new disk:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v /mnt/mail-recovery
     ```
 
 7. We mount the volume:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme3n1p1 /mnt/mail-recovery
     ```
 
 8. We search for the email of the user `maria` in the directory where we have mounted the temporary disk:
 
-    ```sh
+    ```sh linenums="1"
     sudo find /mnt/mail-recovery/icecrown.es/maria/ -type f -exec ls -l {} \;
     ```
 
     Example on my server:
 
-    ```text
+    ```text linenums="1"
     -rw------- 1 ebox ebox 2180 Feb 27 21:36 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.index.cache
     -rw------- 1 ebox ebox 384 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.list.index.log
     -rw------- 1 ebox ebox 8 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot-uidvalidity
@@ -229,7 +229,7 @@ Now that we have simulated the disaster, we will proceed to perform the necessar
 
 9. Once the email has been identified, we proceed to restore it:
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -vp '/mnt/mail-recovery/icecrown.es/maria/Maildir/cur/1677530165.M104169P13132.arthas,S=31900,W=32366:2,S' /var/vmail/icecrown.es/maria/Maildir/cur/
     ```
 
@@ -244,7 +244,7 @@ Now that we have simulated the disaster, we will proceed to perform the necessar
 
 11. Once the email has been successfully restored, we proceed to unmount the disk and delete the temporary directory created:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount -v /mnt/mail-recovery
     sudo rmdir -v /mnt/mail-recovery
     ```
@@ -271,13 +271,13 @@ To simulate the disaster, I will delete the `zentyal-core` package.
 
 1. We will log in to the server via SSH and check the status of the Zentyal packages:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
     The result obtained in my case:
 
-    ```text
+    ```text linenums="1"
     ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     ii  zentyal-core                          7.0.5                             all          Zentyal - Core
@@ -295,19 +295,19 @@ To simulate the disaster, I will delete the `zentyal-core` package.
 
 2. We will remove the `zentyal-core` package to cause instability:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt remove -y zentyal-core
     ```
 
 3. Finally, we confirm that the modules have been uninstalled, leaving the server inoperable:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
     The result obtained in my case:
 
-    ```text
+    ```text linenums="1"
     rc  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     rc  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     rc  zentyal-core                          7.0.5                             all          Zentyal - Core
@@ -369,13 +369,13 @@ With the disaster properly implemented, we will proceed to restore it using the 
 
 9. We connect to the instance and check that the packages are properly installed again:
 
-    ```sh
+    ```sh linenums="1"
     dpkg -l | egrep 'zen(buntu|tyal)-'
     ```
 
     The result obtained in my case:
 
-    ```text
+    ```text linenums="1"
     ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
     ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
     ii  zentyal-core                          7.0.5                             all          Zentyal - Core

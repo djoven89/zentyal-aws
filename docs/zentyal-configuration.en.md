@@ -30,7 +30,7 @@ The objectives that will be accomplished are:
     * [DNS](https://doc.zentyal.org/en/dns.html)
     * [Controlador de dominio](https://doc.zentyal.org/en/directory.html)
     * [Correo](https://doc.zentyal.org/en/mail.html)
-    * [Webmail](https://doc.zentyal.org/en/mail.html#cliente-de-webmail)
+    * [Webmail](https://doc.zentyal.org/en/mail.html#webmail)
     * [Antivirus](https://doc.zentyal.org/en/antivirus.html)
     * [Mailfilter](https://doc.zentyal.org/en/mailfilter.html)
     * [CA](https://doc.zentyal.org/en/ca.html)
@@ -47,19 +47,19 @@ Since Zentyal does not use Snap, we will proceed with its uninstallation.
 
 1. Stop the service:
 
-    ```sh
+    ```sh linenums="1"
     sudo systemctl stop snapd snapd.socket
     ```
 
 2. Remove the package:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt remove --purge -y snapd
     ```
 
 3. Remove the directories that remain in the file system:
 
-    ```sh
+    ```sh linenums="1"
     sudo rm -rf /root/snap/
     ```
 
@@ -67,7 +67,7 @@ Since Zentyal does not use Snap, we will proceed with its uninstallation.
 
 To improve the user experience when performing tasks from the CLI, we will enable prompt colors for existing and future local users.
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel/; do
     sudo sed -i 's/#force_color_prompt/force_color_prompt/' $user/.bashrc
 done
@@ -77,7 +77,7 @@ done
 
 In order to store more information in the personal history of users and also have a timestamp indicating the date and time a certain command was executed, we will add a series of additional options to both existing and future local users.
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel/; do
 
 sudo tee -a $user/.bashrc &>/dev/null <<EOF
@@ -107,7 +107,7 @@ We will add a simple custom configuration for the `vim` text editor for both exi
 To set up the configuration, simply create a file called `.vimrc` in the users' home directory.
 Previous Configuration
 
-```sh
+```sh linenums="1"
 for user in /root /home/ubuntu /home/djoven /etc/skel; do
 
 sudo tee -a $user/.vimrc &>/dev/null <<EOF
@@ -133,38 +133,38 @@ It is highly recommended to configure a SWAP partition on the server to increase
 
 1. Create an empty 4GB file, which will be the size of our SWAP partition:
 
-    ```sh
+    ```sh linenums="1"
     sudo dd if=/dev/zero of=/swapfile1 bs=128M count=32
     ```
 
 2. Set the permissions for the file:
 
-    ```sh
+    ```sh linenums="1"
     sudo chmod 0600 /swapfile1
     ```
 
 3. Set the file as a SWAP area:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkswap /swapfile1
     ```
 
 4. Enable the SWAP partition temporarily:
 
-    ```sh
+    ```sh linenums="1"
     sudo swapon /swapfile1
     ```
 
 5. Verify that the system recognizes the new SWAP partition by running the following commands:
 
-    ```sh
+    ```sh linenums="1"
     sudo swapon -s
     sudo free -m
     ```
 
     The result we should get is:
 
-    ```text
+    ```text linenums="1"
     ## Comando 'swapon'
     Filename				Type		Size	  Used	  Priority
     /swapfile1             	file    	4194300	     0	        -2
@@ -177,13 +177,13 @@ It is highly recommended to configure a SWAP partition on the server to increase
 
 6. Set the partition in the /etc/fstab configuration file so that it persists after the server restarts:
 
-    ```sh
+    ```sh linenums="1"
     echo -e '\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0' | sudo tee -a /etc/fstab
     ```
 
 7. Finally, check that the new entry in the file does not contain syntax errors:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount -a
     ```
 
@@ -197,13 +197,13 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 1. List the volumes with the command:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     In my specific case, it shows the following result:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     nvme0n1      259:1    0   30G  0 disk
@@ -215,7 +215,7 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 2. Create a single partition that occupies the entire disk on the nvme1n1 and nvme2n1 volumes:
 
-    ```sh
+    ```sh linenums="1"
     for disk in nvme1n1 nvme2n1; do
         echo -e 'n\np\n\n\n\nt\n8e\nw' | sudo fdisk /dev/$disk
     done
@@ -227,13 +227,13 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 3. Verify that the partitions have been created correctly:
 
-    ```sh
+    ```sh linenums="1"
     lsblk
     ```
 
     In my specific case, it shows the following result:
 
-    ```text
+    ```text linenums="1"
     NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
     nvme1n1      259:0    0   10G  0 disk
     └─nvme1n1p1  259:7    0   10G  0 part
@@ -247,7 +247,7 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 4. Set ext4 as the file system for the new partitions:
 
-    ```sh
+    ```sh linenums="1"
     for disk in nvme1n1p1 nvme2n1p1; do
         sudo mkfs -t ext4 /dev/$disk
     done
@@ -255,13 +255,13 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 5. Verify that everything went well with the command:
 
-    ```sh
+    ```sh linenums="1"
     lsblk -f
     ```
 
     In my specific case, it shows the following result:
 
-    ```text
+    ```text linenums="1"
     NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
     nvme1n1
     └─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
@@ -275,37 +275,37 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 6. Create the directory where the EBS volume for mailboxes will be mounted:
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -v -m0775 /var/vmail
     ```
 
 7. Temporarily mount the EBS volume that will contain the shared resources:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount /dev/nvme2n1p1 /mnt
     ```
 
 8. Copy the content of the /home/ directory to the temporary directory where we have mounted the EBS volume:
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -aR /home/* /mnt/
     ```
 
 9. Unmount the EBS volume:
 
-    ```sh
+    ```sh linenums="1"
     sudo umount /mnt
     ```
 
 10. Obtain the identifier (UUID) of the volumes:
 
-    ```sh
+    ```sh linenums="1"
     sudo sudo blkid | egrep "nvme[12]n1p1"
     ```
 
     In my specific case, it shows the following result:
 
-    ```sh
+    ```sh linenums="1"
     /dev/nvme2n1p1: UUID="28e5471e-8fc1-48b5-8729-778c56a19b90" TYPE="ext4" PARTUUID="558dd3b7-01"
     /dev/nvme1n1p1: UUID="e903ff6f-c431-4e3a-92a1-9f476c66b3be" TYPE="ext4" PARTUUID="446d2929-01"
     ```
@@ -322,20 +322,20 @@ In case we have added additional EBS volumes - as in my case for mailboxes and s
 
 12. Mount the volumes to verify that there are no syntax errors in the file from the previous step:
 
-    ```sh
+    ```sh linenums="1"
     sudo mount -a
     ```
 
 13. Finally, confirm that they have been mounted correctly by running the following commands:
 
-    ```sh
+    ```sh linenums="1"
     mount | egrep 'nvme[12]n1p1'
     df -h
     ```
 
     In my specific case, it shows the following result:
 
-    ```sh
+    ```sh linenums="1"
     ## Comando 'mount'
     /dev/nvme2n1p1 on /var/vmail type ext4 (rw,nosuid,nodev,noexec,relatime)
     /dev/nvme1n1p1 on /home type ext4 (rw,nosuid,nodev,noexec,relatime)
@@ -363,14 +363,14 @@ To be able to use the quotas that Zentyal allows setting to limit the use of inf
 
 1. Install the following packages required for AWS instances:
 
-    ```sh
+    ```sh linenums="1"
     sudo apt update
     sudo apt install -y quota quotatool linux-modules-extra-aws
     ```
 
 2. Set the additional mount options on the EBS volume for shared resources, to do this, edit the configuration file /etc/fstab:
 
-    ```sh
+    ```sh linenums="1"
     ## AWS EBS - Shares
     UUID=28e5471e-8fc1-48b5-8729-778c56a19b90	/home	ext4	defaults,noexec,nodev,nosuid,usrjquota=quota.user,grpjquota=quota.group,jqfmt=vfsv0 0 2
     ```
@@ -381,31 +381,31 @@ To be able to use the quotas that Zentyal allows setting to limit the use of inf
 
 3. Restart the server so that the latest kernel is loaded and we can securely enable quotas:
 
-    ```sh
+    ```sh linenums="1"
     sudo reboot
     ```
 
 4. Add the Quota module to the kernel:
 
-    ```sh
+    ```sh linenums="1"
     sudo modprobe quota_v2
     ```
 
 5. Persist the previous change:
 
-    ```sh
+    ```sh linenums="1"
     echo 'quota_v2' | sudo tee -a /etc/modules
     ```
 
 6. Let the system check quotas and create the necessary files:
 
-    ```sh
+    ```sh linenums="1"
     sudo quotacheck -vugmf /home
     ```
 
     The result I obtained in my case was:
 
-    ```text
+    ```text linenums="1"
     quotacheck: Scanning /dev/nvme1n1p1 [/home] done
     quotacheck: Checked 8 directories and 18 files
     ```
@@ -538,7 +538,7 @@ The configuration we will establish will be minimal, since we will manage the DN
 
 7. Finally, we check that we can resolve the configured DNS records from the server itself. To do this, we will run the following commands:
 
-    ```sh
+    ```sh linenums="1"
     ## For the domain
     dig icecrown.es
 
@@ -552,7 +552,7 @@ The configuration we will establish will be minimal, since we will manage the DN
 
     Below are the results I have obtained:
 
-    ```text
+    ```text linenums="1"
     ## For the domain
     ; <<>> DiG 9.16.1-Ubuntu <<>> icecrown.es
     ;; global options: +cmd
@@ -645,8 +645,8 @@ The configuration we will establish will be minimal, since we will manage the DN
 
     As can be seen, the `status` for all is '**NOERROR**' and the '**ANSWER SECTION**' shows the DNS records in question.
 
-[Cloudflare]: https://www.cloudflare.com/es-es/
-[Quad9]: https://www.quad9.net/es/
+[Cloudflare]: https://www.cloudflare.com/
+[Quad9]: https://www.quad9.net/
 
 At this point, the module would be configured in Zentyal. However, we still need to create the records with the server's public IP address in the DNS provider so that they are visible externally. Here are the steps to perform for AWS Route53:
 
@@ -658,7 +658,7 @@ At this point, the module would be configured in Zentyal. However, we still need
 
 3. Finally, we check the resolution of the records:
 
-    ```sh
+    ```sh linenums="1"
     ## For the domain
     dig @8.8.8.8 icecrown.es
 
@@ -672,7 +672,7 @@ At this point, the module would be configured in Zentyal. However, we still need
 
     A continuación, los resultados que he obtenido:
 
-    ```text
+    ```text linenums="1"
     ## For the domain
     ; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 icecrown.es
     ; (1 server found)
@@ -810,20 +810,20 @@ Here are the steps to configure the module:
 
     Additionally, I will also create it in Zentyal, but as it is an alias, it will have to be done using the CLI:
 
-    ```sh
+    ```sh linenums="1"
     sudo samba-tool dns add 127.0.0.1 icecrown.es icecrown.es MX "mail.icecrown.es 10" -U zenadmin
     ```
 
 7. Check the new DNS record both internally and externally:
 
-    ```sh
+    ```sh linenums="1"
     dig MX icecrown.es
     dig @8.8.8.8 MX icecrown.es
     ```
 
     The result I get is:
 
-    ```text
+    ```text linenums="1"
     ## Internal query
     ; <<>> DiG 9.16.1-Ubuntu <<>> MX icecrown.es
     ;; global options: +cmd
@@ -909,7 +909,7 @@ Finally, we will test with a mail client (Thunderbird in my case) that we can co
 
 6. If everything went well, we should have received the email both internally and externally, and also in the `/var/log/mail.log` log we should see similar records as:
 
-    ```text
+    ```text linenums="1"
     Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: connect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36]
     Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: 958BDFEEFC: client=36.red-45-4-127.staticip.rima-tde.net[88.6.127.36], sasl_method=PLAIN, sasl_username=test.
     djoven@icecrown.es
@@ -986,25 +986,25 @@ The following actions should be taken to apply the optional configurations:
 
 1. We create the directory that will make the changes to the configuration templates (stubs) persistent against module updates.
 
-    ```sh
+    ```sh linenums="1"
     sudo mkdir -vp /etc/zentyal/stubs/sogo
     ```
 
 2. We copy the Sogo configuration template `sogo.conf.mas`.
 
-    ```sh
+    ```sh linenums="1"
     sudo cp -v /usr/share/zentyal/stubs/sogo/sogo.conf.mas /etc/zentyal/stubs/sogo/
     ```
 
 3. We set the parameter `SOGoVacationEnabled` to `YES` in the newly copied template.
 
-    ```sh
+    ```sh linenums="1"
     sudo sed -i 's/SOGoVacationEnabled.*/SOGoVacationEnabled = YES;/' /etc/zentyal/stubs/sogo/sogo.conf.mas
     ```
 
 4. We restart the Webmail module to apply the change.
 
-    ```sh
+    ```sh linenums="1"
     sudo zs sogo restart
     ```
 
@@ -1014,31 +1014,31 @@ The following actions should be taken to apply the optional configurations:
 
 6. We set the value of prefork in the configuration file `/etc/zentyal/sogo.conf`.
 
-    ```sh
+    ```sh linenums="1"
     sed -i 's/#sogod_prefork.*/sogod_prefork=8/' /etc/zentyal/sogo.conf
     ```
 
     If we have many concurrent users using the module, it is possible that Sogo cannot manage all requests properly, so it will be necessary to increase this value. To detect this scenario, we simply need to search for records in the Sogo log located at `/var/log/sogo/sogo.log` similar to the following:
 
-    ```sh
+    ```sh linenums="1"
     sogod [3252]: [ERROR] <0x0x55c9db827250[WOWatchDog]> No child available to handle incoming request!
     ```
 
 7. We restart the Webmail module to apply the change.
 
-    ```sh
+    ```sh linenums="1"
     sudo zs sogo restart
     ```
 
 8. Finally, we check that the service has been started with the new value applied.
 
-    ```sh
+    ```sh linenums="1"
     ps -ef | grep sogod | head -1
     ```
 
     In my case, the result obtained from the command was:
 
-    ```sh
+    ```sh linenums="1"
     sogo 24430 1 0 00:40 ? 00:00:00 /usr/sbin/sogod -WOWorkersCount 8 -WOPidFile /var/run/sogo/sogo.pid -WOLogFile /var/log/sogo/sogo.log
     ```
 
@@ -1056,13 +1056,13 @@ The configuration that we can define for this module from the Zentyal administra
 
 2. We update the signature database.
 
-    ```sh
+    ```sh linenums="1"
     sudo freshclam -v
     ```
 
 3. We confirm that the module is active.
 
-    ```sh
+    ```sh linenums="1"
     sudo zs antivirus status
     ```
 
@@ -1130,7 +1130,7 @@ Here are the steps to configure the module:
 
 8. We send a simple email from an external domain and check in the log file `/var/log/mail.log` that the module has analyzed it through the Amavis service:
 
-    ```text
+    ```text linenums="1" hl_lines="15"
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: connect from mail-lj1-f176.google.com[209.85.208.176]
     Feb 18 11:18:57 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f176.google.com, client_address=209.85.208.176/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:18:57 arthas postfix/smtpd[18582]: A69DDFEF59: client=mail-lj1-f176.google.com[209.85.208.176]
@@ -1160,7 +1160,7 @@ Here are the steps to configure the module:
 
 9. Once we confirm that emails are properly received, we will proceed to verify the functioning of the module by sending another email with an attachment whose extension is `.sh` - denied in step 5 - from an external account. Here are the log records regarding the success of the block in `/var/log/mail.log`:
 
-    ```text
+    ```text linenums="1" hl_lines="25 30"
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: connect from mail-lj1-f171.google.com[209.85.208.171]
     Feb 18 11:31:30 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f171.google.com, client_address=209.85.208.171/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
     Feb 18 11:31:30 arthas postfix/smtpd[18720]: 79C12FEF59: client=mail-lj1-f171.google.com[209.85.208.171]
@@ -1197,13 +1197,13 @@ Here are the steps to configure the module:
     Feb 18 11:31:31 arthas postfix/qmgr[18435]: B0E32FEF75: removed
     ```
 
-    Como se puede apreciar, el email procedente de una cuenta de GMail llegó al servidor, el servicio de Amavis lo analizó y denegó debido a la extensión del archivo adjunto. A continuación se lo notificó a la cuenta `issues@icecrown.es` y finalmente, devolvió el correo a la cuenta externa.
+    As can be seen, the email from a GMail account arrived at the server, the Amavis service analyzed it and denied it due to the extension of the attached file. Then it notified `issues@icecrown.es` and finally returned the email to the external account.
 
 10. Finally, we confirm that the `issues@icecrown.es` account has an email with our latest test.
 
     ![Mail confirmation](assets/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
-At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least **SPF** and **DKIM**, and ideally, **DMARC**. These security configurations are discussed on the `Hardening` page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in `Certificates`.
+At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least **SPF** and **DKIM**, and ideally, **DMARC**. These security configurations are discussed on the [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/) page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/).
 
 ### CA module
 
@@ -1304,7 +1304,7 @@ With the module now configured, we create a certificate, user, and shared resour
 
 7. Establish the connection from the OpenVPN client. If everything went well, we should be able to see similar logs in the Zentyal VPN connection log file called `/var/log/openvpn/Icecrown-RecursosCompartidos.log`:
 
-    ```text
+    ```text linenums="1"
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 TLS: Initial packet from [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5), sid=7c56b72b 70d7b663
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=1, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown CA Authority Certificate
     Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY X509NAME OK: C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
@@ -1346,7 +1346,7 @@ With the module now configured, we create a certificate, user, and shared resour
 
 10. Add a file to the `Maria` and `rrhh` resources and verify its creation from the Zentyal server CLI:
 
-    ```sh
+    ```sh linenums="1"
     ls -l /home/maria/test-file-1.txt
         -rwxrwx--x+ 1 ICECROWN\maria ICECROWN\domain users 0 Feb  4 20:56 /home/maria/test-file-1.txt
 

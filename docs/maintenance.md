@@ -27,7 +27,7 @@ Lo primero y más importante es saber si los archivos de logs importantes del si
 
 A continuación un ejemplo de una búsqueda de warnings y errores en el log de Zentyal:
 
-```sh
+```sh linenums="1"
 egrep -i '(ERROR|WARN)>' /var/log/zentyal/zentyal.log
 ```
 
@@ -37,7 +37,7 @@ egrep -i '(ERROR|WARN)>' /var/log/zentyal/zentyal.log
 
 El resultado de un warning inofensivo y un error:
 
-```text
+```text linenums="1"
 2023/02/04 20:06:31 WARN> zentyal.psgi:43 Plack::Sandbox::_2fusr_2fshare_2fzentyal_2fpsgi_2fzentyal_2epsgi::__ANON__ - Argument "Icecrown-RC-" isn't numeric in numeric eq (==) at /usr/share/perl5/EBox/OpenVPN/Model/ServerConfiguration.pm line 572.
 
 2023/02/04 20:06:53 ERROR> MyDBEngine.pm:200 EBox::MyDBEngine::_connect - Connection DB Error: Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (13)
@@ -47,13 +47,13 @@ El resultado de un warning inofensivo y un error:
 
 Otra tarea crítica a revisar es si el servidor tiene algún paquete roto. Esto lo se puede ver con el siguiente comando:
 
-```sh
+```sh linenums="1"
 dpkg -l | egrep -v '^(ii|rc)'
 ```
 
 Un ejemplo de un sistema sin ningún paquete roto:
 
-```text
+```text linenums="1"
 Desired=Unknown/Install/Remove/Purge/Hold
 | Status=Not/Inst/Conf-files/Unpacked/halF-conf/Half-inst/trig-aWait/Trig-pend
 |/ Err?=(none)/Reinst-required (Status,Err: uppercase=bad)
@@ -65,7 +65,7 @@ Desired=Unknown/Install/Remove/Purge/Hold
 
 Es conveniente generar un reporte del sistema una vez a la semana para ver el estado general del servidor y detectar posibles incidencias. El reporte se puede generar usando la CLI como se muestra a continuación:
 
-```sh
+```sh linenums="1"
 /usr/share/zentyal/smart-admin-report > zentyal-report_12-02-2023
 ```
 
@@ -73,7 +73,7 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
 
 * **Disk usage** -> Espacio disponible en los discos.
 
-    ```text
+    ```text linenums="1"
     Filesystem      Type      Size  Used Avail Use% Mounted on
     /dev/root       ext4       29G  8.0G   21G  28% /
     /dev/nvme2n1p1  ext4      9.8G   17M  9.3G   1% /var/vmail
@@ -83,13 +83,13 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
 
 * **Network Interfaces where were** -> Fallos de red.
 
-    ```sh
+    ```sh linenums="1"
     Network Interfaces where were 'Down': 0
     ```
 
 * **Server packages** -> Paquetes rotos o pendientes por actualizar.
 
-    ```text
+    ```text linenums="1"
     Broken packages: 0
     Upgradable packages:
 
@@ -105,13 +105,13 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
 
 * **DNS users on DnsAdmins** -> El usuario especial del módulo de DNS debe existir y pertenecer al grupo especial del dominio llamado `DnsADmins`.
 
-    ```text
+    ```text linenums="1"
     dns-arthas
     ```
 
 * **Daemons' information** -> Estado de los demonios antiguos del controlador del dominio (deben estar *inactivos*).
 
-    ```text
+    ```text linenums="1"
     Status of the daemon: 'smbd': inactive
     State of the daemon: 'smbd': masked
 
@@ -127,19 +127,19 @@ A continuación algunas de las secciones más importantes del reporte que hay qu
 
 * **Samba database check** -> Errores en la base de datos de Samba.
 
-    ```text
+    ```text linenums="1"
     Checked 3763 objects (0 errors)
     ```
 
 * **DNS alias** -> Registro especial de tipo CNAME en el dominio para el controlador de dominio.
 
-    ```text
+    ```text linenums="1"
     cb8c94d6-fde3-4f61-9d61-8b7e6c1ce537._msdcs.icecrown.es is an alias for arthas.icecrown.es.
     ```
 
 * **Mails status** -> El estado de los emails gestionados por el módulo de correo.
 
-    ```text
+    ```text linenums="1"
     Mail queue:
     Mail queue is empty
     Mails sent: 2

@@ -50,7 +50,7 @@ The modules that will be installed and configured are:
 * [DNS](https://doc.zentyal.org/en/dns.html)
 * [Controlador de dominio](https://doc.zentyal.org/en/directory.html)
 * [Correo](https://doc.zentyal.org/en/mail.html)
-* [Webmail](https://doc.zentyal.org/en/mail.html#cliente-de-webmail)
+* [Webmail](https://doc.zentyal.org/en/mail.html#webmail)
 * [Antivirus](https://doc.zentyal.org/en/antivirus.html)
 * [Mailfilter](https://doc.zentyal.org/en/mailfilter.html)
 * [CA](https://doc.zentyal.org/en/ca.html)

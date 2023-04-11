@@ -1,0 +1,102 @@
+---
+#####
+## Plantilla base
+#####
+
+site_author: Daniel Joven
+site_name: Zentyal & AWS
+site_url: https://zentyal-aws.projects.djoven.es
+repo_url: https://github.com/djoven89/zentyal-aws
+docs_dir: 'docs'
+site_dir: '/generated'
+
+nav:
+  - Home: 'index.md'
+  - AWS: 'aws-configuration.md'
+  - Install: 'zentyal-installation.md'
+  - Configuration: 'zentyal-configuration.md'
+  - Certificates: 'zentyal-certificates.md'
+  - Hardening: 'zentyal-hardening.md'
+  - Backup: 'backup.md'
+  - Monitoring: 'monitoring.md'
+  - Maintenance: 'maintenance.md'
+  - Recovery: 'recovery.md'
+  - Bug fixing: 'zentyal-bug-fixing.md'
+  - About me: 'about.md'
+
+## https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#configuration
+
+theme:
+  name: material
+  # custom_dir: '../../overrides/'                  # This is where the customization of the theme lives
+  # logo: assets/images/logo.png                    # The logo is shared by all languages
+  favicon: assets/favicon.ico              # The favicon is shared by all languages
+  features:
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - toc.integrate
+    - content.code.copy
+    - content.code.annotate
+    - navigation.top
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      accent: red
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+        accent: indigo
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      accent: red
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search:
+      lang:
+        - es
+        - en
+  - tags
+  ## https://github.com/ultrabug/mkdocs-static-i18n
+  - i18n:
+      default_language: es
+      docs_structure: suffix
+      languages:
+        es:
+          name: Spanish
+          build: true
+        en:
+          name: English
+          build: true
+      material_alternate: true
+  ## https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+  ## https://github.com/blueswen/mkdocs-glightbox
+  - glightbox:
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - toc:
+      permalink: true
+
+...

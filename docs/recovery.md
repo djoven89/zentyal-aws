@@ -7,7 +7,9 @@ tags:
 
 # Recovery
 
-En esta página se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en la página de backup.
+En esta página se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en la página de [backup].
+
+[backup]: https://zentyal-aws.projects.djoven.es/backup/#aws-dlm
 
 ## Recursos compartidos
 

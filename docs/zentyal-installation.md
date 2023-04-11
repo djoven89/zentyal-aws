@@ -41,7 +41,7 @@ Los datos del entorno que crearé para el proyecto son:
 
 Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
 
-1. Nos conectamos a la instancia a través de SSH usando la clave privada que nos hemos descargado cuando creamos el Key pair:
+1. Nos conectamos a la instancia a través de SSH usando la clave privada que nos hemos descargado cuando creamos el [Key pair]:
 
     ```sh linenums="1"
     ssh -i KP-Prod-Zentyal.pem ubuntu@arthas.icecrown.es
@@ -86,6 +86,8 @@ Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:
     ```
 
 7. Finalmente, añadimos el contenido de nuestra clave pública al archivo recién creado `.ssh/authorized_keys`.
+
+[Key pair]: https://zentyal-aws.projects.djoven.es/aws-configuration/#key-pair
 
 ## Instalación
 
@@ -143,7 +145,7 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
 
     !!! warning
 
-        Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la página `Bug fixing` (ver menú superior de navegación) o simplemente modificamos la URL por: <https://arthas.icecrown.es:8443>
+        Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado [aquí]. Si es el caso, seguir los pasos descritos en la página [Bug fixing] (ver menú superior de navegación) o simplemente modificamos la URL por: <https://arthas.icecrown.es:8443>
 
 8. Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.
 
@@ -205,3 +207,4 @@ A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A
 [firewall]: https://doc.zentyal.org/es/firewall.html
 [network]: https://doc.zentyal.org/es/firststeps.html#configuracion-basica-de-red-en-zentyal
 [aquí]: https://github.com/zentyal/zentyal/issues/2100
+[Bug fixing]: https://zentyal-aws.projects.djoven.es/zentyal-bug-fixing/#saving-changes

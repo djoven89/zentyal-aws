@@ -7,7 +7,9 @@ tags:
 
 # Recovery
 
-On this page, we will explain the three possible scenarios regarding recoveries, from the "most" probable to the "least". In all three cases, we will use the DLM backup policies defined on the backup page.
+On this page, we will explain the three possible scenarios regarding recoveries, from the "most" probable to the "least". In all three cases, we will use the DLM backup policies defined on the [backup] page.
+
+[backup]: https://zentyal-aws.projects.djoven.es/en/backup/#aws-dlm
 
 ## Shared resources
 

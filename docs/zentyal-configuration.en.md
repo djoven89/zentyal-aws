@@ -932,10 +932,9 @@ Finally, we will test with a mail client (Thunderbird in my case) that we can co
 
         As can be seen, the status of both emails is `sent`.
 
+At this point, the mail module should be fully functional. However, it is not yet secured, so it is advisable not to use it yet until at least the Mailfilter module has been configured and enabled. Additionally, there is another page in this project called [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/#mail-module) where the module's security will be further increased.
 
-At this point, the mail module should be fully functional. However, it is not yet secured, so it is advisable not to use it yet until at least the Mailfilter module has been configured and enabled. Additionally, there is another section in this project called 'hardening' where the module's security will be further increased.
-
-Also, note that if the server is installed in the AWS cloud provider, sending emails is not allowed by default (check the last section of the 'AWS' section).
+Also, note that if the server is installed in the AWS cloud provider, sending emails is not allowed by default (check the next to last section of the [AWS](https://zentyal-aws.projects.djoven.es/en/aws-configuration/#request-email-sending) page).
 
 ### Webmail Module
 
@@ -969,13 +968,14 @@ The next module to configure will be the [Webmail] (Sogo), which will allow us t
 
     !!! warning
 
-        If we do not see the mailbox, it is possible that we are experiencing an existing bug, which occurs when the insecure mail protocols are not configured, and the certificate used is self-signed. To solve this, see the section 'Webmail -> IMAPS' on the 'bug fixing' page.
+        If we do not see the mailbox, it is possible that we are experiencing an existing bug, which occurs when the insecure mail protocols are not configured, and the certificate used is self-signed. To solve this, see the section `IMAPS` on the [bug fixing] page.
 
 6. Finally, we try to send another email to ourselves to verify integration with the email module.
 
     ![Webmail sending an email](assets/zentyal/webmail-sending_email.png "Webmail sending an email")
 
 [ActiveSync]: https://doc.zentyal.org/en/mail.html#activesync-support
+[bug fixing]: https://zentyal-aws.projects.djoven.es/en/zentyal-bug-fixing/#imaps
 
 At this point, the module is fully functional; however, I will set the following optional configurations:
 
@@ -1203,7 +1203,7 @@ Here are the steps to configure the module:
 
     ![Mail confirmation](assets/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
-At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least **SPF** and **DKIM**, and ideally, **DMARC**. These security configurations are discussed on the [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/) page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/).
+At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least **SPF** and **DKIM**, and ideally, **DMARC**. These security configurations are discussed on the [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/#mail-module) page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/).
 
 ### CA module
 

@@ -55,7 +55,7 @@ There are several solutions to this problem:
 
 1. We can modify the configuration parameter to allow insecure certificate connections on localhost.
 2. We can temporarily enable the `IMAP` protocol from `Mail -> General`.
-3. We can use a recognized certificate in the Webmail (Sogo) module, as explained on the `Certificates` page.
+3. We can use a recognized certificate in the Webmail (Sogo) module, as explained on the [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/) page.
 
 If we want to apply the first option, we need to perform the following actions:
 

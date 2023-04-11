@@ -10,6 +10,8 @@ tags:
 On this page, we will explain how to configure the AWS cloud provider environment to deploy the Zentyal server.
 Requirements
 
+## Requirements
+
 To follow this document, you will need the following:
 
 1. An AWS account.
@@ -19,7 +21,7 @@ To follow this document, you will need the following:
     * KMS
     * EC2
 
-# Region
+## Region
 
 Before starting to create resources, we need to know which is the best region to use. To do this, we will use [this] website, where we can see which region has better latency from our location.
 
@@ -63,7 +65,6 @@ Once it has been created, we can optionally enable the following options:
 Once we have our VPC created, we will proceed to create a public [subnet], which will be where we will locate our Zentyal server.
 
 [subnet]: https://docs.aws.amazon.com/vpc/latest/userguide/configure-subnets.html
-
 
 The subnet configuration will be:
 

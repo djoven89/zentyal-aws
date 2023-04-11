@@ -353,7 +353,7 @@ The actions to be performed are:
     The result obtained in my case has been:
 
     ```text linenums="1"
-    ## Para SMTP
+    ## SMTP
     CONNECTED(00000003)
     depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
     verify return:1
@@ -367,7 +367,7 @@ The actions to be performed are:
     i:C = US, O = Let's Encrypt, CN = R3
 
 
-    ## Para IMAP
+    ## IMAP
     CONNECTED(00000003)
     depth=2 C = US, O = Internet Security Research Group, CN = ISRG Root X1
     verify return:1

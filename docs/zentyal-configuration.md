@@ -967,9 +967,9 @@ Finalmente, probaremos con un cliente de correo (Thunderbird en mi caso) a que p
 
         Como se puede ver, el status de ambos emails es `sent`.
 
-Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, hay otro apartado en este proyecto llamado '**hardening**' donde se incrementará todavía más la seguridad del módulo.
+Llegados a este punto, el módulo de correo debería ser totalmente funcional, no obstante, todavía está sin securizar, por lo que es conveniente no usarlo todavía hasta al menos, haber configurado y habilitado el módulo de Mailfilter. Adicionalmente, hay otro apartado en este proyecto llamado [Hardening](https://zentyal-aws.projects.djoven.es/zentyal-hardening/#modulo-de-correo) donde se incrementará todavía más la seguridad del módulo.
 
-Mencionar también que si el servidor está instalado en el proveedor cloud AWS, por defecto no se permite enviar emails (revisar la última sección del apartado 'AWS').
+Mencionar también que si el servidor está instalado en el proveedor cloud AWS, por defecto no se permite enviar emails (revisar la penúltima sección de la página [AWS](https://zentyal-aws.projects.djoven.es/aws-configuration/#solicitar-envio-de-correos)).
 
 ### Módulo de Webmail
 
@@ -1003,13 +1003,14 @@ El siguiente módulo a configurar será el [Webmail] (Sogo), el cual nos permiti
 
     !!! warning
 
-        Si no vemos el buzón de correo, es posible que estemos experimentando un bug existente, el cual se produce cuando no se tiene configurado los protocolos no seguros de correo y el certificado usado es auto-firmado. Para solucionarlo, ver en el apartado 'Webmail -> IMAPS' de la página 'bug fixing'.
+        Si no vemos el buzón de correo, es posible que estemos experimentando un bug existente, el cual se produce cuando no se tiene configurado los protocolos no seguros de correo y el certificado usado es auto-firmado. Para solucionarlo, ver la página [bug fixing].
 
 6. Finalmente, tratamos de enviar otro email a nosotros mismos para verificar la integración con el módulo de correo:
 
     ![Webmail sending an email](assets/zentyal/webmail-sending_email.png "Webmail sending an email")
 
 [ActiveSync]: https://doc.zentyal.org/es/mail.html#soporte-activesync
+[bug fixing]: https://zentyal-aws.projects.djoven.es/zentyal-bug-fixing/#imaps
 
 Llegados a este punto, el módulo es totalmente funcional, no obstante, estableceré las siguientes configuraciones opcionales:
 
@@ -1237,7 +1238,7 @@ A continuación las acciones a realizar para configurar el módulo:
 
     ![Mail confirmation](assets/zentyal/mailfilter-confirmed_spam.png "Mail confirmation")
 
-Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratan en la página [Hardening](https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/). Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra página del proyecto, concretamente en [Certificates](https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/).
+Llegados a este punto, nuestro servicio de correo es lo suficientemente seguro para ser utilizado en producción. No obstante, es altamente recomendable configurar como mínimo SPF y DKIM e idealmente, DMARC. Estas configuraciones relativas a la seguridad se tratan en la página [Hardening](https://zentyal-aws.projects.djoven.es/zentyal-hardening/#modulo-de-correo). Adicionalmente, también es recomendable establecer certificados emitidos por entidades certificadoras reconocidas como Let's Encrypt. Nuevamente, esto será tratado en otra página del proyecto, concretamente en [Certificates](https://zentyal-aws.projects.djoven.es/zentyal-certificates/).
 
 ### Módulo de CA
 

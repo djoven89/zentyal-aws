@@ -7,8 +7,8 @@ site_author: Daniel Joven
 site_name: Zentyal & AWS
 site_url: https://zentyal-aws.projects.djoven.es
 repo_url: https://github.com/djoven89/zentyal-aws
-docs_dir: 'docs'
-site_dir: '/generated'
+docs_dir: 'docs/'
+site_dir: 'generated/'
 
 nav:
   - Home: 'index.md'

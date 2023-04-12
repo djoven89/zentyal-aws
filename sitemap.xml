@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/about/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/about/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/about/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/aws-configuration/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/aws-configuration/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/aws-configuration/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/backup/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/backup/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/backup/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/maintenance/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/maintenance/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/maintenance/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/monitoring/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/monitoring/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/monitoring/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/recovery/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/recovery/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/recovery/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/zentyal-bug-fixing/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/zentyal-bug-fixing/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/zentyal-bug-fixing/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/zentyal-certificates/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/zentyal-certificates/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/zentyal-configuration/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/zentyal-configuration/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/zentyal-configuration/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/zentyal-hardening/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/zentyal-hardening/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/"/>
+         
+    </url>
+    <url>
+         <loc>https://zentyal-aws.projects.djoven.es/zentyal-installation/</loc>
+         <lastmod>2023-04-12</lastmod>
+         <changefreq>daily</changefreq>
+         <xhtml:link rel="alternate" hreflang="es" href="https://zentyal-aws.projects.djoven.es/es/zentyal-installation/"/>
+         <xhtml:link rel="alternate" hreflang="en" href="https://zentyal-aws.projects.djoven.es/en/zentyal-installation/"/>
+         
+    </url>
+</urlset>

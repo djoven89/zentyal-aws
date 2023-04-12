@@ -1,0 +1,850 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/es/aws-configuration/" rel="canonical"/>
+<link href="../" rel="prev"/>
+<link href="../zentyal-installation/" rel="next"/>
+<link href="../../assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>AWS - Zentyal &amp; AWS</title>
+<link href="../../assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#aws">
+          Saltar a contenido
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Cabecera" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              AWS
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Seleccionar idioma" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="../../aws-configuration/" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="../../en/aws-configuration/" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Búsqueda" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Búsqueda" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Buscar" class="md-search__options">
+<button aria-label="Limpiar" class="md-search__icon md-icon" tabindex="-1" title="Limpiar" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Pestañas" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-installation/">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-configuration/">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../monitoring/">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../recovery/">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navegación" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+        Home
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          AWS
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        AWS
+      </a>
+<nav aria-label="Tabla de contenidos" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requisitos">
+    Requisitos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#region">
+    Región
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vpc">
+    VPC
+  </a>
+<nav aria-label="VPC" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#subnet">
+    Subnet
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#gateway">
+    Gateway
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#routes">
+    Routes
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#network-acl">
+    Network ACL
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#security-group">
+    Security Group
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ec2">
+    EC2
+  </a>
+<nav aria-label="EC2" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#group-placement">
+    Group Placement
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#key-pair">
+    Key Pair
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#network-interface">
+    Network interface
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#instance">
+    Instance
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#volumes">
+    Volumes
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#elastic-ip">
+    Elastic IP
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#route-53">
+    Route 53
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#solicitar-envio-de-correos">
+    Solicitar envió de correos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#saving-plans">
+    Saving Plans
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-installation/">
+        Install
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-configuration/">
+        Configuration
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../monitoring/">
+        Monitoring
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../recovery/">
+        Recovery
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags">
+<span class="md-tag">AWS</span>
+</nav>
+<h1 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">¶</a></h1>
+<p>En esta página se explicará como configurar el entorno del proveedor cloud AWS para poder desplegar el servidor Zentyal.</p>
+<h2 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h2>
+<p>Para poder seguir este documento, se necesitará lo siguiente:</p>
+<ol>
+<li>Una cuenta en AWS.</li>
+<li>Un usuario con permisos para los siguientes servicios:<ul>
+<li>Route53 (en caso de tener alojado el dominio en este servicio)</li>
+<li>VPC</li>
+<li>KMS</li>
+<li>EC2</li>
+</ul>
+</li>
+</ol>
+<h2 id="region">Región<a class="headerlink" href="#region" title="Permanent link">¶</a></h2>
+<p>Antes de empezar a crear los recursos, tenemos que saber cual es la mejor región a usar. Para ello, haremos uso de <a href="https://www.awsspeedtest.com">esta</a> página web, donde podremos ver que región tiene una mejora latencia desde nuestra ubicación.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-01-latency.png"><img alt="Regiones" src="../assets/aws/aws-01-latency.png" title="Regiones"/></a></p>
+<p>Como se puede ver en la imagen, en mi caso concreto, he seleccionado todas las regiones de Europa, ya que me encuentro en España. El resultado mostrado indica que <strong>Paris</strong> es la región con mejor latencia, por lo tanto, ésta será la región donde desplegaré el entorno.</p>
+<h2 id="vpc">VPC<a class="headerlink" href="#vpc" title="Permanent link">¶</a></h2>
+<p>El primer servicio que configuraremos es <a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/what-is-amazon-vpc.html">VPC</a>, el cual es básicamente una red virtual donde ubicaremos nuestro servidor Zentyal.</p>
+<p>Vamos a crear una VPC con la siguiente configuración:</p>
+<ul>
+<li><strong>Name:</strong> VPC-Prod-Zentyal</li>
+<li><strong>IPv4 CIDR:</strong> 10.0.0.0/16</li>
+<li><strong>IPv6:</strong> Disabled</li>
+<li><strong>Tenancy:</strong> Default</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name:</strong> VPC-Prod-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+</ul>
+</li>
+</ul>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>Como Zentyal no permite IPv6, lo deshabilitamos para evitar posibles brechas de seguridad.</p>
+</div>
+<p>A continuación una imagen con la configuración.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-02-vpc_vpc.png"><img alt="VPC creation" src="../assets/aws/aws-02-vpc_vpc.png" title="VPC creation"/></a></p>
+<p>Una vez que haya sido creada, podremos habilitar opcionalmente las siguientes opciones:</p>
+<ul>
+<li>DNS hostname</li>
+<li>DNS resolution</li>
+</ul>
+<h3 id="subnet">Subnet<a class="headerlink" href="#subnet" title="Permanent link">¶</a></h3>
+<p>Una vez que tenemos nuestra VPC creada, procederemos a crear una <a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/configure-subnets.html">subred</a> pública, que será donde ubicaremos nuestro servidor Zentyal.</p>
+<p>La configuración de la subnet será:</p>
+<ul>
+<li><strong>Name</strong>: SUB-Prod-Public-1</li>
+<li><strong>Availability zone</strong>: eu-west-3a</li>
+<li><strong>IPv4 CIDR</strong>: 10.0.1.0/24</li>
+<li><strong>Tags</strong>:<ul>
+<li><strong>Name</strong>: SUB-Prod-Public-1</li>
+<li><strong>Env</strong>: Production</li>
+</ul>
+</li>
+</ul>
+<p>A continuación una imagen con la configuración.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-03-vpc_subnet-1.png"><img alt="Subnet creation" src="../assets/aws/aws-03-vpc_subnet-1.png" title="Subnet creation"/></a></p>
+<h3 id="gateway">Gateway<a class="headerlink" href="#gateway" title="Permanent link">¶</a></h3>
+<p>Lo siguiente que haremos será configurar la puerta de enlace de tipo <a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/VPC_Internet_Gateway.html">Internet gateway</a> para nuestra VPC, de esta forma, las instancias que usen esta subred tendrán acceso a Internet.</p>
+<p>La configuración de la puerta de enlace será:</p>
+<ul>
+<li><strong>Name</strong>: GW-Prod-1</li>
+<li><strong>Tags</strong>:<ul>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Name</strong>: GW-Prod-1</li>
+</ul>
+</li>
+</ul>
+<p>A continuación una imagen con la configuración.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-04-vpc_gateway-1.png"><img alt="Internet gateway creation" src="../assets/aws/aws-04-vpc_gateway-1.png" title="Internet gateway creation"/></a></p>
+<p>Finalmente, asociaremos el recurso recién creado a nuestra VPC.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-05-vpc_gateway-2.png"><img alt="Internet gateway attach" src="../assets/aws/aws-05-vpc_gateway-2.png" title="Internet gateway attach"/></a></p>
+<h3 id="routes">Routes<a class="headerlink" href="#routes" title="Permanent link">¶</a></h3>
+<p>Una vez que tenemos tanto la subred como la puerta de enlace creadas, tendremos que crear modificar la <a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/VPC_Route_Tables.html">tabla de enrutamiento</a> que AWS nos crea por defecto cuando creamos una VPC.</p>
+<p>Para este caso, tendremos que editar el recurso ya existente y realizar las siguientes acciones:</p>
+<ol>
+<li>
+<p>Creamos los tags tal y como muestra la imagen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-06-vpc_route-1.png"><img alt="Route tags" src="../assets/aws/aws-06-vpc_route-1.png" title="Route tags"/></a></p>
+</li>
+<li>
+<p>Nos aseguramos que la subred esté asociada:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-07-vpc_route-2.png"><img alt="Route subnets" src="../assets/aws/aws-07-vpc_route-2.png" title="Route subnets"/></a></p>
+</li>
+<li>
+<p>Establecemos la puerta de enlace para que resuelva el resto de rangos de red.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-08-vpc_route-3.png"><img alt="Route gateway" src="../assets/aws/aws-08-vpc_route-3.png" title="Route gateway"/></a></p>
+</li>
+</ol>
+<h3 id="network-acl">Network ACL<a class="headerlink" href="#network-acl" title="Permanent link">¶</a></h3>
+<p>El siguiente recurso que modificaremos será la <a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/vpc-network-acls.html">ACL de red</a> que AWS nos crea por defecto. Las reglas definidas allí nos permiten denegar o permitir el tráfico entrante y saliente de nuestra subnets.</p>
+<p>Una vez más, AWS nos crea por defecto una ACL de red, la cual modificaremos de la siguiente manera:</p>
+<ol>
+<li>
+<p>Creamos los tags tal y como muestra la imagen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-09-vpc_nacl-1.png"><img alt="NACL tags" src="../assets/aws/aws-09-vpc_nacl-1.png" title="NACL tags"/></a></p>
+</li>
+<li>
+<p>Nos aseguramos que la subred esté asociada:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-10-vpc_nacl-2.png"><img alt="Route subnets" src="../assets/aws/aws-10-vpc_nacl-2.png" title="Route subnets"/></a></p>
+</li>
+<li>
+<p>Verificamos que todo el tráfico entrante está permitido:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-11-vpc_nacl-3.png"><img alt="Route Inbound" src="../assets/aws/aws-11-vpc_nacl-3.png" title="Route Inbound"/></a></p>
+</li>
+<li>
+<p>Verificamos que todo el tráfico saliente está permitido:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-12-vpc_nacl-4.png"><img alt="Route Outbound" src="../assets/aws/aws-12-vpc_nacl-4.png" title="Route Outbound"/></a></p>
+</li>
+</ol>
+<h3 id="security-group">Security Group<a class="headerlink" href="#security-group" title="Permanent link">¶</a></h3>
+<p>El último recurso que modificaremos en el servicio de VPC es el <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-security-groups.html">grupo de seguridad</a> que asociaremos al servidor Zentyal, el cual básicamente un firewall virtual que permite establecer los puertos e IPs que se permiten.</p>
+<p>Para este recurso concreto, haremos 2 cosas:</p>
+<ol>
+<li>
+<p>Modificaremos las tags del recurso que creó AWS por defecto cuando creamos la VPC.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-13-vpc_securityGroup-1.png"><img alt="Default Security Group" src="../assets/aws/aws-13-vpc_securityGroup-1.png" title="Default Security Group"/></a></p>
+</li>
+<li>
+<p>Crearemos un nuevo recurso, el cual contendrá los puertos que permitiremos acceder públicamente, los cuales son:</p>
+<ul>
+<li><strong>ICMP-IPv4 echo request</strong> -&gt; Permite poder hacer un <code>ping</code> al servidor.</li>
+<li><strong>22/TCP</strong> -&gt; SSH.</li>
+<li><strong>25/TCP</strong> -&gt; SMTP.</li>
+<li><strong>53/UDP</strong> -&gt; DNS.</li>
+<li><strong>53/TCP</strong> -&gt; DNS.</li>
+<li><strong>143/TCP</strong> -&gt; IMAP.</li>
+<li><strong>443/TCP</strong> -&gt; HTTPS.</li>
+<li><strong>465/TCP</strong> -&gt; SMTPS.</li>
+<li><strong>587/TCP</strong> -&gt; SMTPS con StartTLS.</li>
+<li><strong>993/TCP</strong> -&gt; IMAPS.</li>
+<li><strong>8443/TCP</strong> -&gt; Zentyal GUI.</li>
+<li><strong>11994/UDP</strong> -&gt; OpenVPN.</li>
+</ul>
+<p>El resultado deberá ser el siguiente:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-14-vpc_securityGroup-2.png"><img alt="Security Group for Zentyal" src="../assets/aws/aws-14-vpc_securityGroup-2.png" title="Security Group for Zentyal"/></a></p>
+<p>Además, también le establecemos las siguientes tags:</p>
+<ul>
+<li><strong>Name</strong>: SG-Prod-Zentyal</li>
+<li><strong>Tags</strong>:<ul>
+<li><strong>Name</strong>: SG-Prod-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+</ul>
+</li>
+</ul>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>El host 'arthas.icecrown.es' será el nombre que le daré al servidor Zentyal.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-15-vpc_securityGroup-3.png"><img alt="Security Group tags" src="../assets/aws/aws-15-vpc_securityGroup-3.png" title="Security Group tags"/></a></p>
+<p>Finalmente, nos aseguraremos de que todo tráfico saliente esté permitido:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-16-vpc_securityGroup-4.png"><img alt="Security Group outbound" src="../assets/aws/aws-16-vpc_securityGroup-4.png" title="Security Group outbound"/></a></p>
+</li>
+</ol>
+<h2 id="ec2">EC2<a class="headerlink" href="#ec2" title="Permanent link">¶</a></h2>
+<p>Una vez que tenemos la red (VPC) configurada, procederemos a crear los recursos necesarios en el servicio de <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html">EC2</a>.</p>
+<h3 id="group-placement">Group Placement<a class="headerlink" href="#group-placement" title="Permanent link">¶</a></h3>
+<p>El primer recurso que crearemos será un <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/placement-groups.html">grupo de ubicación</a>, el cual nos permitirá distribuir las instancias (servidores) en hardware distinto, por lo que minimizaremos posibles errores que puedan surgir por parte de AWS.</p>
+<p>La configuración que estableceremos será:</p>
+<ul>
+<li><strong>Name</strong>: GP-Prod-1</li>
+<li><strong>Placement strategy</strong>: Spread</li>
+<li><strong>Spread level:</strong> Rack</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name</strong>: GP-Prod-1</li>
+<li><strong>Env</strong>: Production</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-17-ec2_groupPlacement.png"><img alt="Group Placement creation" src="../assets/aws/aws-17-ec2_groupPlacement.png" title="Group Placement creation"/></a></p>
+<h3 id="key-pair">Key Pair<a class="headerlink" href="#key-pair" title="Permanent link">¶</a></h3>
+<p>Después, crearemos un de <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/ec2-key-pairs.html">pares de claves</a>, las cuales nos permitirán conectarnos a la instancia a través de SSH.</p>
+<p><strong>Consideraciones:</strong></p>
+<ul>
+<li>Únicamente durante la generación del par de claves será posible descargar la clave privada.</li>
+<li>El acceso a la clave privada descargada deberá estar restringido, ya que con este clave tendremos acceso completo como administrador a la instancia sin necesidad de establecer una contraseña (comportamiento por defecto en las instancias Linux de AWS).</li>
+<li>Los permisos que debe tener la clave son de sólo lectura para el usuario, en notación octal es: <strong>0400</strong>.</li>
+</ul>
+<p>La configuración que estableceremos será:</p>
+<ul>
+<li><strong>Name</strong>: KP-Prod-Zentyal</li>
+<li><strong>Key pair type</strong>: RSA</li>
+<li><strong>Private ket file format:</strong> .pem</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name</strong>: KP-Prod-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-18-ec2_keypair.png"><img alt="Key Pair creation" src="../assets/aws/aws-18-ec2_keypair.png" title="Key Pair creation"/></a></p>
+<h3 id="network-interface">Network interface<a class="headerlink" href="#network-interface" title="Permanent link">¶</a></h3>
+<p>El siguiente recurso que usaremos será crear una <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/using-eni.html">interfaz de red</a>, la cual nos permitirá establecer una IP estática y asociarla con la instancia de Zentyal, evitando así posibles incidencias en el módulo más crítico, el de red.</p>
+<p>La configuración que estableceremos será:</p>
+<ul>
+<li><strong>Name</strong>: NI-Prod-Zentyal</li>
+<li><strong>Subnet</strong>: SUB-Prod-Public-1</li>
+<li><strong>Private IPv4 address:</strong> 10.0.1.200</li>
+<li><strong>Security Group</strong>: SG-Prod-Zentyal</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name</strong>: NI-Prod-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-19-ec2_network-1.png"><img alt="Network interface creation 1" src="../assets/aws/aws-19-ec2_network-1.png" title="Network interface creation 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-20-ec2_network-2.png"><img alt="Network interface creation 2" src="../assets/aws/aws-20-ec2_network-2.png" title="Network interface creation 2"/></a></p>
+<h3 id="instance">Instance<a class="headerlink" href="#instance" title="Permanent link">¶</a></h3>
+<p>Una vez que hemos creado todos los recursos anteriores en el servicio de EC2, procederemos a crear la <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html">instancia de computación</a> (servidor) sobre el que instalaremos Zentyal.</p>
+<p><strong>Consideraciones:</strong></p>
+<ul>
+<li>Debido a los módulos de Zentyal que usaremos, la instancia deberá tener un mínimo de 4GB de RAM.</li>
+<li>Para las pruebas del proyecto, he optado por la instancia más económica posible, que es de tipo general y se llama <a href="https://aws.amazon.com/ec2/instance-types/t3/">t3a.medium</a>.</li>
+<li>El precio de la instancia lo podéis obtener de <a href="https://aws.amazon.com/ec2/pricing/on-demand/">aquí</a>.<ul>
+<li>En mi caso concreto, el coste por hora (en caso de estar iniciada) será de '<strong>0.04$</strong>'.
+    <a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-ec2_price.png"><img alt="Instance price" src="../assets/aws/aws-ec2_price.png" title="Instance price"/></a></li>
+</ul>
+</li>
+<li>Usaré 3 volúmenes EBS (discos duros) para establecer el siguiente particionado:<ul>
+<li>EBS del sistema de 30GB.</li>
+<li>EBS para los emails de 10GB.</li>
+<li>EBS para los directorios personales y los recursos compartidos de 10GB.</li>
+</ul>
+</li>
+<li>
+<p>Habilitaré la monitorización avanzada ya que usaré AWS CloudWatch como sistema de monitorización.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Esta opción tiene un coste añadido, el cual se puede consultar <a href="https://aws.amazon.com/cloudwatch/pricing/">aquí</a>.</p>
+</div>
+</li>
+<li>
+<p>Las opciones que configuraré y que suponen un coste mensual son:</p>
+<ul>
+<li>Instance type.</li>
+<li>Root volume.</li>
+<li>Detailed CloudWatch monitoring.</li>
+</ul>
+</li>
+</ul>
+<p>Por lo tanto, la configuración que definiremos en el servicio será:</p>
+<ul>
+<li><strong>Name</strong>: arthas.icecrown.es</li>
+<li><strong>AMI</strong>: Ubuntu Server 20.04 LTS (HVM), SSD Volume Type</li>
+<li><strong>Architecture:</strong> 64-bit (x86)</li>
+<li><strong>Instance type</strong>: t3a.medium</li>
+<li><strong>Key pair</strong>: KP-Prod-Zentyal</li>
+<li><strong>Network settings</strong>:<ul>
+<li><strong>VPC</strong>: VPC-Prod-Zentyal</li>
+<li><strong>Subnet</strong>: SUB-Prod-Public-1</li>
+<li><strong>Auto-assign public IP</strong>: Disable</li>
+<li><strong>Firewall</strong>: Select existint security group</li>
+<li><strong>Network interface:</strong> NI-Prod-Zentyal</li>
+</ul>
+</li>
+<li><strong>Configure storage:</strong><ul>
+<li><strong>Root volume:</strong> 30 GB, GP3</li>
+</ul>
+</li>
+<li><strong>Advanced details:</strong><ul>
+<li><strong>Shutdown behavior:</strong> Stop</li>
+<li><strong>Termination protection:</strong> Enable</li>
+<li><strong>Detailed CloudWatch monitoring:</strong> Enable</li>
+<li><strong>Placement group:</strong> GP-Prod-1</li>
+</ul>
+</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name</strong>: arthas.icecrown.es</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-21-ec2_ec2-1.png"><img alt="Instance creation 1" src="../assets/aws/aws-21-ec2_ec2-1.png" title="Instance creation 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-22-ec2_ec2-2.png"><img alt="Instance creation 2" src="../assets/aws/aws-22-ec2_ec2-2.png" title="Instance creation 2"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-23-ec2_ec2-3.png"><img alt="Instance creation 3" src="../assets/aws/aws-23-ec2_ec2-3.png" title="Instance creation 3"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-24-ec2_ec2-4.png"><img alt="Instance creation 4" src="../assets/aws/aws-24-ec2_ec2-4.png" title="Instance creation 4"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-25-ec2_ec2-5.png"><img alt="Instance creation 5" src="../assets/aws/aws-25-ec2_ec2-5.png" title="Instance creation 5"/></a></p>
+<h3 id="volumes">Volumes<a class="headerlink" href="#volumes" title="Permanent link">¶</a></h3>
+<p>Una vez que tenemos la instancia creada, procederemos a configurar los <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-volumes.html">volúmenes</a> (disco duro) de nuestro servidor Zentyal. En mi caso concreto, crearé dos volúmenes adicionales, uno para alojar los emails y otro para los directorios personales y los recursos compartidos. El motivo es que me permitirá definir políticas de copias de seguridad distintas a nivel de AWS, además que los datos están en discos separados, con las ventajas que eso conlleva, como por ejemplo, recuperar información ante un fallo humano.</p>
+<p>Antes de proceder a crear los volúmenes adicionales, estableceremos las tags para el volumen del sistema asociado a la instancia en ejecución:</p>
+<ul>
+<li><strong>Name</strong>: EBS-Prod-System-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+<li><strong>Type:</strong> System</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-26-ec2_volume-1.png"><img alt="Volumen root modification" src="../assets/aws/aws-26-ec2_volume-1.png" title="Volumen root modification"/></a></p>
+<p>A continuación, creamos los volúmenes adicionales:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Los volúmenes deberán estar en la misma zona de disponibilidad que la instancia, <strong>eu-west-3a</strong> en mi caso.</p>
+</div>
+<p><strong>Para los buzones de correo:</strong></p>
+<ul>
+<li><strong>Volume Type:</strong> General Purpose SSD (gp3)</li>
+<li><strong>Size:</strong> 10GiB</li>
+<li><strong>IOPS:</strong> 3000</li>
+<li><strong>Throughput:</strong> 125</li>
+<li><strong>Availability zone:</strong> eu-west-3a</li>
+<li><strong>Snapshot ID:</strong> Don't create volume from a snapshot</li>
+<li><strong>Encryption:</strong> Enabled<ul>
+<li><strong>KMS key:</strong> (default) aws/ebs</li>
+</ul>
+</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name:</strong> EBS-Prod-Mail-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+<li><strong>Type:</strong> Mail</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-27-ec2_volume-2.png"><img alt="Mail volume creation 1" src="../assets/aws/aws-27-ec2_volume-2.png" title="Mail volume creation 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-28-ec2_volume-3.png"><img alt="Mail volume creation 2" src="../assets/aws/aws-28-ec2_volume-3.png" title="Mail volume creation 2"/></a></p>
+<p><strong>Para los directorios personales y recursos compartidos:</strong></p>
+<ul>
+<li><strong>Volume Type:</strong> General Purpose SSD (gp3)</li>
+<li><strong>Size:</strong> 10GiB</li>
+<li><strong>IOPS:</strong> 3000</li>
+<li><strong>Throughput:</strong> 125</li>
+<li><strong>Availability zone:</strong> eu-west-3a</li>
+<li><strong>Snapshot ID:</strong> Don't create volume from a snapshot</li>
+<li><strong>Encryption:</strong> Enabled<ul>
+<li><strong>KMS key:</strong> (default) aws/ebs</li>
+</ul>
+</li>
+<li><strong>Tags:</strong><ul>
+<li><strong>Name:</strong> EBS-Prod-Shares-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+<li><strong>Type:</strong> Shares</li>
+</ul>
+</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-29-ec2_volume-4.png"><img alt="Shares volume creation 1" src="../assets/aws/aws-29-ec2_volume-4.png" title="Shares volume creation 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-30-ec2_volume-5.png"><img alt="Shares volume creation 2" src="../assets/aws/aws-30-ec2_volume-5.png" title="Shares volume creation 2"/></a></p>
+<p>Finalmente, asociaremos ambos volúmenes a la instancia EC2.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-31-ec2_volume-6.png"><img alt="Mail volume attach" src="../assets/aws/aws-31-ec2_volume-6.png" title="Mail volume attach"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-32-ec2_volume-7.png"><img alt="Shares volume attach" src="../assets/aws/aws-32-ec2_volume-7.png" title="Shares volume attach"/></a></p>
+<h3 id="elastic-ip">Elastic IP<a class="headerlink" href="#elastic-ip" title="Permanent link">¶</a></h3>
+<p>El siguiente recurso que crearemos será una <a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">IP elástica</a>, que no es más que una dirección IPv4 pública que asociaremos a nuestra instancia.</p>
+<p>Las tags que definiremos al recurso serán:</p>
+<ul>
+<li><strong>Name:</strong> EIP-Prod-Zentyal</li>
+<li><strong>Env</strong>: Production</li>
+<li><strong>Host:</strong> arthas.icecrown.es</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-33-ec2_eip-1.png"><img alt="Elastic IP creation" src="../assets/aws/aws-33-ec2_eip-1.png" title="Elastic IP creation"/></a></p>
+<p>Finalmente, asociamos el recurso recién creado a la instancia.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-34-ec2_eip-2.png"><img alt="Elastic IP attach" src="../assets/aws/aws-34-ec2_eip-2.png" title="Elastic IP attach"/></a></p>
+<h2 id="route-53">Route 53<a class="headerlink" href="#route-53" title="Permanent link">¶</a></h2>
+<p>La siguiente acción necesaria es crear el registro DNS en el dominio para que apunte a la IP pública asociada a la instancia. En mi caso concreto, usaré el servicio <a href="https://docs.aws.amazon.com/es_es/Route53/latest/DeveloperGuide/Welcome.html">Route 53</a> para la creación del registro DNS de tipo <code>A</code>, ya que es allí donde tengo contratado el dominio.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/aws-35-ec2_route53-1.png"><img alt="DNS record" src="../assets/aws/aws-35-ec2_route53-1.png" title="DNS record"/></a></p>
+<h2 id="solicitar-envio-de-correos">Solicitar envió de correos<a class="headerlink" href="#solicitar-envio-de-correos" title="Permanent link">¶</a></h2>
+<p>Para poder enviar emails desde el servidor Zentyal a través de la IP estática asociada, es necesario solicitar a AWS a través de un formulario que nos elimine la restricción que tienen por defecto. Para ello, simplemente hay que seguir <a href="https://aws.amazon.com/premiumsupport/knowledge-center/ec2-port-25-throttle/">este</a> enlace donde se explican los pasos.</p>
+<p><strong>Consideraciones sobre el mensaje:</strong></p>
+<ul>
+<li>Debe estar escrito en Inglés.</li>
+<li>Ha de ser detallado, de lo contrario te solicitarán más información o incluso podrían negar la solicitud.</li>
+<li>Algunos detalles recomendados son:<ul>
+<li>Uso que se le dará al servidor.</li>
+<li>Número de usuarios que usarán el correo.</li>
+<li>Número aproximado de emails que se enviarán por hora.</li>
+</ul>
+</li>
+</ul>
+<p>Un ejemplo del mensaje:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-0-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-0-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-0-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-0-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-0-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-0-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-0-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-0-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-0-10">10</a></span>
+<span class="normal"><a href="#__codelineno-0-11">11</a></span>
+<span class="normal"><a href="#__codelineno-0-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>Hi Support team,
+<a id="__codelineno-0-2" name="__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3"></a>We have deployed a new EC2 instance that acts as a Mail server using Zentyal operating system.
+<a id="__codelineno-0-4" name="__codelineno-0-4"></a>Would you mind removing the default restriction so my users can send emails outside, please?
+<a id="__codelineno-0-5" name="__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6"></a>Below you have more information:
+<a id="__codelineno-0-7" name="__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8"></a>* We are a small IT business focused on web development.
+<a id="__codelineno-0-9" name="__codelineno-0-9"></a>* Around 20 users will send and receive emails every day.
+<a id="__codelineno-0-10" name="__codelineno-0-10"></a>* We think we might send around 50 emails per hour.
+<a id="__codelineno-0-11" name="__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12"></a>Kind regards, Daniel.
+</code></pre></div></td></tr></table></div>
+<h2 id="saving-plans">Saving Plans<a class="headerlink" href="#saving-plans" title="Permanent link">¶</a></h2>
+<p>Una vez que el servidor haya sido creado, configurado y testado en profundidad, es altamente recomendable contratar la instancia usando <a href="https://aws.amazon.com/es/savingsplans/?nc1=h_ls">Saving Plans</a>, ya que nos permitirá reducir significativamente el coste que supone el uso de la instancia EC2 desplegada.</p>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Última actualización:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+<br/>
+        Creado:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Volver al principio
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+<script src="../../assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

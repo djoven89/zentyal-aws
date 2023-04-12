@@ -1,0 +1,846 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/es/monitoring/" rel="canonical"/>
+<link href="../backup/" rel="prev"/>
+<link href="../maintenance/" rel="next"/>
+<link href="../../assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>Monitoring - Zentyal &amp; AWS</title>
+<link href="../../assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#monitorizacion">
+          Saltar a contenido
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Cabecera" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Monitoring
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Seleccionar idioma" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="../../monitoring/" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="../../en/monitoring/" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Búsqueda" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Búsqueda" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Buscar" class="md-search__options">
+<button aria-label="Limpiar" class="md-search__icon md-icon" tabindex="-1" title="Limpiar" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Pestañas" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../aws-configuration/">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-installation/">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-configuration/">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../recovery/">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navegación" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+        Home
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../aws-configuration/">
+        AWS
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-installation/">
+        Install
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-configuration/">
+        Configuration
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Monitoring
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Monitoring
+      </a>
+<nav aria-label="Tabla de contenidos" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sns">
+    SNS
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ssm-parameter-store">
+    SSM Parameter Store
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cloudwatch">
+    Cloudwatch
+  </a>
+<nav aria-label="Cloudwatch" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#logs">
+    Logs
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dashboard">
+    Dashboard
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#alertas">
+    Alertas
+  </a>
+<nav aria-label="Alertas" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#cpu">
+    CPU
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ram">
+    RAM
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#disco-sistema">
+    Disco - Sistema
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#disco-mail">
+    Disco - Mail
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#disco-shares">
+    Disco - Shares
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dlm-sistema">
+    DLM - Sistema
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dlm-mail">
+    DLM - Mail
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dlm-shares">
+    DLM - Shares
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ec2-system">
+    EC2 - System
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ec2-instance">
+    EC2 - Instance
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#log-de-zentyal">
+    Log de Zentyal
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../recovery/">
+        Recovery
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags">
+<span class="md-tag">AWS</span>
+</nav>
+<h1 id="monitorizacion">Monitorización<a class="headerlink" href="#monitorizacion" title="Permanent link">¶</a></h1>
+<p>En esta página configuraremos un sistema de monitorización para nuestro servidor Zentyal usando el servicio de AWS <a href="https://docs.aws.amazon.com/es_es/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html">Cloudwatch</a>. Además, también haremos uso del servicio de AWS SSM <a href="https://docs.aws.amazon.com/es_es/systems-manager/latest/userguide/systems-manager-parameter-store.html">Parameter Store</a> para alojar la configuración del agente de Cloudwatch en nuestro servidor y finalmente, del servicio AWS <a href="https://docs.aws.amazon.com/es_es/sns/latest/dg/welcome.html">SNS</a> para las notificaciones de las alertas.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>La implementación de estos servicios tendrán un coste adicional mensual.</p>
+</div>
+<h2 id="sns">SNS<a class="headerlink" href="#sns" title="Permanent link">¶</a></h2>
+<p>Para notificar cualquier alerta que se dispare en CloudWatch haremos uso del servicio SNS, el cual envíará un email a una cuenta de correo. En mi caso, usaré la cuenta creada de <code>it.infra@icecrown.es</code>.</p>
+<ol>
+<li>
+<p>Vamos a <code>SNS</code> y creamos un <em>topic</em> llamado <code>Prod-Zentyal-Email-Alerting</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-sns_topic.png"><img alt='"SNS topic creation"' src="../assets/aws/monitoring-sns_topic.png" title="SNS topic creation"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-sns_topic-tags.png"><img alt='"SNS topic creation"' src="../assets/aws/monitoring-sns_topic-tags.png" title="SNS topic creation"/></a></p>
+</li>
+<li>
+<p>Creamos una <em>subscription</em> para la cuenta de correo que recibirá las notificaciones:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-sns_subscription.png"><img alt='"SNS topic creation"' src="../assets/aws/monitoring-sns_subscription.png" title="SNS topic creation"/></a></p>
+</li>
+<li>
+<p>Finalmente, esperamos a que nos llegue la invitación a la cuenta de correo para activar la suscripción.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-sns_confirmation.png"><img alt='"SNS subscription confirmation"' src="../assets/aws/monitoring-sns_confirmation.png" title="SNS subscription confirmation"/></a></p>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>Al tener habilitado la lista gris, nos tardará en llegar unos minutos.</p>
+</div>
+</li>
+</ol>
+<h2 id="ssm-parameter-store">SSM Parameter Store<a class="headerlink" href="#ssm-parameter-store" title="Permanent link">¶</a></h2>
+<p>Para monitorizar los recursos del servidor Zentyal usaremos el servicio AWS Cloudwatch, cuyo archivo de configuración almacenaremos en SSM Parameter store.</p>
+<p>La configuración que especificaré será:</p>
+<ul>
+<li>La ruta completa al parámetro se llamará <code>/zentyal/prod/cloudwatch-config</code></li>
+<li>El namespace en Cloudwatch se llamará <code>CWA-Prod-Zentyal</code>.</li>
+<li>El intervalo de las métricas será de <code>60</code> segundos.</li>
+<li>Se configurarán métricas adicionales para:<ul>
+<li>RAM</li>
+<li>Swap</li>
+<li>Disco.</li>
+</ul>
+</li>
+<li>Los 3 volúmenes EBS se incluirán en las métricas de disco.</li>
+<li>Se monitorizará también el log <code>/var/log/zentyal/zentyal.log</code>, el cual tendrá una retención de 7 días.</li>
+<li>El grupo de logs en CloudWatch se llamará <code>CWAL-Prod-Zentyal</code>.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Para añadir configuraciones adicionales o resolver dudas, <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch-Agent-Configuration-File-Details.html#CloudWatch-Agent-Configuration-File-Metricssection">aquí</a> tenemos la referencia de la configuración.</p>
+</div>
+<p>A continuación se indican las acciones a realizar:</p>
+<ol>
+<li>Nos ubicamos en la región donde tenemos la instancia, que en mi caso es Paris.</li>
+<li>Vamos a <code>AWS Systems Manager -&gt; Parameter Store -&gt; Create parameter</code>.</li>
+<li>
+<p>Creamos el <em>parámetro</em>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-parameter_config.png"><img alt='"Parameter store configuration"' src="../assets/aws/monitoring-parameter_config.png" title="Parameter store configuration"/></a></p>
+</li>
+<li>
+<p>Añadimos la configuración del agente en la sección de <code>Value</code>:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-0-1" id="__codelineno-0-1" name="__codelineno-0-1"></a><span class="p">{</span>
+<a href="#__codelineno-0-2" id="__codelineno-0-2" name="__codelineno-0-2"></a><span class="w">    </span><span class="nt">"agent"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-3" id="__codelineno-0-3" name="__codelineno-0-3"></a><span class="w">        </span><span class="nt">"metrics_collection_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<a href="#__codelineno-0-4" id="__codelineno-0-4" name="__codelineno-0-4"></a><span class="w">        </span><span class="nt">"run_as_user"</span><span class="p">:</span><span class="w"> </span><span class="s2">"root"</span>
+<a href="#__codelineno-0-5" id="__codelineno-0-5" name="__codelineno-0-5"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-0-6" id="__codelineno-0-6" name="__codelineno-0-6"></a><span class="w">    </span><span class="nt">"metrics"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-7" id="__codelineno-0-7" name="__codelineno-0-7"></a><span class="w">        </span><span class="nt">"namespace"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CWA-Prod-Zentyal"</span><span class="p">,</span>
+<a href="#__codelineno-0-8" id="__codelineno-0-8" name="__codelineno-0-8"></a><span class="w">        </span><span class="nt">"aggregation_dimensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-9" id="__codelineno-0-9" name="__codelineno-0-9"></a><span class="w">            </span><span class="p">[</span>
+<a href="#__codelineno-0-10" id="__codelineno-0-10" name="__codelineno-0-10"></a><span class="w">                </span><span class="s2">"InstanceId"</span>
+<a href="#__codelineno-0-11" id="__codelineno-0-11" name="__codelineno-0-11"></a><span class="w">            </span><span class="p">]</span>
+<a href="#__codelineno-0-12" id="__codelineno-0-12" name="__codelineno-0-12"></a><span class="w">        </span><span class="p">],</span>
+<a href="#__codelineno-0-13" id="__codelineno-0-13" name="__codelineno-0-13"></a><span class="w">        </span><span class="nt">"append_dimensions"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-14" id="__codelineno-0-14" name="__codelineno-0-14"></a><span class="w">        </span><span class="nt">"AutoScalingGroupName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${aws:AutoScalingGroupName}"</span><span class="p">,</span>
+<a href="#__codelineno-0-15" id="__codelineno-0-15" name="__codelineno-0-15"></a><span class="w">        </span><span class="nt">"ImageId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${aws:ImageId}"</span><span class="p">,</span>
+<a href="#__codelineno-0-16" id="__codelineno-0-16" name="__codelineno-0-16"></a><span class="w">        </span><span class="nt">"InstanceId"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${aws:InstanceId}"</span><span class="p">,</span>
+<a href="#__codelineno-0-17" id="__codelineno-0-17" name="__codelineno-0-17"></a><span class="w">        </span><span class="nt">"InstanceType"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${aws:InstanceType}"</span>
+<a href="#__codelineno-0-18" id="__codelineno-0-18" name="__codelineno-0-18"></a><span class="w">        </span><span class="p">},</span>
+<a href="#__codelineno-0-19" id="__codelineno-0-19" name="__codelineno-0-19"></a><span class="w">        </span><span class="nt">"metrics_collected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-20" id="__codelineno-0-20" name="__codelineno-0-20"></a><span class="w">            </span><span class="nt">"mem"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-21" id="__codelineno-0-21" name="__codelineno-0-21"></a><span class="w">                </span><span class="nt">"measurement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-22" id="__codelineno-0-22" name="__codelineno-0-22"></a><span class="w">                    </span><span class="s2">"used_percent"</span><span class="p">,</span>
+<a href="#__codelineno-0-23" id="__codelineno-0-23" name="__codelineno-0-23"></a><span class="w">                    </span><span class="s2">"used"</span><span class="p">,</span>
+<a href="#__codelineno-0-24" id="__codelineno-0-24" name="__codelineno-0-24"></a><span class="w">                    </span><span class="s2">"free"</span><span class="p">,</span>
+<a href="#__codelineno-0-25" id="__codelineno-0-25" name="__codelineno-0-25"></a><span class="w">                    </span><span class="s2">"total"</span><span class="p">,</span>
+<a href="#__codelineno-0-26" id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="w">                    </span><span class="s2">"cached"</span><span class="p">,</span>
+<a href="#__codelineno-0-27" id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="w">                    </span><span class="s2">"buffered"</span>
+<a href="#__codelineno-0-28" id="__codelineno-0-28" name="__codelineno-0-28"></a><span class="w">                </span><span class="p">],</span>
+<a href="#__codelineno-0-29" id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="w">                </span><span class="nt">"metrics_collection_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<a href="#__codelineno-0-30" id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="w">            </span><span class="p">},</span>
+<a href="#__codelineno-0-31" id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">            </span><span class="nt">"swap"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-32" id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="w">                </span><span class="nt">"measurement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-33" id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">                    </span><span class="s2">"used_percent"</span><span class="p">,</span>
+<a href="#__codelineno-0-34" id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="w">                    </span><span class="s2">"used"</span><span class="p">,</span>
+<a href="#__codelineno-0-35" id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="w">                    </span><span class="s2">"free"</span>
+<a href="#__codelineno-0-36" id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="w">                </span><span class="p">],</span>
+<a href="#__codelineno-0-37" id="__codelineno-0-37" name="__codelineno-0-37"></a><span class="w">                </span><span class="nt">"metrics_collection_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span>
+<a href="#__codelineno-0-38" id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="w">            </span><span class="p">},</span>
+<a href="#__codelineno-0-39" id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="w">            </span><span class="nt">"disk"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-40" id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">                </span><span class="nt">"measurement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-41" id="__codelineno-0-41" name="__codelineno-0-41"></a><span class="w">                    </span><span class="s2">"used_percent"</span><span class="p">,</span>
+<a href="#__codelineno-0-42" id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="w">                    </span><span class="s2">"used"</span><span class="p">,</span>
+<a href="#__codelineno-0-43" id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">                    </span><span class="s2">"free"</span><span class="p">,</span>
+<a href="#__codelineno-0-44" id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">                    </span><span class="s2">"total"</span><span class="p">,</span>
+<a href="#__codelineno-0-45" id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">                    </span><span class="s2">"inodes_used"</span><span class="p">,</span>
+<a href="#__codelineno-0-46" id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="w">                    </span><span class="s2">"inodes_free"</span><span class="p">,</span>
+<a href="#__codelineno-0-47" id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="w">                    </span><span class="s2">"inodes_total"</span>
+<a href="#__codelineno-0-48" id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="w">                </span><span class="p">],</span>
+<a href="#__codelineno-0-49" id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="w">                </span><span class="nt">"metrics_collection_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<a href="#__codelineno-0-50" id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">                </span><span class="nt">"ignore_file_system_types"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-51" id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">                    </span><span class="s2">"tmpfs"</span><span class="p">,</span>
+<a href="#__codelineno-0-52" id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">                    </span><span class="s2">"vfat"</span><span class="p">,</span>
+<a href="#__codelineno-0-53" id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">                    </span><span class="s2">"devtmps"</span>
+<a href="#__codelineno-0-54" id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="w">                </span><span class="p">],</span>
+<a href="#__codelineno-0-55" id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="w">                </span><span class="nt">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-56" id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="w">                </span><span class="s2">"/"</span><span class="p">,</span>
+<a href="#__codelineno-0-57" id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">                </span><span class="s2">"/var/vmail"</span><span class="p">,</span>
+<a href="#__codelineno-0-58" id="__codelineno-0-58" name="__codelineno-0-58"></a><span class="w">                </span><span class="s2">"/home"</span>
+<a href="#__codelineno-0-59" id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">                </span><span class="p">]</span>
+<a href="#__codelineno-0-60" id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">            </span><span class="p">},</span>
+<a href="#__codelineno-0-61" id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="w">            </span><span class="nt">"statsd"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-62" id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">                </span><span class="nt">"metrics_aggregation_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<a href="#__codelineno-0-63" id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">                </span><span class="nt">"metrics_collection_interval"</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<a href="#__codelineno-0-64" id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="w">                </span><span class="nt">"service_address"</span><span class="p">:</span><span class="w"> </span><span class="s2">":8125"</span>
+<a href="#__codelineno-0-65" id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="w">            </span><span class="p">}</span>
+<a href="#__codelineno-0-66" id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="w">        </span><span class="p">}</span>
+<a href="#__codelineno-0-67" id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="w">    </span><span class="p">},</span>
+<a href="#__codelineno-0-68" id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="w">    </span><span class="nt">"logs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-69" id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">        </span><span class="nt">"logs_collected"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-70" id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="w">            </span><span class="nt">"files"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a href="#__codelineno-0-71" id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="w">                </span><span class="nt">"collect_list"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-0-72" id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="w">                    </span><span class="p">{</span>
+<a href="#__codelineno-0-73" id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="w">                        </span><span class="nt">"file_path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/log/zentyal/zentyal.log"</span><span class="p">,</span>
+<a href="#__codelineno-0-74" id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="w">                        </span><span class="nt">"log_group_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CWAL-Prod-Zentyal"</span><span class="p">,</span>
+<a href="#__codelineno-0-75" id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="w">                        </span><span class="nt">"log_stream_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"{instance_id}"</span><span class="p">,</span>
+<a href="#__codelineno-0-76" id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">                        </span><span class="nt">"retention_in_days"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="p">,</span>
+<a href="#__codelineno-0-77" id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="w">                        </span><span class="nt">"timezone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"UTC"</span>
+<a href="#__codelineno-0-78" id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="w">                    </span><span class="p">}</span>
+<a href="#__codelineno-0-79" id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="w">                </span><span class="p">]</span>
+<a href="#__codelineno-0-80" id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="w">            </span><span class="p">}</span>
+<a href="#__codelineno-0-81" id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="w">        </span><span class="p">},</span>
+<a href="#__codelineno-0-82" id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">        </span><span class="nt">"log_stream_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stream-Prod-Zentyal"</span><span class="p">,</span>
+<a href="#__codelineno-0-83" id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="w">        </span><span class="nt">"force_flush_interval"</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
+<a href="#__codelineno-0-84" id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="w">    </span><span class="p">}</span>
+<a href="#__codelineno-0-85" id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Con el parámetro creado, crearemos una política de IAM que permita el acceso desde la instancia EC2 al parámetro recién creado. Para ello vamos a <code>IAM -&gt; Policies</code></p>
+</li>
+<li>
+<p>Creamos una política que tenga el siguiente contenido:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-1-1" id="__codelineno-1-1" name="__codelineno-1-1"></a><span class="p">{</span>
+<a href="#__codelineno-1-2" id="__codelineno-1-2" name="__codelineno-1-2"></a><span class="w">    </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<a href="#__codelineno-1-3" id="__codelineno-1-3" name="__codelineno-1-3"></a><span class="w">    </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-1-4" id="__codelineno-1-4" name="__codelineno-1-4"></a><span class="w">        </span><span class="p">{</span>
+<a href="#__codelineno-1-5" id="__codelineno-1-5" name="__codelineno-1-5"></a><span class="w">            </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ParameterStoreZentyal1"</span><span class="p">,</span>
+<a href="#__codelineno-1-6" id="__codelineno-1-6" name="__codelineno-1-6"></a><span class="w">            </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<a href="#__codelineno-1-7" id="__codelineno-1-7" name="__codelineno-1-7"></a><span class="w">            </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-1-8" id="__codelineno-1-8" name="__codelineno-1-8"></a><span class="w">                </span><span class="s2">"ssm:GetParameterHistory"</span><span class="p">,</span>
+<a href="#__codelineno-1-9" id="__codelineno-1-9" name="__codelineno-1-9"></a><span class="w">                </span><span class="s2">"ssm:GetParametersByPath"</span><span class="p">,</span>
+<a href="#__codelineno-1-10" id="__codelineno-1-10" name="__codelineno-1-10"></a><span class="w">                </span><span class="s2">"ssm:GetParameters"</span><span class="p">,</span>
+<a href="#__codelineno-1-11" id="__codelineno-1-11" name="__codelineno-1-11"></a><span class="w">                </span><span class="s2">"ssm:GetParameter"</span>
+<a href="#__codelineno-1-12" id="__codelineno-1-12" name="__codelineno-1-12"></a><span class="w">            </span><span class="p">],</span>
+<a href="#__codelineno-1-13" id="__codelineno-1-13" name="__codelineno-1-13"></a><span class="w">            </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-1-14" id="__codelineno-1-14" name="__codelineno-1-14"></a><span class="w">                </span><span class="s2">"arn:aws:ssm:eu-west-3:*:parameter/zentyal/prod/cloudwatch-config"</span>
+<a href="#__codelineno-1-15" id="__codelineno-1-15" name="__codelineno-1-15"></a><span class="w">            </span><span class="p">]</span>
+<a href="#__codelineno-1-16" id="__codelineno-1-16" name="__codelineno-1-16"></a><span class="w">        </span><span class="p">},</span>
+<a href="#__codelineno-1-17" id="__codelineno-1-17" name="__codelineno-1-17"></a><span class="w">        </span><span class="p">{</span>
+<a href="#__codelineno-1-18" id="__codelineno-1-18" name="__codelineno-1-18"></a><span class="w">            </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ParameterStoreZentyal2"</span><span class="p">,</span>
+<a href="#__codelineno-1-19" id="__codelineno-1-19" name="__codelineno-1-19"></a><span class="w">            </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<a href="#__codelineno-1-20" id="__codelineno-1-20" name="__codelineno-1-20"></a><span class="w">            </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ssm:DescribeParameters"</span><span class="p">,</span>
+<a href="#__codelineno-1-21" id="__codelineno-1-21" name="__codelineno-1-21"></a><span class="w">            </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="s2">"*"</span>
+<a href="#__codelineno-1-22" id="__codelineno-1-22" name="__codelineno-1-22"></a><span class="w">        </span><span class="p">}</span>
+<a href="#__codelineno-1-23" id="__codelineno-1-23" name="__codelineno-1-23"></a><span class="w">    </span><span class="p">]</span>
+<a href="#__codelineno-1-24" id="__codelineno-1-24" name="__codelineno-1-24"></a><span class="p">}</span>
+</code></pre></div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_cloudwatch.png"><img alt='"IAM policy for CloudWatch Agent"' src="../assets/aws/monitoring-iam_cloudwatch.png" title="IAM policy for CloudWatch Agent"/></a></p>
+</li>
+<li>
+<p>Creamos otra política que permita subir el archivo de log a Cloudwatch:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-2-1" id="__codelineno-2-1" name="__codelineno-2-1"></a><span class="p">{</span>
+<a href="#__codelineno-2-2" id="__codelineno-2-2" name="__codelineno-2-2"></a><span class="w">    </span><span class="nt">"Version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2012-10-17"</span><span class="p">,</span>
+<a href="#__codelineno-2-3" id="__codelineno-2-3" name="__codelineno-2-3"></a><span class="w">    </span><span class="nt">"Statement"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-2-4" id="__codelineno-2-4" name="__codelineno-2-4"></a><span class="w">        </span><span class="p">{</span>
+<a href="#__codelineno-2-5" id="__codelineno-2-5" name="__codelineno-2-5"></a><span class="w">            </span><span class="nt">"Sid"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ZentyalCloudWatchLogs"</span><span class="p">,</span>
+<a href="#__codelineno-2-6" id="__codelineno-2-6" name="__codelineno-2-6"></a><span class="w">            </span><span class="nt">"Effect"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Allow"</span><span class="p">,</span>
+<a href="#__codelineno-2-7" id="__codelineno-2-7" name="__codelineno-2-7"></a><span class="w">            </span><span class="nt">"Action"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-2-8" id="__codelineno-2-8" name="__codelineno-2-8"></a><span class="w">                </span><span class="s2">"logs:CreateLogGroup"</span><span class="p">,</span>
+<a href="#__codelineno-2-9" id="__codelineno-2-9" name="__codelineno-2-9"></a><span class="w">                </span><span class="s2">"logs:CreateLogStream"</span><span class="p">,</span>
+<a href="#__codelineno-2-10" id="__codelineno-2-10" name="__codelineno-2-10"></a><span class="w">                </span><span class="s2">"logs:PutLogEvents"</span><span class="p">,</span>
+<a href="#__codelineno-2-11" id="__codelineno-2-11" name="__codelineno-2-11"></a><span class="w">                </span><span class="s2">"logs:DescribeLogStreams"</span>
+<a href="#__codelineno-2-12" id="__codelineno-2-12" name="__codelineno-2-12"></a><span class="w">            </span><span class="p">],</span>
+<a href="#__codelineno-2-13" id="__codelineno-2-13" name="__codelineno-2-13"></a><span class="w">            </span><span class="nt">"Resource"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a href="#__codelineno-2-14" id="__codelineno-2-14" name="__codelineno-2-14"></a><span class="w">                </span><span class="s2">"arn:aws:logs:eu-west-3:*:*"</span>
+<a href="#__codelineno-2-15" id="__codelineno-2-15" name="__codelineno-2-15"></a><span class="w">            </span><span class="p">]</span>
+<a href="#__codelineno-2-16" id="__codelineno-2-16" name="__codelineno-2-16"></a><span class="w">        </span><span class="p">}</span>
+<a href="#__codelineno-2-17" id="__codelineno-2-17" name="__codelineno-2-17"></a><span class="w">    </span><span class="p">]</span>
+<a href="#__codelineno-2-18" id="__codelineno-2-18" name="__codelineno-2-18"></a><span class="p">}</span>
+</code></pre></div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_cloudwatch-logs.png"><img alt='"IAM policy for CloudWatch Logs"' src="../assets/aws/monitoring-iam_cloudwatch-logs.png" title="IAM policy for CloudWatch Logs"/></a></p>
+</li>
+<li>
+<p>Creamos un rol donde asociaremos las políticas recién creadas y también, la existente llamada <code>CloudWatchAgentServerPolicy</code>. Para ello vamos a <code>IAM -&gt; Roles</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_role-entity.png"><img alt='"IAM role entity"' src="../assets/aws/monitoring-iam_role-entity.png" title="IAM role entity"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_role-summary-1.png"><img alt='"IAM role summary 1"' src="../assets/aws/monitoring-iam_role-summary-1.png" title="IAM role summary 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_role-summary-2.png"><img alt='"IAM role summary 2"' src="../assets/aws/monitoring-iam_role-summary-2.png" title="IAM role summary 2"/></a></p>
+</li>
+<li>
+<p>Finalmente, asociamos el rol recién creado a la instancia de Zentyal. Para ello vamos a <code>EC2 -&gt; Actions -&gt; Security -&gt; Modify IAM role</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-iam_role-ec2.png"><img alt='"IAM role assign to EC2"' src="../assets/aws/monitoring-iam_role-ec2.png" title="IAM role assign to EC2"/></a></p>
+</li>
+</ol>
+<h2 id="cloudwatch">Cloudwatch<a class="headerlink" href="#cloudwatch" title="Permanent link">¶</a></h2>
+<p>Una vez que tenemos el entorno de AWS listo, procederemos a instalar y configurar el agente de CloudWatch para monitorizar el servidor y el archivo de log principal de Zentyal.</p>
+<ol>
+<li>
+<p>Descargamos el paquete <code>.deb</code> del agente de CloudWatch en nuestro servidor Zentyal:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>sudo<span class="w"> </span>curl<span class="w"> </span><span class="s2">"https://s3.amazonaws.com/amazoncloudwatch-agent/debian/amd64/latest/amazon-cloudwatch-agent.deb"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"/opt/amazon-cloudwatch-agent.deb"</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Instalamos el paquete:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>-E<span class="w"> </span>/opt/amazon-cloudwatch-agent.deb
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Descargamos también el archivo comprimido que contiene el binario de AWS para la CLI:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>sudo<span class="w"> </span>curl<span class="w"> </span><span class="s2">"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"</span><span class="w"> </span>-o<span class="w"> </span><span class="s2">"/opt/awscliv2.zip"</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Instalamos el paquete <code>unzip</code> para poder descomprimir el archivo:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span>
+<span class="normal"><a href="#__codelineno-6-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-6-2" name="__codelineno-6-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>unzip
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Descomprimimos el archivo y lo instalamos:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>sudo<span class="w"> </span>unzip<span class="w"> </span>/opt/awscliv2.zip<span class="w"> </span>-d<span class="w"> </span>/opt/aws/
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>sudo<span class="w"> </span>/opt/aws/aws/install
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Configuramos el agente de CloudWatch:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>sudo<span class="w"> </span>amazon-cloudwatch-agent-ctl<span class="w"> </span>-a<span class="w"> </span>fetch-config<span class="w"> </span>-m<span class="w"> </span>ec2<span class="w"> </span>-s<span class="w"> </span>-c<span class="w"> </span>ssm:/zentyal/prod/cloudwatch-config
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Confirmamos que el servicio esté activo:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>sudo<span class="w"> </span>/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl<span class="w"> </span>-a<span class="w"> </span>status
+</code></pre></div></td></tr></table></div>
+<p>El resultado que he obtenido:</p>
+<div class="highlight"><pre><span></span><code><a href="#__codelineno-10-1" id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="p">{</span>
+<a href="#__codelineno-10-2" id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"running"</span><span class="p">,</span>
+<a href="#__codelineno-10-3" id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="nt">"starttime"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-02-25T09:59:17+00:00"</span><span class="p">,</span>
+<a href="#__codelineno-10-4" id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="nt">"configstatus"</span><span class="p">:</span><span class="w"> </span><span class="s2">"configured"</span><span class="p">,</span>
+<a href="#__codelineno-10-5" id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.247357.0b252275"</span>
+<a href="#__codelineno-10-6" id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="p">}</span>
+</code></pre></div>
+</li>
+<li>
+<p>Tras esperar un par de minutos, vamos a <code>CloudWatch -&gt; All metrics</code> y comprobamos que el namespace con las métricas personalizas se hayan creado:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-check_metrics-1.png"><img alt='"CloudWatch namespace"' src="../assets/aws/monitoring-check_metrics-1.png" title="CloudWatch namespace"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-check_metrics-2.png"><img alt='"CloudWatch metrics"' src="../assets/aws/monitoring-check_metrics-2.png" title="CloudWatch metrics"/></a></p>
+</li>
+<li>
+<p>Finalmente, revisamos también que se esté monitorizando el archivo de log de Zentyal, para ello vamos a <code>CloudWatch -&gt; Log groups</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-check_logs-1.png"><img alt='"CloudWatch logs 1"' src="../assets/aws/monitoring-check_logs-1.png" title="CloudWatch logs 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-check_logs-2.png"><img alt='"CloudWatch logs 2"' src="../assets/aws/monitoring-check_logs-2.png" title="CloudWatch logs 2"/></a></p>
+</li>
+</ol>
+<h3 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">¶</a></h3>
+<p>Con el archivo principal de Zentyal monitorizado por CloudWatch, vamos a crear un filtro de métrica que compruebe si el archivo de log contiene el evento <code>ERROR&gt;</code>. La finalidad es poder crear una alerta que notifique vía email a través de AWS SNS cuando se produzca este tipo de eventos.</p>
+<ol>
+<li>
+<p>Vamos a <code>CloudWatch -&gt; Metric filters</code> y creamos el filtro:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-logs_filter-1.png"><img alt='"CloudWatch filter log 1"' src="../assets/aws/monitoring-logs_filter-1.png" title="CloudWatch filter log 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-logs_filter-2.png"><img alt='"CloudWatch filter log 2"' src="../assets/aws/monitoring-logs_filter-2.png" title="CloudWatch filter log 2"/></a></p>
+</li>
+<li>
+<p>Una vez creado el filtro y pasado un par de minutos para que CloudWatch recolecte información.</p>
+</li>
+<li>
+<p>Finalmente, verificamos que desde <code>CloudWatch -&gt; All metrics</code> tenemos la métrica disponible:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-logs_metric-check.png"><img alt='"CloudWatch filter metric"' src="../assets/aws/monitoring-logs_metric-check.png" title="CloudWatch filter metric"/></a></p>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>El tipo de métrica mostrado en la imagen es de tipo <code>Number</code> como se puede ver en la parte superior.</p>
+</div>
+</li>
+</ol>
+<h3 id="dashboard">Dashboard<a class="headerlink" href="#dashboard" title="Permanent link">¶</a></h3>
+<p>Una vez confirmado el funcionamiento del sistema de monitorización, podremos crear un dashboard que agrupe las métricas más importantes desde <code>CloudWatch -&gt; Dashboard</code>. A continuación un ejemplo sencillo:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-dashboard.png"><img alt='"CloudWatch dashboard"' src="../assets/aws/monitoring-dashboard.png" title="CloudWatch dashboard"/></a></p>
+<h3 id="alertas">Alertas<a class="headerlink" href="#alertas" title="Permanent link">¶</a></h3>
+<p>Lo último que haremos sobre el sistema de monitorización será crear las alertas. Todas las alertas que configuraremos se harán desde <code>CloudWatch -&gt; All alarm</code> y serán las siguientes:</p>
+<ul>
+<li><strong>CPU:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>RAM:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>Disco de sistema:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>Disco de los correos:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>Disco de de los recursos compartidos:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>DLM para el sistema:</strong><ul>
+<li>La comprobación se hará una vez al día.</li>
+<li>El valor de la alerta para que se disparé será igual o superior a 1.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse una única vez.</li>
+</ul>
+</li>
+<li><strong>DLM para el correo:</strong><ul>
+<li>La comprobación se hará una vez al día.</li>
+<li>El valor de la alerta para que se disparé será igual o superior a 1.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse una única vez.</li>
+</ul>
+</li>
+<li><strong>DLM para el recursos compartidos:</strong><ul>
+<li>La comprobación se hará una vez al día.</li>
+<li>El valor de la alerta para que se disparé será igual o superior a 1.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse una única vez.</li>
+</ul>
+</li>
+<li><strong>Comprobaciones fallidas de EC2:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>Comprobaciones fallidas de la instancia:</strong><ul>
+<li>La comprobación se hará cada minuto.</li>
+<li>El valor de la alerta para que se disparé será superior a 80%.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse 3 veces consecutivas.</li>
+</ul>
+</li>
+<li><strong>Errores en el log de Zentyal:</strong><ul>
+<li>La comprobación se hará una vez al día.</li>
+<li>El valor de la alerta para que se disparé será igual o superior a 1.</li>
+<li>Para que se envía una notificación, la alerta tendrá que producirse una única vez.</li>
+</ul>
+</li>
+</ul>
+<h4 id="cpu">CPU<a class="headerlink" href="#cpu" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_cpu-1.png"><img alt='"CloudWatch CPU alert 1"' src="../assets/aws/monitoring-alert_cpu-1.png" title="CloudWatch CPU alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_cpu-2.png"><img alt='"CloudWatch CPU alert 2"' src="../assets/aws/monitoring-alert_cpu-2.png" title="CloudWatch CPU alert 2"/></a></p>
+<h4 id="ram">RAM<a class="headerlink" href="#ram" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ram-1.png"><img alt='"CloudWatch RAM alert 1"' src="../assets/aws/monitoring-alert_ram-1.png" title="CloudWatch RAM alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ram-2.png"><img alt='"CloudWatch RAM alert 2"' src="../assets/aws/monitoring-alert_ram-2.png" title="CloudWatch RAM alert 2"/></a></p>
+<h4 id="disco-sistema">Disco - Sistema<a class="headerlink" href="#disco-sistema" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-system-1.png"><img alt='"CloudWatch System disk alert 1"' src="../assets/aws/monitoring-alert_disk-system-1.png" title="CloudWatch System disk alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-system-2.png"><img alt='"CloudWatch System disk alert 2"' src="../assets/aws/monitoring-alert_disk-system-2.png" title="CloudWatch System disk alert 2"/></a></p>
+<h4 id="disco-mail">Disco - Mail<a class="headerlink" href="#disco-mail" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-mail-1.png"><img alt='"CloudWatch Mail disk alert 1"' src="../assets/aws/monitoring-alert_disk-mail-1.png" title="CloudWatch Mail disk alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-mail-2.png"><img alt='"CloudWatch Mail disk alert 2"' src="../assets/aws/monitoring-alert_disk-mail-2.png" title="CloudWatch Mail disk alert 2"/></a></p>
+<h4 id="disco-shares">Disco - Shares<a class="headerlink" href="#disco-shares" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-shares-1.png"><img alt='"CloudWatch Shares disk alert 1"' src="../assets/aws/monitoring-alert_disk-shares-1.png" title="CloudWatch Shares disk alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_disk-shares-2.png"><img alt='"CloudWatch Shares disk alert 2"' src="../assets/aws/monitoring-alert_disk-shares-2.png" title="CloudWatch Shares disk alert 2"/></a></p>
+<h4 id="dlm-sistema">DLM - Sistema<a class="headerlink" href="#dlm-sistema" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-system-1.png"><img alt='"CloudWatch DLM System alert 1"' src="../assets/aws/monitoring-alert_dlm-system-1.png" title="CloudWatch DLM system alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-system-2.png"><img alt='"CloudWatch DLM System alert 2"' src="../assets/aws/monitoring-alert_dlm-system-2.png" title="CloudWatch DLM system alert 2"/></a></p>
+<h4 id="dlm-mail">DLM - Mail<a class="headerlink" href="#dlm-mail" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-mail-1.png"><img alt='"CloudWatch DLM Mail alert 1"' src="../assets/aws/monitoring-alert_dlm-mail-1.png" title="CloudWatch DLM Mail alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-mail-2.png"><img alt='"CloudWatch DLM Mail alert 2"' src="../assets/aws/monitoring-alert_dlm-mail-2.png" title="CloudWatch DLM Mail alert 2"/></a></p>
+<h4 id="dlm-shares">DLM - Shares<a class="headerlink" href="#dlm-shares" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-shares-1.png"><img alt='"CloudWatch DLM Shares alert 1"' src="../assets/aws/monitoring-alert_dlm-shares-1.png" title="CloudWatch DLM Shares alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_dlm-shares-2.png"><img alt='"CloudWatch DLM Shares alert 2"' src="../assets/aws/monitoring-alert_dlm-shares-2.png" title="CloudWatch DLM Shares alert 2"/></a></p>
+<h4 id="ec2-system">EC2 - System<a class="headerlink" href="#ec2-system" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ec2-system-1.png"><img alt='"CloudWatch EC2 System alert 1"' src="../assets/aws/monitoring-alert_ec2-system-1.png" title="CloudWatch EC2 System alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ec2-system-2.png"><img alt='"CloudWatch EC2 System alert 2"' src="../assets/aws/monitoring-alert_ec2-system-2.png" title="CloudWatch EC2 System alert 2"/></a></p>
+<h4 id="ec2-instance">EC2 - Instance<a class="headerlink" href="#ec2-instance" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ec2-instance-1.png"><img alt='"CloudWatch EC2 Instance alert 1"' src="../assets/aws/monitoring-alert_ec2-instance-1.png" title="CloudWatch EC2 Instance alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_ec2-instance-2.png"><img alt='"CloudWatch EC2 Instance alert 2"' src="../assets/aws/monitoring-alert_ec2-instance-2.png" title="CloudWatch EC2 Instance alert 2"/></a></p>
+<h4 id="log-de-zentyal">Log de Zentyal<a class="headerlink" href="#log-de-zentyal" title="Permanent link">¶</a></h4>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_log-1.png"><img alt='"CloudWatch Log alert 1"' src="../assets/aws/monitoring-alert_log-1.png" title="CloudWatch Log alert 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/monitoring-alert_log-2.png"><img alt='"CloudWatch Log alert 2"' src="../assets/aws/monitoring-alert_log-2.png" title="CloudWatch Log alert 2"/></a></p>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Última actualización:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+<br/>
+        Creado:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Volver al principio
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+<script src="../../assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

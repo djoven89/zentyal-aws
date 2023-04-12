@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/zentyal-installation/" rel="canonical"/>
+<link href="../aws-configuration/" rel="prev"/>
+<link href="../zentyal-configuration/" rel="next"/>
+<link href="../assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>Install - Zentyal &amp; AWS</title>
+<link href="../assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#instalacion-de-zentyal">
+          Saltar a contenido
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Cabecera" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href=".." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Install
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Seleccionar idioma" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="./" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="../en/zentyal-installation/" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Búsqueda" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Búsqueda" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Buscar" class="md-search__options">
+<button aria-label="Limpiar" class="md-search__icon md-icon" tabindex="-1" title="Limpiar" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Pestañas" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="..">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../aws-configuration/">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-configuration/">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../monitoring/">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../recovery/">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navegación" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+        Home
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../aws-configuration/">
+        AWS
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Install
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Install
+      </a>
+<nav aria-label="Tabla de contenidos" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requisitos">
+    Requisitos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#consideraciones">
+    Consideraciones
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuracion-previa">
+    Configuración previa
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#instalacion">
+    Instalación
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-configuration/">
+        Configuration
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../monitoring/">
+        Monitoring
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../recovery/">
+        Recovery
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags">
+<span class="md-tag">Zentyal</span>
+</nav>
+<h1 id="instalacion-de-zentyal">Instalación de Zentyal<a class="headerlink" href="#instalacion-de-zentyal" title="Permanent link">¶</a></h1>
+<p>En esta página se explicará como instalar Zentyal 7.0 sobre un Ubuntu Server 20.04 en una instancia EC2 del proveedor cloud AWS. El objetivo es simplemente instalar Zentyal 7.0 con sólo los módulos esenciales y confirmar que no hay incidencias a nivel de red ante un reinicio.</p>
+<p>Para la instalación, usaremos <a href="https://doc.zentyal.org/es/installation.html#instalacion-sobre-ubuntu-20-04-lts-server-o-desktop">este</a> script disponible por parte de Zentyal. Mencionar que instalaremos Zentyal sin entorno gráfico, ya que queremos reducir el uso de recursos que necesita el servidor.</p>
+<p>Los datos del entorno que crearé para el proyecto son:</p>
+<ul>
+<li><strong>Nombre del servidor</strong>: arthas</li>
+<li><strong>Dominio</strong>: icecrown.es</li>
+<li><strong>IP:</strong> 10.0.1.200/24</li>
+<li><strong>Tipo de red:</strong> Interna</li>
+<li><strong>Nombre de un usuario administrador adicional:</strong> djoven</li>
+</ul>
+<h2 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h2>
+<ul>
+<li>El sistema operativo <strong>debe</strong> ser <strong>Ubuntu 20.04 LTS</strong>.</li>
+<li>El servidor tiene que tener un mínimo de 4GB de RAM.</li>
+<li>Se necesita un usuario con permisos de administrador (grupo <code>sudo</code>).</li>
+</ul>
+<h2 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">¶</a></h2>
+<ul>
+<li>Los pasos descritos a continuación son idénticos tantos en entornos cloud como en entornos on-premise.</li>
+<li>En caso de no tener conocimientos robustos sobre Linux, es recomendable usar la versión comercial, ya que se puede contratar acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones de versiones.</li>
+<li>En caso de instalar el servidor en un proveedor cloud o en una ubicación sin acceso físico al servidor, la estabilidad del módulo de red será crítica. A continuación se indican algunas recomendaciones al respecto:<ul>
+<li>Definir previamente la configuración que se establecerá.</li>
+<li>Asignar una IP concreta a la interfaz de red de la instancia (en caso de usarse un proveedor cloud).</li>
+<li>Establecer la IP de la instancia como estática en Zentyal.</li>
+<li>Se recomienda configurar la tarjeta de red en Zentyal como interna, así se evita bloquearse a uno mismo durante la configuración inicial.</li>
+</ul>
+</li>
+</ul>
+<h2 id="configuracion-previa">Configuración previa<a class="headerlink" href="#configuracion-previa" title="Permanent link">¶</a></h2>
+<p>Antes de proceder a instalar Zentyal, realizaremos las siguientes acciones:</p>
+<ol>
+<li>
+<p>Nos conectamos a la instancia a través de SSH usando la clave privada que nos hemos descargado cuando creamos el <a href="https://zentyal-aws.projects.djoven.es/aws-configuration/#key-pair">Key pair</a>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>ssh<span class="w"> </span>-i<span class="w"> </span>KP-Prod-Zentyal.pem<span class="w"> </span>ubuntu@arthas.icecrown.es
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Establecemos una contraseña para los usuarios: <code>root</code> y <code>ubuntu</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span>
+<span class="normal"><a href="#__codelineno-1-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>root
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>ubuntu
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Actualizamos los paquetes del servidor:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span>
+<span class="normal"><a href="#__codelineno-2-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-2-2" name="__codelineno-2-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>dist-upgrade<span class="w"> </span>-y
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Nos creamos un usuario administrador adicional, el cual usaremos para administrar Zentyal desde la interfaz de administración:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>sudo<span class="w"> </span>useradd<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/home/djoven<span class="w"> </span>-G<span class="w"> </span>sudo<span class="w"> </span>-s<span class="w"> </span>/bin/bash<span class="w"> </span>-c<span class="w"> </span><span class="s1">'Sysadmin'</span><span class="w"> </span>djoven
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>djoven
+</code></pre></div></td></tr></table></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Es importante que el usuario pertenezca al grupo <code>sudo</code>, de lo contrario no podremos usarlo para acceder a la interfaz de administración.</p>
+</div>
+</li>
+<li>
+<p>Nos logeamos con el usuario recién creado:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>su<span class="w"> </span>-<span class="w"> </span>djoven
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Creamos el directorio y el archivo necesarios para alojar nuestra clave pública para poder conectarnos vía SSH:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span>
+<span class="normal"><a href="#__codelineno-5-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>mkdir<span class="w"> </span>-v<span class="w"> </span>.ssh
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>touch<span class="w"> </span>.ssh/authorized_keys
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Finalmente, añadimos el contenido de nuestra clave pública al archivo recién creado <code>.ssh/authorized_keys</code>.</p>
+</li>
+</ol>
+<h2 id="instalacion">Instalación<a class="headerlink" href="#instalacion" title="Permanent link">¶</a></h2>
+<p>A partir de este momento, el servidor estará listo para instalar Zentyal 7.0. A continuación las acciones a realizar para su instalación:</p>
+<ol>
+<li>
+<p>Creamos un directorio donde almacenaremos el script de instalación de Zentyal:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>/opt/zentyal-install
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Nos descargamos el script y le damos los permisos adecuados:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>sudo<span class="w"> </span>wget<span class="w"> </span>-O<span class="w"> </span>/opt/zentyal-install/zentyal_installer.sh<span class="w"> </span>https://zentyal.com/zentyal_installer.sh
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">0750</span><span class="w"> </span>/opt/zentyal-install/zentyal_installer.sh
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Instalamos Zentyal a través del script:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>sudo<span class="w"> </span>bash<span class="w"> </span>/opt/zentyal-install/zentyal_installer.sh
+</code></pre></div></td></tr></table></div>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>Contestaremos <code>n</code> a la pregunta: '<em>Do you want to install the Zentyal Graphical environment?</em>', ya que no queremos instalar el entorno gráfico.</p>
+</div>
+<p>Los paquetes de Zentyal que nos instalará el script serán:</p>
+<ul>
+<li>zentyal (meta-paquete)</li>
+<li>zentyal-core</li>
+<li>zentyal-software</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Llegados a este punto, no podemos reiniciar el servidor hasta haber instalado y configurado el módulo de red, de lo contrario, el servidor se iniciará sin una dirección IP y por lo tanto, perderemos el acceso a través de SSH.</p>
+</div>
+</li>
+<li>
+<p>Una vez que el script haya terminado, nos logeamos al panel de administración de Zentyal: <a href="https://arthas.icecrown.es:8443">https://arthas.icecrown.es:8443</a></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>En caso de que no hayamos creado el registro <code>A</code> en el DNS, usaremos la dirección IP pública de la instancia.</p>
+</div>
+</li>
+<li>
+<p>Nos logeamos con el usuario administrador que hemos creado previamente, en mi caso es <code>djoven</code>.</p>
+</li>
+<li>
+<p>En el wizard de configuración inicial, únicamente instalaremos el módulo de <a href="https://doc.zentyal.org/es/firewall.html">firewall</a>, de esta forma se nos instalará como dependencia el módulo de <a href="https://doc.zentyal.org/es/firststeps.html#configuracion-basica-de-red-en-zentyal">network</a> a su vez.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/01-wizard_packages.png"><img alt="Initial wizard - Packages" src="../assets/zentyal/01-wizard_packages.png" title="Initial wizard - Packages"/></a></p>
+</li>
+<li>
+<p>Configuramos la tarjeta de red como <code>internal</code> y <code>estática</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/02-wizard_network-1.png"><img alt="Initial wizard - Network 1" src="../assets/zentyal/02-wizard_network-1.png" title="Initial wizard - Network 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/03-wizard_network-2.png"><img alt="Initial wizard - Network 2" src="../assets/zentyal/03-wizard_network-2.png" title="Initial wizard - Network 2"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Es posible que al terminar de configurarse la red, se nos reproduzca el bug reportado <a href="https://github.com/zentyal/zentyal/issues/2100">aquí</a>. Si es el caso, seguir los pasos descritos en la página <a href="https://zentyal-aws.projects.djoven.es/zentyal-bug-fixing/#saving-changes">Bug fixing</a> (ver menú superior de navegación) o simplemente modificamos la URL por: <a href="https://arthas.icecrown.es:8443">https://arthas.icecrown.es:8443</a></p>
+</div>
+</li>
+<li>
+<p>Una vez que se haya terminado de guardar cambios, podremos empezar a gestionar Zentyal a través del dashboard.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/04-dashboard_initial.png"><img alt="Zentyal initial dashboard" src="../assets/zentyal/04-dashboard_initial.png" title="Zentyal initial dashboard"/></a></p>
+</li>
+<li>
+<p>Finalmente, antes de procedes a configurar el servidor, realizaremos las siguientes comprobaciones para confirmar la estabilidad del servidor:</p>
+<ol>
+<li>Nos aseguramos que todos los módulos estén habilitados (<code>Modules Status</code>).</li>
+<li>
+<p>Que la máquina tenga acceso a Internet.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span>
+<span class="normal"><a href="#__codelineno-9-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>ping<span class="w"> </span>-c4<span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>ping<span class="w"> </span>-c4<span class="w"> </span>google.es
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Que no haya habido ningún error en el log <code>/var/log/zentyal/zentyal.log</code>. A continuación un ejemplo del logs sin ningún error:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-10-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-10-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-10-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-10-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-10-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-10-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-10-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-10-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-10-10">10</a></span>
+<span class="normal"><a href="#__codelineno-10-11">11</a></span>
+<span class="normal"><a href="#__codelineno-10-12">12</a></span>
+<span class="normal"><a href="#__codelineno-10-13">13</a></span>
+<span class="normal"><a href="#__codelineno-10-14">14</a></span>
+<span class="normal"><a href="#__codelineno-10-15">15</a></span>
+<span class="normal"><a href="#__codelineno-10-16">16</a></span>
+<span class="normal"><a href="#__codelineno-10-17">17</a></span>
+<span class="normal"><a href="#__codelineno-10-18">18</a></span>
+<span class="normal"><a href="#__codelineno-10-19">19</a></span>
+<span class="normal"><a href="#__codelineno-10-20">20</a></span>
+<span class="normal"><a href="#__codelineno-10-21">21</a></span>
+<span class="normal"><a href="#__codelineno-10-22">22</a></span>
+<span class="normal"><a href="#__codelineno-10-23">23</a></span>
+<span class="normal"><a href="#__codelineno-10-24">24</a></span>
+<span class="normal"><a href="#__codelineno-10-25">25</a></span>
+<span class="normal"><a href="#__codelineno-10-26">26</a></span>
+<span class="normal"><a href="#__codelineno-10-27">27</a></span>
+<span class="normal"><a href="#__codelineno-10-28">28</a></span>
+<span class="normal"><a href="#__codelineno-10-29">29</a></span>
+<span class="normal"><a href="#__codelineno-10-30">30</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:17:51<span class="w"> </span>DEBUG&gt;<span class="w"> </span>PAM.pm:83<span class="w"> </span>Authen::Simple::PAM::check<span class="w"> </span>-<span class="w"> </span>Successfully<span class="w"> </span>authenticated<span class="w"> </span>user<span class="w"> </span><span class="s1">'djoven'</span><span class="w"> </span>using<span class="w"> </span>service<span class="w"> </span><span class="s1">'zentyal'</span>.
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:29<span class="w"> </span>INFO&gt;<span class="w"> </span>install-packages:61<span class="w"> </span>main::<span class="w"> </span>-<span class="w"> </span>Starting<span class="w"> </span>package<span class="w"> </span>installation<span class="w"> </span>process
+<a id="__codelineno-10-3" name="__codelineno-10-3"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:39<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:256<span class="w"> </span>EBox::Module::Base::saveConfig<span class="w"> </span>-<span class="w"> </span>Saving<span class="w"> </span>config<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>network
+<a id="__codelineno-10-4" name="__codelineno-10-4"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:39<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:256<span class="w"> </span>EBox::Module::Base::saveConfig<span class="w"> </span>-<span class="w"> </span>Saving<span class="w"> </span>config<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>network
+<a id="__codelineno-10-5" name="__codelineno-10-5"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:40<span class="w"> </span>INFO&gt;<span class="w"> </span>Service.pm:965<span class="w"> </span>EBox::Module::Service::restartService<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>network
+<a id="__codelineno-10-6" name="__codelineno-10-6"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:43<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:256<span class="w"> </span>EBox::Module::Base::saveConfig<span class="w"> </span>-<span class="w"> </span>Saving<span class="w"> </span>config<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>network
+<a id="__codelineno-10-7" name="__codelineno-10-7"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:43<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:256<span class="w"> </span>EBox::Module::Base::saveConfig<span class="w"> </span>-<span class="w"> </span>Saving<span class="w"> </span>config<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>firewall
+<a id="__codelineno-10-8" name="__codelineno-10-8"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:43<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>firewall
+<a id="__codelineno-10-9" name="__codelineno-10-9"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:44<span class="w"> </span>INFO&gt;<span class="w"> </span>Service.pm:965<span class="w"> </span>EBox::Module::Service::restartService<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>firewall
+<a id="__codelineno-10-10" name="__codelineno-10-10"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:20:49<span class="w"> </span>INFO&gt;<span class="w"> </span>install-packages:121<span class="w"> </span>main::<span class="w"> </span>-<span class="w"> </span>Package<span class="w"> </span>installation<span class="w"> </span>process<span class="w"> </span>finished
+<a id="__codelineno-10-11" name="__codelineno-10-11"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:15<span class="w"> </span>INFO&gt;<span class="w"> </span>Network.pm:89<span class="w"> </span>EBox::Network::CGI::Wizard::Network::_processWizard<span class="w"> </span>-<span class="w"> </span>Configuring<span class="w"> </span>ens5<span class="w"> </span>as<span class="w"> </span><span class="m">10</span>.0.1.200/255.255.255.0
+<a id="__codelineno-10-12" name="__codelineno-10-12"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:15<span class="w"> </span>INFO&gt;<span class="w"> </span>Network.pm:93<span class="w"> </span>EBox::Network::CGI::Wizard::Network::_processWizard<span class="w"> </span>-<span class="w"> </span>Adding<span class="w"> </span>gateway<span class="w"> </span><span class="m">10</span>.0.1.1<span class="w"> </span><span class="k">for</span><span class="w"> </span>iface<span class="w"> </span>ens5
+<a id="__codelineno-10-13" name="__codelineno-10-13"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:15<span class="w"> </span>INFO&gt;<span class="w"> </span>Network.pm:108<span class="w"> </span>EBox::Network::CGI::Wizard::Network::_processWizard<span class="w"> </span>-<span class="w"> </span>Adding<span class="w"> </span>nameserver<span class="w"> </span><span class="m">1</span>.1.1.1
+<a id="__codelineno-10-14" name="__codelineno-10-14"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:15<span class="w"> </span>INFO&gt;<span class="w"> </span>Network.pm:114<span class="w"> </span>EBox::Network::CGI::Wizard::Network::_processWizard<span class="w"> </span>-<span class="w"> </span>Adding<span class="w"> </span>nameserver<span class="w"> </span><span class="m">9</span>.9.9.9
+<a id="__codelineno-10-15" name="__codelineno-10-15"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:17<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:571<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>First<span class="w"> </span>installation,<span class="w"> </span>enabling<span class="w"> </span>modules:<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>webadmin<span class="w"> </span>logs<span class="w"> </span>audit<span class="w"> </span>firewall
+<a id="__codelineno-10-16" name="__codelineno-10-16"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:17<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>network
+<a id="__codelineno-10-17" name="__codelineno-10-17"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:17<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>firewall
+<a id="__codelineno-10-18" name="__codelineno-10-18"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:17<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>webadmin
+<a id="__codelineno-10-19" name="__codelineno-10-19"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:18<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>logs
+<a id="__codelineno-10-20" name="__codelineno-10-20"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:18<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>audit
+<a id="__codelineno-10-21" name="__codelineno-10-21"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:19<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:574<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Enabling<span class="w"> </span>module<span class="w"> </span>firewall
+<a id="__codelineno-10-22" name="__codelineno-10-22"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:19<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>network
+<a id="__codelineno-10-23" name="__codelineno-10-23"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:23<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>firewall
+<a id="__codelineno-10-24" name="__codelineno-10-24"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:23<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>logs
+<a id="__codelineno-10-25" name="__codelineno-10-25"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:23<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>audit
+<a id="__codelineno-10-26" name="__codelineno-10-26"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:23<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>firewall
+<a id="__codelineno-10-27" name="__codelineno-10-27"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:24<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>sysinfo
+<a id="__codelineno-10-28" name="__codelineno-10-28"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:25<span class="w"> </span>INFO&gt;<span class="w"> </span>GlobalImpl.pm:660<span class="w"> </span>EBox::GlobalImpl::saveAllModules<span class="w"> </span>-<span class="w"> </span>Saving<span class="w"> </span>configuration:<span class="w"> </span>webadmin
+<a id="__codelineno-10-29" name="__codelineno-10-29"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:23:25<span class="w"> </span>INFO&gt;<span class="w"> </span>Base.pm:231<span class="w"> </span>EBox::Module::Base::save<span class="w"> </span>-<span class="w"> </span>Restarting<span class="w"> </span>service<span class="w"> </span><span class="k">for</span><span class="w"> </span>module:<span class="w"> </span>webadmin
+<a id="__codelineno-10-30" name="__codelineno-10-30"></a><span class="m">2022</span>/10/23<span class="w"> </span><span class="m">08</span>:24:51<span class="w"> </span>INFO&gt;<span class="w"> </span>Index.pm:187<span class="w"> </span>EBox::Dashboard::CGI::Index::masonParameters<span class="w"> </span>-<span class="w"> </span>dashboard1
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Reiniciamos el servidor para asegurarnos de que es capaz de iniciar sin ningún tipo de problema de red.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Verificamos que podemos conectarnos a través de SSH y a la interfaz de administración de Zentyal.</p>
+</li>
+</ol>
+</li>
+</ol>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Última actualización:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+<br/>
+        Creado:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Volver al principio
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+<script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

@@ -1,0 +1,2102 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/en/zentyal-configuration/" rel="canonical"/>
+<link href="../zentyal-installation/" rel="prev"/>
+<link href="../zentyal-certificates/" rel="next"/>
+<link href="../../assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>Configuration - Zentyal &amp; AWS</title>
+<link href="../../assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="../../assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#zentyal-configuration">
+          Skip to content
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Header" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Configuration
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Select language" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="../../zentyal-configuration/" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="./" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Search" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Search" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Search" class="md-search__options">
+<button aria-label="Clear" class="md-search__icon md-icon" tabindex="-1" title="Clear" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Initializing search
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Tabs" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../aws-configuration/">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-installation/">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../monitoring/">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../recovery/">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navigation" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href="../" title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Go to repository">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="../">
+        Home
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../aws-configuration/">
+        AWS
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-installation/">
+        Install
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Configuration
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Configuration
+      </a>
+<nav aria-label="Table of contents" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#objectives">
+    Objectives
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#optional-configuration">
+    Optional Configuration
+  </a>
+<nav aria-label="Optional Configuration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#prompt">
+    Prompt
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#history">
+    History
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#vim">
+    Vim
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#previous-configuration">
+    Previous Configuration
+  </a>
+<nav aria-label="Previous Configuration" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#swap-partition">
+    SWAP Partition
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#additional-ebs-volumes">
+    Additional EBS volumes
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#quota">
+    Quota
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#configuration-of-the-modules">
+    Configuration of the modules
+  </a>
+<nav aria-label="Configuration of the modules" class="md-nav">
+<ul class="md-nav__list">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#general">
+    General
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#logs-module">
+    Logs module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#firewall-module">
+    Firewall module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#software-module">
+    Software module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ntp-module">
+    NTP module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#dns-module">
+    DNS module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mail-module">
+    Mail module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#webmail-module">
+    Webmail Module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#antivirus-module">
+    Antivirus Module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#mailfilter-module">
+    Mailfilter module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#ca-module">
+    CA module
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#openvpn-module">
+    OpenVPN Module
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../monitoring/">
+        Monitoring
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../recovery/">
+        Recovery
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags">
+<span class="md-tag">Zentyal</span>
+</nav>
+<h1 id="zentyal-configuration">Zentyal Configuration<a class="headerlink" href="#zentyal-configuration" title="Permanent link">¶</a></h1>
+<p>This page will cover the configuration of the Zentyal server to act as a mail and file sharing server.</p>
+<h2 id="objectives">Objectives<a class="headerlink" href="#objectives" title="Permanent link">¶</a></h2>
+<p>The objectives that will be accomplished are:</p>
+<ul>
+<li>(Optional) Uninstallation of Snap.</li>
+<li>(Optional) Additional configuration of local system users:<ul>
+<li>Modification of the prompt.</li>
+<li>Modifications to the history.</li>
+<li>Configuration for the vim editor.</li>
+</ul>
+</li>
+<li>Creation of a SWAP partition.</li>
+<li>Configuration of additional EBS volumes.</li>
+<li>Implementation of quotas in the file system.</li>
+<li>Configuration of the following Zentyal modules:<ul>
+<li><a href="https://doc.zentyal.org/en/firststeps.html#network-configuration-with-zentyal">Network</a></li>
+<li><a href="https://doc.zentyal.org/en/logs.html">Logs</a></li>
+<li><a href="https://doc.zentyal.org/en/firewall.html">Firewall</a></li>
+<li><a href="https://doc.zentyal.org/en/software.html">Software</a></li>
+<li><a href="https://doc.zentyal.org/en/ntp.html">NTP</a></li>
+<li><a href="https://doc.zentyal.org/en/dns.html">DNS</a></li>
+<li><a href="https://doc.zentyal.org/en/directory.html">Controlador de dominio</a></li>
+<li><a href="https://doc.zentyal.org/en/mail.html">Correo</a></li>
+<li><a href="https://doc.zentyal.org/en/mail.html#webmail">Webmail</a></li>
+<li><a href="https://doc.zentyal.org/en/antivirus.html">Antivirus</a></li>
+<li><a href="https://doc.zentyal.org/en/mailfilter.html">Mailfilter</a></li>
+<li><a href="https://doc.zentyal.org/en/ca.html">CA</a></li>
+<li><a href="https://doc.zentyal.org/en/vpn.html">OpenVPN</a></li>
+</ul>
+</li>
+</ul>
+<p>At the end of this document, the Zentyal server will be ready to use, although in subsequent documents we will continue to establish additional configurations such as the configuration of Let's Encrypt issued certificates or highly recommended options such as hardening of the mail service.</p>
+<h2 id="optional-configuration">Optional Configuration<a class="headerlink" href="#optional-configuration" title="Permanent link">¶</a></h2>
+<p>In this section, various optional configurations will be made on the Zentyal server, so it can be skipped and move on to the 'Previous Configuration' section.
+Snap</p>
+<p>Since Zentyal does not use Snap, we will proceed with its uninstallation.</p>
+<ol>
+<li>
+<p>Stop the service:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>snapd<span class="w"> </span>snapd.socket
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Remove the package:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>remove<span class="w"> </span>--purge<span class="w"> </span>-y<span class="w"> </span>snapd
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Remove the directories that remain in the file system:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>sudo<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span>/root/snap/
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<h3 id="prompt">Prompt<a class="headerlink" href="#prompt" title="Permanent link">¶</a></h3>
+<p>To improve the user experience when performing tasks from the CLI, we will enable prompt colors for existing and future local users.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span>
+<span class="normal"><a href="#__codelineno-3-2">2</a></span>
+<span class="normal"><a href="#__codelineno-3-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a><span class="k">for</span><span class="w"> </span>user<span class="w"> </span><span class="k">in</span><span class="w"> </span>/root<span class="w"> </span>/home/ubuntu<span class="w"> </span>/home/djoven<span class="w"> </span>/etc/skel/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2"></a><span class="w">    </span>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/#force_color_prompt/force_color_prompt/'</span><span class="w"> </span><span class="nv">$user</span>/.bashrc
+<a id="__codelineno-3-3" name="__codelineno-3-3"></a><span class="k">done</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="history">History<a class="headerlink" href="#history" title="Permanent link">¶</a></h3>
+<p>In order to store more information in the personal history of users and also have a timestamp indicating the date and time a certain command was executed, we will add a series of additional options to both existing and future local users.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-4-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-4-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-4-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-4-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-4-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-4-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-4-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-4-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-4-10">10</a></span>
+<span class="normal"><a href="#__codelineno-4-11">11</a></span>
+<span class="normal"><a href="#__codelineno-4-12">12</a></span>
+<span class="normal"><a href="#__codelineno-4-13">13</a></span>
+<span class="normal"><a href="#__codelineno-4-14">14</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a><span class="k">for</span><span class="w"> </span>user<span class="w"> </span><span class="k">in</span><span class="w"> </span>/root<span class="w"> </span>/home/ubuntu<span class="w"> </span>/home/djoven<span class="w"> </span>/etc/skel/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3"></a>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="nv">$user</span>/.bashrc<span class="w"> </span><span class="p">&amp;</span>&gt;/dev/null<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4"></a><span class="s">## Custom options</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5"></a><span class="s">HISTTIMEFORMAT="%F %T  "</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6"></a><span class="s">PROMPT_COMMAND='history -a'</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7"></a><span class="s">HISTIGNORE='clear:history'</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8"></a><span class="s">EOF</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10"></a>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span>-e<span class="w"> </span><span class="s1">'s/HISTCONTROL=.*/HISTCONTROL=ignoreboth/'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11"></a><span class="w">            </span>-e<span class="w"> </span><span class="s1">'s/HISTSIZE=.*/HISTSIZE=1000/'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12"></a><span class="w">            </span>-e<span class="w"> </span><span class="s1">'s/HISTFILESIZE=.*/HISTFILESIZE=2000/'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13"></a><span class="w">        </span><span class="nv">$user</span>/.bashrc
+<a id="__codelineno-4-14" name="__codelineno-4-14"></a><span class="k">done</span>
+</code></pre></div></td></tr></table></div>
+<h3 id="vim">Vim<a class="headerlink" href="#vim" title="Permanent link">¶</a></h3>
+<p>We will add a simple custom configuration for the <code>vim</code> text editor for both existing and future users. This configuration will establish the following:</p>
+<ul>
+<li>Tabulation of 2 spaces.</li>
+<li>Enables syntax highlighting.</li>
+<li>Displays line numbers.</li>
+<li>Uses the 'desert' color scheme.</li>
+<li>Configures the editor to use Yaml files.</li>
+</ul>
+<p>To set up the configuration, simply create a file called <code>.vimrc</code> in the users' home directory.
+Previous Configuration</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-5-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-5-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-5-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-5-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-5-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-5-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-5-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-5-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-5-10">10</a></span>
+<span class="normal"><a href="#__codelineno-5-11">11</a></span>
+<span class="normal"><a href="#__codelineno-5-12">12</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a><span class="k">for</span><span class="w"> </span>user<span class="w"> </span><span class="k">in</span><span class="w"> </span>/root<span class="w"> </span>/home/ubuntu<span class="w"> </span>/home/djoven<span class="w"> </span>/etc/skel<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3"></a>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="nv">$user</span>/.vimrc<span class="w"> </span><span class="p">&amp;</span>&gt;/dev/null<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4"></a><span class="s">set tabstop=2</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5"></a><span class="s">syntax on</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6"></a><span class="s">set number</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7"></a><span class="s">color desert</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8"></a><span class="s">set shiftwidth=2</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9"></a><span class="s">auto FileType yaml,yml setlocal ai ts=2 sw=2 et</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10"></a><span class="s">EOF</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12"></a><span class="k">done</span>
+</code></pre></div></td></tr></table></div>
+<h2 id="previous-configuration">Previous Configuration<a class="headerlink" href="#previous-configuration" title="Permanent link">¶</a></h2>
+<p>The previous configurations will be made before configuring the Zentyal modules. Except for the <code>Additional EBS Volumes</code> section, which is optional, the rest should be implemented.</p>
+<h3 id="swap-partition">SWAP Partition<a class="headerlink" href="#swap-partition" title="Permanent link">¶</a></h3>
+<p>It is highly recommended to configure a SWAP partition on the server to increase server availability in case of RAM-related spikes. The actions we will take are documented <a href="https://aws.amazon.com/premiumsupport/knowledge-center/ec2-memory-swap-file/">here</a>.</p>
+<ol>
+<li>
+<p>Create an empty 4GB file, which will be the size of our SWAP partition:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>sudo<span class="w"> </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/swapfile1<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>128M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">32</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Set the permissions for the file:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>sudo<span class="w"> </span>chmod<span class="w"> </span><span class="m">0600</span><span class="w"> </span>/swapfile1
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Set the file as a SWAP area:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>sudo<span class="w"> </span>mkswap<span class="w"> </span>/swapfile1
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Enable the SWAP partition temporarily:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>sudo<span class="w"> </span>swapon<span class="w"> </span>/swapfile1
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Verify that the system recognizes the new SWAP partition by running the following commands:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span>
+<span class="normal"><a href="#__codelineno-10-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>sudo<span class="w"> </span>swapon<span class="w"> </span>-s
+<a id="__codelineno-10-2" name="__codelineno-10-2"></a>sudo<span class="w"> </span>free<span class="w"> </span>-m
+</code></pre></div></td></tr></table></div>
+<p>The result we should get is:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span>
+<span class="normal"><a href="#__codelineno-11-2">2</a></span>
+<span class="normal"><a href="#__codelineno-11-3">3</a></span>
+<span class="normal"><a href="#__codelineno-11-4">4</a></span>
+<span class="normal"><a href="#__codelineno-11-5">5</a></span>
+<span class="normal"><a href="#__codelineno-11-6">6</a></span>
+<span class="normal"><a href="#__codelineno-11-7">7</a></span>
+<span class="normal"><a href="#__codelineno-11-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>## Comando 'swapon'
+<a id="__codelineno-11-2" name="__codelineno-11-2"></a>Filename                Type        Size      Used    Priority
+<a id="__codelineno-11-3" name="__codelineno-11-3"></a>/swapfile1              file        4194300      0          -2
+<a id="__codelineno-11-4" name="__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5"></a>## comando 'free'
+<a id="__codelineno-11-6" name="__codelineno-11-6"></a>                total        used        free      shared  buff/cache   available
+<a id="__codelineno-11-7" name="__codelineno-11-7"></a>Mem:           3875        1218         209           2        2447        2396
+<a id="__codelineno-11-8" name="__codelineno-11-8"></a>Swap:          4095           0        4095
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Set the partition in the /etc/fstab configuration file so that it persists after the server restarts:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'\n## SWAP partition 4GB\n/swapfile1 swap swap defaults 0 0'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/fstab
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Finally, check that the new entry in the file does not contain syntax errors:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-a
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<h3 id="additional-ebs-volumes">Additional EBS volumes<a class="headerlink" href="#additional-ebs-volumes" title="Permanent link">¶</a></h3>
+<p>In case we have added additional EBS volumes - as in my case for mailboxes and shared resources -, we will proceed to configure and mount them on the server.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For the mount point of shared resources, <code>/home/samba/</code> could be used instead of <code>/home/</code>. However, using <code>/home/samba/</code> the personal directories of domain users (shared in '<em>H</em>' letter by default) would not be stored in the EBS volume.</p>
+</div>
+<ol>
+<li>
+<p>List the volumes with the command:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a>lsblk
+</code></pre></div></td></tr></table></div>
+<p>In my specific case, it shows the following result:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span>
+<span class="normal"><a href="#__codelineno-15-3">3</a></span>
+<span class="normal"><a href="#__codelineno-15-4">4</a></span>
+<span class="normal"><a href="#__codelineno-15-5">5</a></span>
+<span class="normal"><a href="#__codelineno-15-6">6</a></span>
+<span class="normal"><a href="#__codelineno-15-7">7</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a>NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a>nvme1n1      259:0    0   10G  0 disk
+<a id="__codelineno-15-3" name="__codelineno-15-3"></a>nvme0n1      259:1    0   30G  0 disk
+<a id="__codelineno-15-4" name="__codelineno-15-4"></a>├─nvme0n1p1  259:2    0 29.9G  0 part /
+<a id="__codelineno-15-5" name="__codelineno-15-5"></a>├─nvme0n1p14 259:3    0    4M  0 part
+<a id="__codelineno-15-6" name="__codelineno-15-6"></a>└─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+<a id="__codelineno-15-7" name="__codelineno-15-7"></a>nvme2n1      259:5    0   10G  0 disk
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Create a single partition that occupies the entire disk on the nvme1n1 and nvme2n1 volumes:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1">1</a></span>
+<span class="normal"><a href="#__codelineno-16-2">2</a></span>
+<span class="normal"><a href="#__codelineno-16-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a><span class="k">for</span><span class="w"> </span>disk<span class="w"> </span><span class="k">in</span><span class="w"> </span>nvme1n1<span class="w"> </span>nvme2n1<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">'n\np\n\n\n\nt\n8e\nw'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>fdisk<span class="w"> </span>/dev/<span class="nv">$disk</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3"></a><span class="k">done</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>'8e' sets the partition label as 'Linux'.</p>
+</div>
+</li>
+<li>
+<p>Verify that the partitions have been created correctly:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a>lsblk
+</code></pre></div></td></tr></table></div>
+<p>In my specific case, it shows the following result:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span>
+<span class="normal"><a href="#__codelineno-18-2">2</a></span>
+<span class="normal"><a href="#__codelineno-18-3">3</a></span>
+<span class="normal"><a href="#__codelineno-18-4">4</a></span>
+<span class="normal"><a href="#__codelineno-18-5">5</a></span>
+<span class="normal"><a href="#__codelineno-18-6">6</a></span>
+<span class="normal"><a href="#__codelineno-18-7">7</a></span>
+<span class="normal"><a href="#__codelineno-18-8">8</a></span>
+<span class="normal"><a href="#__codelineno-18-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a>NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-18-2" name="__codelineno-18-2"></a>nvme1n1      259:0    0   10G  0 disk
+<a id="__codelineno-18-3" name="__codelineno-18-3"></a>└─nvme1n1p1  259:7    0   10G  0 part
+<a id="__codelineno-18-4" name="__codelineno-18-4"></a>nvme0n1      259:1    0   30G  0 disk
+<a id="__codelineno-18-5" name="__codelineno-18-5"></a>├─nvme0n1p1  259:2    0 29.9G  0 part /
+<a id="__codelineno-18-6" name="__codelineno-18-6"></a>├─nvme0n1p14 259:3    0    4M  0 part
+<a id="__codelineno-18-7" name="__codelineno-18-7"></a>└─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+<a id="__codelineno-18-8" name="__codelineno-18-8"></a>nvme2n1      259:5    0   10G  0 disk
+<a id="__codelineno-18-9" name="__codelineno-18-9"></a>└─nvme2n1p1  259:8    0   10G  0 part
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Set ext4 as the file system for the new partitions:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span>
+<span class="normal"><a href="#__codelineno-19-2">2</a></span>
+<span class="normal"><a href="#__codelineno-19-3">3</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a><span class="k">for</span><span class="w"> </span>disk<span class="w"> </span><span class="k">in</span><span class="w"> </span>nvme1n1p1<span class="w"> </span>nvme2n1p1<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2"></a><span class="w">    </span>sudo<span class="w"> </span>mkfs<span class="w"> </span>-t<span class="w"> </span>ext4<span class="w"> </span>/dev/<span class="nv">$disk</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3"></a><span class="k">done</span>
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Verify that everything went well with the command:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a>lsblk<span class="w"> </span>-f
+</code></pre></div></td></tr></table></div>
+<p>In my specific case, it shows the following result:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span>
+<span class="normal"><a href="#__codelineno-21-2">2</a></span>
+<span class="normal"><a href="#__codelineno-21-3">3</a></span>
+<span class="normal"><a href="#__codelineno-21-4">4</a></span>
+<span class="normal"><a href="#__codelineno-21-5">5</a></span>
+<span class="normal"><a href="#__codelineno-21-6">6</a></span>
+<span class="normal"><a href="#__codelineno-21-7">7</a></span>
+<span class="normal"><a href="#__codelineno-21-8">8</a></span>
+<span class="normal"><a href="#__codelineno-21-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>NAME         FSTYPE LABEL           UUID                                 FSAVAIL FSUSE% MOUNTPOINT
+<a id="__codelineno-21-2" name="__codelineno-21-2"></a>nvme1n1
+<a id="__codelineno-21-3" name="__codelineno-21-3"></a>└─nvme1n1p1  ext4                   28e5471e-8fc1-48b5-8729-778c56a19b90
+<a id="__codelineno-21-4" name="__codelineno-21-4"></a>nvme0n1
+<a id="__codelineno-21-5" name="__codelineno-21-5"></a>├─nvme0n1p1  ext4   cloudimg-rootfs 418a4763-c829-4fb6-b538-9a38158da803   26.8G     7% /
+<a id="__codelineno-21-6" name="__codelineno-21-6"></a>├─nvme0n1p14
+<a id="__codelineno-21-7" name="__codelineno-21-7"></a>└─nvme0n1p15 vfat   UEFI            CBF7-D252                              99.2M     5% /boot/efi
+<a id="__codelineno-21-8" name="__codelineno-21-8"></a>nvme2n1
+<a id="__codelineno-21-9" name="__codelineno-21-9"></a>└─nvme2n1p1  ext4                   e903ff6f-c431-4e3a-92a1-9f476c66b3be
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Create the directory where the EBS volume for mailboxes will be mounted:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-v<span class="w"> </span>-m0775<span class="w"> </span>/var/vmail
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Temporarily mount the EBS volume that will contain the shared resources:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-23-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>/dev/nvme2n1p1<span class="w"> </span>/mnt
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Copy the content of the /home/ directory to the temporary directory where we have mounted the EBS volume:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-24-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>-aR<span class="w"> </span>/home/*<span class="w"> </span>/mnt/
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Unmount the EBS volume:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-25-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/mnt
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Obtain the identifier (UUID) of the volumes:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-26-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1"></a>sudo<span class="w"> </span>sudo<span class="w"> </span>blkid<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s2">"nvme[12]n1p1"</span>
+</code></pre></div></td></tr></table></div>
+<p>In my specific case, it shows the following result:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-27-1">1</a></span>
+<span class="normal"><a href="#__codelineno-27-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1"></a>/dev/nvme2n1p1:<span class="w"> </span><span class="nv">UUID</span><span class="o">=</span><span class="s2">"28e5471e-8fc1-48b5-8729-778c56a19b90"</span><span class="w"> </span><span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext4"</span><span class="w"> </span><span class="nv">PARTUUID</span><span class="o">=</span><span class="s2">"558dd3b7-01"</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2"></a>/dev/nvme1n1p1:<span class="w"> </span><span class="nv">UUID</span><span class="o">=</span><span class="s2">"e903ff6f-c431-4e3a-92a1-9f476c66b3be"</span><span class="w"> </span><span class="nv">TYPE</span><span class="o">=</span><span class="s2">"ext4"</span><span class="w"> </span><span class="nv">PARTUUID</span><span class="o">=</span><span class="s2">"446d2929-01"</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Remember that the volume for mailboxes was mounted first, so its mount point is <code>/dev/nvme1n1p1</code>.</p>
+</div>
+</li>
+<li>
+<p>Set the EBS volume mounting in the <code>/etc/fstab</code> file:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You will have to change the value of the <code>UUID</code> parameter to your value obtained in step 7.</p>
+</div>
+</li>
+<li>
+<p>Mount the volumes to verify that there are no syntax errors in the file from the previous step:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-28-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-a
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Finally, confirm that they have been mounted correctly by running the following commands:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-29-1">1</a></span>
+<span class="normal"><a href="#__codelineno-29-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s1">'nvme[12]n1p1'</span>
+<a id="__codelineno-29-2" name="__codelineno-29-2"></a>df<span class="w"> </span>-h
+</code></pre></div></td></tr></table></div>
+<p>In my specific case, it shows the following result:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-30-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-30-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-30-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-30-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-30-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-30-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-30-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-30-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-30-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-30-10">10</a></span>
+<span class="normal"><a href="#__codelineno-30-11">11</a></span>
+<span class="normal"><a href="#__codelineno-30-12">12</a></span>
+<span class="normal"><a href="#__codelineno-30-13">13</a></span>
+<span class="normal"><a href="#__codelineno-30-14">14</a></span>
+<span class="normal"><a href="#__codelineno-30-15">15</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1"></a><span class="c1">## Comando 'mount'</span>
+<a id="__codelineno-30-2" name="__codelineno-30-2"></a>/dev/nvme2n1p1<span class="w"> </span>on<span class="w"> </span>/var/vmail<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ext4<span class="w"> </span><span class="o">(</span>rw,nosuid,nodev,noexec,relatime<span class="o">)</span>
+<a id="__codelineno-30-3" name="__codelineno-30-3"></a>/dev/nvme1n1p1<span class="w"> </span>on<span class="w"> </span>/home<span class="w"> </span><span class="nb">type</span><span class="w"> </span>ext4<span class="w"> </span><span class="o">(</span>rw,nosuid,nodev,noexec,relatime<span class="o">)</span>
+<a id="__codelineno-30-4" name="__codelineno-30-4"></a>
+<a id="__codelineno-30-5" name="__codelineno-30-5"></a><span class="c1">## Comando 'df'</span>
+<a id="__codelineno-30-6" name="__codelineno-30-6"></a>Filesystem<span class="w">       </span>Size<span class="w">  </span>Used<span class="w"> </span>Avail<span class="w"> </span>Use%<span class="w"> </span>Mounted<span class="w"> </span>on
+<a id="__codelineno-30-7" name="__codelineno-30-7"></a>/dev/root<span class="w">         </span>29G<span class="w">  </span><span class="m">7</span>.9G<span class="w">   </span>21G<span class="w">  </span><span class="m">28</span>%<span class="w"> </span>/
+<a id="__codelineno-30-8" name="__codelineno-30-8"></a>devtmpfs<span class="w">         </span><span class="m">1</span>.9G<span class="w">     </span><span class="m">0</span><span class="w">  </span><span class="m">1</span>.9G<span class="w">   </span><span class="m">0</span>%<span class="w"> </span>/dev
+<a id="__codelineno-30-9" name="__codelineno-30-9"></a>tmpfs<span class="w">            </span><span class="m">1</span>.9G<span class="w">  </span><span class="m">4</span>.0K<span class="w">  </span><span class="m">1</span>.9G<span class="w">   </span><span class="m">1</span>%<span class="w"> </span>/dev/shm
+<a id="__codelineno-30-10" name="__codelineno-30-10"></a>tmpfs<span class="w">            </span>388M<span class="w">  </span><span class="m">2</span>.6M<span class="w">  </span>386M<span class="w">   </span><span class="m">1</span>%<span class="w"> </span>/run
+<a id="__codelineno-30-11" name="__codelineno-30-11"></a>tmpfs<span class="w">            </span><span class="m">5</span>.0M<span class="w">     </span><span class="m">0</span><span class="w">  </span><span class="m">5</span>.0M<span class="w">   </span><span class="m">0</span>%<span class="w"> </span>/run/lock
+<a id="__codelineno-30-12" name="__codelineno-30-12"></a>tmpfs<span class="w">            </span><span class="m">1</span>.9G<span class="w">     </span><span class="m">0</span><span class="w">  </span><span class="m">1</span>.9G<span class="w">   </span><span class="m">0</span>%<span class="w"> </span>/sys/fs/cgroup
+<a id="__codelineno-30-13" name="__codelineno-30-13"></a>/dev/nvme2n1p1<span class="w">   </span><span class="m">9</span>.8G<span class="w">   </span>17M<span class="w">  </span><span class="m">9</span>.3G<span class="w">   </span><span class="m">1</span>%<span class="w"> </span>/var/vmail
+<a id="__codelineno-30-14" name="__codelineno-30-14"></a>/dev/nvme1n1p1<span class="w">   </span><span class="m">9</span>.8G<span class="w">  </span>228K<span class="w">  </span><span class="m">9</span>.3G<span class="w">   </span><span class="m">1</span>%<span class="w"> </span>/home
+<a id="__codelineno-30-15" name="__codelineno-30-15"></a>/dev/nvme0n1p15<span class="w">  </span>105M<span class="w">  </span><span class="m">5</span>.2M<span class="w">  </span>100M<span class="w">   </span><span class="m">5</span>%<span class="w"> </span>/boot/efi
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<h3 id="quota">Quota<a class="headerlink" href="#quota" title="Permanent link">¶</a></h3>
+<p>To be able to use the quotas that Zentyal allows setting to limit the use of information that a domain user can store on the server, as well as for the maximum mailbox size, it is necessary to install a series of packages and enable their use on the disk.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>It is not necessary to enable the quota on the disk that contains the mailboxes, since Zentyal manages them differently.</p>
+</div>
+<ol>
+<li>
+<p>Install the following packages required for AWS instances:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-31-1">1</a></span>
+<span class="normal"><a href="#__codelineno-31-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>update
+<a id="__codelineno-31-2" name="__codelineno-31-2"></a>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>quota<span class="w"> </span>quotatool<span class="w"> </span>linux-modules-extra-aws
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Set the additional mount options on the EBS volume for shared resources, to do this, edit the configuration file /etc/fstab:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-32-1">1</a></span>
+<span class="normal"><a href="#__codelineno-32-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1"></a><span class="c1">## AWS EBS - Shares</span>
+<a id="__codelineno-32-2" name="__codelineno-32-2"></a><span class="nv">UUID</span><span class="o">=</span>28e5471e-8fc1-48b5-8729-778c56a19b90<span class="w">   </span>/home<span class="w">   </span>ext4<span class="w">    </span>defaults,noexec,nodev,nosuid,usrjquota<span class="o">=</span>quota.user,grpjquota<span class="o">=</span>quota.group,jqfmt<span class="o">=</span>vfsv0<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">2</span>
+</code></pre></div></td></tr></table></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The added options are: <code>usrjquota</code>, <code>grpjquota</code>, and <code>jqfmt</code>.</p>
+</div>
+</li>
+<li>
+<p>Restart the server so that the latest kernel is loaded and we can securely enable quotas:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-33-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1"></a>sudo<span class="w"> </span>reboot
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Add the Quota module to the kernel:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-34-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1"></a>sudo<span class="w"> </span>modprobe<span class="w"> </span>quota_v2
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Persist the previous change:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-35-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">'quota_v2'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/modules
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Let the system check quotas and create the necessary files:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-36-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1"></a>sudo<span class="w"> </span>quotacheck<span class="w"> </span>-vugmf<span class="w"> </span>/home
+</code></pre></div></td></tr></table></div>
+<p>The result I obtained in my case was:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-37-1">1</a></span>
+<span class="normal"><a href="#__codelineno-37-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1"></a>quotacheck: Scanning /dev/nvme1n1p1 [/home] done
+<a id="__codelineno-37-2" name="__codelineno-37-2"></a>quotacheck: Checked 8 directories and 18 files
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<h2 id="configuration-of-the-modules">Configuration of the modules<a class="headerlink" href="#configuration-of-the-modules" title="Permanent link">¶</a></h2>
+<p>From this point on, we will be able to install, configure and check the Zentyal modules.</p>
+<h3 id="general">General<a class="headerlink" href="#general" title="Permanent link">¶</a></h3>
+<p>First of all, what we need to do is configure the Zentyal base from the <code>System -&gt; General</code> menu.</p>
+<ol>
+<li>
+<p>We will set the language of the administration panel and the port on which the webadmin module will listen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/05-general-1.png"><img alt="Configuration of language and GUI port" src="../assets/zentyal/05-general-1.png" title="Configuration of language and GUI port"/></a></p>
+</li>
+<li>
+<p>Then, from the same panel, we set the server name and domain:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/06-general-2.png"><img alt="Configuration of FQDN and domain" src="../assets/zentyal/06-general-2.png" title="Configuration of FQDN and domain"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Once we enable the domain controller module, these 2 values cannot be changed.</p>
+</div>
+</li>
+</ol>
+<h3 id="logs-module">Logs module<a class="headerlink" href="#logs-module" title="Permanent link">¶</a></h3>
+<p>Initially, we will enable the available 'domains', change the retention time to 30 days for the firewall and 90 for the administration panel changes as well as administrator logins:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/logs_initial.png"><img alt="Initial log configuration" src="../assets/zentyal/logs_initial.png" title="Initial log configuration"/></a></p>
+<h3 id="firewall-module">Firewall module<a class="headerlink" href="#firewall-module" title="Permanent link">¶</a></h3>
+<p>For our network configuration (internal) and the modules we will use, the firewall sections we will use are:</p>
+<ul>
+<li>Filtering rules from internal networks to Zentyal</li>
+<li>Filtering rules from traffic coming out from Zentyal</li>
+</ul>
+<p>The default policies in both firewall sections are secure; however, we will add a <code>LOG</code> rule for SSH connections as it is always a good idea to have as much information as possible about this critical service. To do this, we will go to F<code>irewall -&gt; Packet Filter -&gt; Filtering rules from internal networks to Zentyal</code> and add the following rule:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/firewall_initial-ssh-1.png"><img alt="Firewall SSH rule 1" src="../assets/zentyal/firewall_initial-ssh-1.png" title="Firewall SSH rule 1"/></a></p>
+<p>Resulting in the following rules:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/firewall_initial-ssh-2.png"><img alt="Firewall SSH rule 2" src="../assets/zentyal/firewall_initial-ssh-2.png" title="Firewall SSH rule 2"/></a></p>
+<p><strong>Considerations:</strong></p>
+<ol>
+<li>It is important that the new rule goes above the rule that accepts the SSH connection; otherwise, it will never be executed as when a rule is fulfilled, the rest are not analyzed.</li>
+<li>Remember that in addition to this firewall, we also have the one from AWS (Security Group associated with the instance), so we will have to make sure that both firewalls have the same rules.</li>
+<li>It could be configured in the Zentyal firewall to allow all traffic and then, from the security group, be more restrictive, or vice versa. However, it is recommended to configure both equally.</li>
+</ol>
+<h3 id="software-module">Software module<a class="headerlink" href="#software-module" title="Permanent link">¶</a></h3>
+<p>In order to have our server updated, we will enable and set the time at which automatic updates will be installed. In addition, we will proceed to install the modules we are going to use.</p>
+<ol>
+<li>
+<p>From the <code>Software Management -&gt; Settings</code> menu, we set the automatic update configurations:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/software_automatic-updates.png"><img alt="Automatic software updates" src="../assets/zentyal/software_automatic-updates.png" title="Automatic software updates"/></a></p>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>It is highly recommended to set a time that is after the server backups such as snapshots, so we have a stable restoration point in case an update causes a critical incident.</p>
+</div>
+</li>
+<li>
+<p>Then, from the <code>Software Management -&gt; Zentyal Components</code> menu, we will proceed to install <strong>only</strong> the modules we are going to use:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/software_installation.png"><img alt="Modules installation" src="../assets/zentyal/software_installation.png" title="Modules installation"/></a></p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>After the modules are installed, multiple rules will be automatically created in the <code>Filtering rules from internal networks to Zentyal</code> section of the firewall to allow access to these modules.</p>
+</div>
+</li>
+</ol>
+<h3 id="ntp-module">NTP module<a class="headerlink" href="#ntp-module" title="Permanent link">¶</a></h3>
+<p>The first of the newly installed modules that we are going to configure is <a href="https://doc.zentyal.org/en/ntp.html">NTP</a>. We will set the time zone and the geographically</p>
+<ol>
+<li>
+<p>Let's go to <code>System -&gt; Date/Time</code> and set the time zone:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ntp_timezone.png"><img alt="NTP timezone" src="../assets/zentyal/ntp_timezone.png" title="NTP timezone"/></a></p>
+</li>
+<li>
+<p>Enable the option that allows syncing time with external servers:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ntp_sync.png"><img alt="NTP sync option" src="../assets/zentyal/ntp_sync.png" title="NTP sync option"/></a></p>
+</li>
+<li>
+<p>Modify the default NTP servers to the official ones we have available on <a href="https://www.pool.ntp.org/en">this</a> website:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ntp_servers.png"><img alt="NTP servers" src="../assets/zentyal/ntp_servers.png" title="NTP servers"/></a></p>
+</li>
+<li>
+<p>Finalmente, habilitamos el módulo de NTP desde <code>Modules Status</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_ntp.png"><img alt="NTP enable" src="../assets/zentyal/modules_ntp.png" title="NTP enable"/></a></p>
+</li>
+</ol>
+<h3 id="dns-module">DNS module<a class="headerlink" href="#dns-module" title="Permanent link">¶</a></h3>
+<p>The next module we will proceed to configure is the <a href="https://doc.zentyal.org/en/dns.html">DNS</a> module, which is critical for the functioning of the domain controller module and, by dependency, also the mail module.</p>
+<p>The configuration we will establish will be minimal, since we will manage the DNS record management from the administration panel where we have registered the domain - Route 53 in my case -.</p>
+<ol>
+<li>
+<p>We create the domain, which must match the one created in <code>System -&gt; General</code>. To do this, from the side menu we select <code>DNS</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-new_domain.png"><img alt="DNS new domain" src="../assets/zentyal/dns-new_domain.png" title="DNS new domain"/></a></p>
+</li>
+<li>
+<p>Next, we check that the server's IP address has been successfully registered to the domain, by going to the <code>Domain IP Addresses</code> field of the newly created domain:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-domain_record.png"><img alt="DNS domain record" src="../assets/zentyal/dns-domain_record.png" title="DNS domain record"/></a></p>
+</li>
+<li>
+<p>We also check that the IP has been registered for the server name. In this case, the field is <code>Hostnames -&gt; IP Address</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-hostname_record.png"><img alt="DNS hostname record" src="../assets/zentyal/dns-hostname_record.png" title="DNS hostname record"/></a></p>
+</li>
+<li>
+<p>Next, we create additional alias records from <code>Hostnames -&gt; Alias</code>. In my case, I will create two records related to email: <strong>mail</strong> and <strong>webmail</strong>.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-alias.png"><img alt="DNS alias records" src="../assets/zentyal/dns-alias.png" title="DNS alias records"/></a></p>
+</li>
+<li>
+<p>We set the DNS forwarders, which in this case will be those of <a href="https://www.cloudflare.com/">Cloudflare</a> and <a href="https://www.quad9.net/">Quad9</a>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-forwarders.png"><img alt="DNS forwarders" src="../assets/zentyal/dns-forwarders.png" title="DNS forwarders"/></a></p>
+</li>
+<li>
+<p>Once the module configuration has been established, we proceed to enable it from <code>Modules Status</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_dns.png"><img alt="DNS enable" src="../assets/zentyal/modules_dns.png" title="DNS enable"/></a></p>
+</li>
+<li>
+<p>Finally, we check that we can resolve the configured DNS records from the server itself. To do this, we will run the following commands:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-38-1">1</a></span>
+<span class="normal"><a href="#__codelineno-38-2">2</a></span>
+<span class="normal"><a href="#__codelineno-38-3">3</a></span>
+<span class="normal"><a href="#__codelineno-38-4">4</a></span>
+<span class="normal"><a href="#__codelineno-38-5">5</a></span>
+<span class="normal"><a href="#__codelineno-38-6">6</a></span>
+<span class="normal"><a href="#__codelineno-38-7">7</a></span>
+<span class="normal"><a href="#__codelineno-38-8">8</a></span>
+<span class="normal"><a href="#__codelineno-38-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1"></a><span class="c1">## For the domain</span>
+<a id="__codelineno-38-2" name="__codelineno-38-2"></a>dig<span class="w"> </span>icecrown.es
+<a id="__codelineno-38-3" name="__codelineno-38-3"></a>
+<a id="__codelineno-38-4" name="__codelineno-38-4"></a><span class="c1">## For the server hostname</span>
+<a id="__codelineno-38-5" name="__codelineno-38-5"></a>dig<span class="w"> </span>arthas.icecrown.es
+<a id="__codelineno-38-6" name="__codelineno-38-6"></a>
+<a id="__codelineno-38-7" name="__codelineno-38-7"></a><span class="c1">## For the alias</span>
+<a id="__codelineno-38-8" name="__codelineno-38-8"></a>dig<span class="w"> </span>mail.icecrown.es
+<a id="__codelineno-38-9" name="__codelineno-38-9"></a>dig<span class="w"> </span>webmail.icecrown.es
+</code></pre></div></td></tr></table></div>
+<p>Below are the results I have obtained:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-39-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-39-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-39-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-39-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-39-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-39-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-39-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-39-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-39-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-39-10">10</a></span>
+<span class="normal"><a href="#__codelineno-39-11">11</a></span>
+<span class="normal"><a href="#__codelineno-39-12">12</a></span>
+<span class="normal"><a href="#__codelineno-39-13">13</a></span>
+<span class="normal"><a href="#__codelineno-39-14">14</a></span>
+<span class="normal"><a href="#__codelineno-39-15">15</a></span>
+<span class="normal"><a href="#__codelineno-39-16">16</a></span>
+<span class="normal"><a href="#__codelineno-39-17">17</a></span>
+<span class="normal"><a href="#__codelineno-39-18">18</a></span>
+<span class="normal"><a href="#__codelineno-39-19">19</a></span>
+<span class="normal"><a href="#__codelineno-39-20">20</a></span>
+<span class="normal"><a href="#__codelineno-39-21">21</a></span>
+<span class="normal"><a href="#__codelineno-39-22">22</a></span>
+<span class="normal"><a href="#__codelineno-39-23">23</a></span>
+<span class="normal"><a href="#__codelineno-39-24">24</a></span>
+<span class="normal"><a href="#__codelineno-39-25">25</a></span>
+<span class="normal"><a href="#__codelineno-39-26">26</a></span>
+<span class="normal"><a href="#__codelineno-39-27">27</a></span>
+<span class="normal"><a href="#__codelineno-39-28">28</a></span>
+<span class="normal"><a href="#__codelineno-39-29">29</a></span>
+<span class="normal"><a href="#__codelineno-39-30">30</a></span>
+<span class="normal"><a href="#__codelineno-39-31">31</a></span>
+<span class="normal"><a href="#__codelineno-39-32">32</a></span>
+<span class="normal"><a href="#__codelineno-39-33">33</a></span>
+<span class="normal"><a href="#__codelineno-39-34">34</a></span>
+<span class="normal"><a href="#__codelineno-39-35">35</a></span>
+<span class="normal"><a href="#__codelineno-39-36">36</a></span>
+<span class="normal"><a href="#__codelineno-39-37">37</a></span>
+<span class="normal"><a href="#__codelineno-39-38">38</a></span>
+<span class="normal"><a href="#__codelineno-39-39">39</a></span>
+<span class="normal"><a href="#__codelineno-39-40">40</a></span>
+<span class="normal"><a href="#__codelineno-39-41">41</a></span>
+<span class="normal"><a href="#__codelineno-39-42">42</a></span>
+<span class="normal"><a href="#__codelineno-39-43">43</a></span>
+<span class="normal"><a href="#__codelineno-39-44">44</a></span>
+<span class="normal"><a href="#__codelineno-39-45">45</a></span>
+<span class="normal"><a href="#__codelineno-39-46">46</a></span>
+<span class="normal"><a href="#__codelineno-39-47">47</a></span>
+<span class="normal"><a href="#__codelineno-39-48">48</a></span>
+<span class="normal"><a href="#__codelineno-39-49">49</a></span>
+<span class="normal"><a href="#__codelineno-39-50">50</a></span>
+<span class="normal"><a href="#__codelineno-39-51">51</a></span>
+<span class="normal"><a href="#__codelineno-39-52">52</a></span>
+<span class="normal"><a href="#__codelineno-39-53">53</a></span>
+<span class="normal"><a href="#__codelineno-39-54">54</a></span>
+<span class="normal"><a href="#__codelineno-39-55">55</a></span>
+<span class="normal"><a href="#__codelineno-39-56">56</a></span>
+<span class="normal"><a href="#__codelineno-39-57">57</a></span>
+<span class="normal"><a href="#__codelineno-39-58">58</a></span>
+<span class="normal"><a href="#__codelineno-39-59">59</a></span>
+<span class="normal"><a href="#__codelineno-39-60">60</a></span>
+<span class="normal"><a href="#__codelineno-39-61">61</a></span>
+<span class="normal"><a href="#__codelineno-39-62">62</a></span>
+<span class="normal"><a href="#__codelineno-39-63">63</a></span>
+<span class="normal"><a href="#__codelineno-39-64">64</a></span>
+<span class="normal"><a href="#__codelineno-39-65">65</a></span>
+<span class="normal"><a href="#__codelineno-39-66">66</a></span>
+<span class="normal"><a href="#__codelineno-39-67">67</a></span>
+<span class="normal"><a href="#__codelineno-39-68">68</a></span>
+<span class="normal"><a href="#__codelineno-39-69">69</a></span>
+<span class="normal"><a href="#__codelineno-39-70">70</a></span>
+<span class="normal"><a href="#__codelineno-39-71">71</a></span>
+<span class="normal"><a href="#__codelineno-39-72">72</a></span>
+<span class="normal"><a href="#__codelineno-39-73">73</a></span>
+<span class="normal"><a href="#__codelineno-39-74">74</a></span>
+<span class="normal"><a href="#__codelineno-39-75">75</a></span>
+<span class="normal"><a href="#__codelineno-39-76">76</a></span>
+<span class="normal"><a href="#__codelineno-39-77">77</a></span>
+<span class="normal"><a href="#__codelineno-39-78">78</a></span>
+<span class="normal"><a href="#__codelineno-39-79">79</a></span>
+<span class="normal"><a href="#__codelineno-39-80">80</a></span>
+<span class="normal"><a href="#__codelineno-39-81">81</a></span>
+<span class="normal"><a href="#__codelineno-39-82">82</a></span>
+<span class="normal"><a href="#__codelineno-39-83">83</a></span>
+<span class="normal"><a href="#__codelineno-39-84">84</a></span>
+<span class="normal"><a href="#__codelineno-39-85">85</a></span>
+<span class="normal"><a href="#__codelineno-39-86">86</a></span>
+<span class="normal"><a href="#__codelineno-39-87">87</a></span>
+<span class="normal"><a href="#__codelineno-39-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1"></a>## For the domain
+<a id="__codelineno-39-2" name="__codelineno-39-2"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; icecrown.es
+<a id="__codelineno-39-3" name="__codelineno-39-3"></a>;; global options: +cmd
+<a id="__codelineno-39-4" name="__codelineno-39-4"></a>;; Got answer:
+<a id="__codelineno-39-5" name="__codelineno-39-5"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 11829
+<a id="__codelineno-39-6" name="__codelineno-39-6"></a>;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-39-7" name="__codelineno-39-7"></a>
+<a id="__codelineno-39-8" name="__codelineno-39-8"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-39-9" name="__codelineno-39-9"></a>; EDNS: version: 0, flags:; udp: 4096
+<a id="__codelineno-39-10" name="__codelineno-39-10"></a>; COOKIE: 517f093b1a488a630100000063ef1e5f33c655878c47e480 (good)
+<a id="__codelineno-39-11" name="__codelineno-39-11"></a>;; QUESTION SECTION:
+<a id="__codelineno-39-12" name="__codelineno-39-12"></a>;icecrown.es.           IN  A
+<a id="__codelineno-39-13" name="__codelineno-39-13"></a>
+<a id="__codelineno-39-14" name="__codelineno-39-14"></a>;; ANSWER SECTION:
+<a id="__codelineno-39-15" name="__codelineno-39-15"></a>icecrown.es.        259200  IN  A   10.0.1.200
+<a id="__codelineno-39-16" name="__codelineno-39-16"></a>
+<a id="__codelineno-39-17" name="__codelineno-39-17"></a>;; Query time: 0 msec
+<a id="__codelineno-39-18" name="__codelineno-39-18"></a>;; SERVER: 127.0.0.1#53(127.0.0.1)
+<a id="__codelineno-39-19" name="__codelineno-39-19"></a>;; WHEN: Fri Feb 17 07:27:43 CET 2023
+<a id="__codelineno-39-20" name="__codelineno-39-20"></a>;; MSG SIZE  rcvd: 84
+<a id="__codelineno-39-21" name="__codelineno-39-21"></a>
+<a id="__codelineno-39-22" name="__codelineno-39-22"></a>
+<a id="__codelineno-39-23" name="__codelineno-39-23"></a>## For the server hostname
+<a id="__codelineno-39-24" name="__codelineno-39-24"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; arthas.icecrown.es
+<a id="__codelineno-39-25" name="__codelineno-39-25"></a>;; global options: +cmd
+<a id="__codelineno-39-26" name="__codelineno-39-26"></a>;; Got answer:
+<a id="__codelineno-39-27" name="__codelineno-39-27"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 53740
+<a id="__codelineno-39-28" name="__codelineno-39-28"></a>;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-39-29" name="__codelineno-39-29"></a>
+<a id="__codelineno-39-30" name="__codelineno-39-30"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-39-31" name="__codelineno-39-31"></a>; EDNS: version: 0, flags:; udp: 4096
+<a id="__codelineno-39-32" name="__codelineno-39-32"></a>; COOKIE: 0a10fe5bc110fbe20100000063ef1e79cd9a2652e62e1cba (good)
+<a id="__codelineno-39-33" name="__codelineno-39-33"></a>;; QUESTION SECTION:
+<a id="__codelineno-39-34" name="__codelineno-39-34"></a>;arthas.icecrown.es.        IN  A
+<a id="__codelineno-39-35" name="__codelineno-39-35"></a>
+<a id="__codelineno-39-36" name="__codelineno-39-36"></a>;; ANSWER SECTION:
+<a id="__codelineno-39-37" name="__codelineno-39-37"></a>arthas.icecrown.es. 259200  IN  A   10.0.1.200
+<a id="__codelineno-39-38" name="__codelineno-39-38"></a>
+<a id="__codelineno-39-39" name="__codelineno-39-39"></a>;; Query time: 0 msec
+<a id="__codelineno-39-40" name="__codelineno-39-40"></a>;; SERVER: 127.0.0.1#53(127.0.0.1)
+<a id="__codelineno-39-41" name="__codelineno-39-41"></a>;; WHEN: Fri Feb 17 07:28:09 CET 2023
+<a id="__codelineno-39-42" name="__codelineno-39-42"></a>;; MSG SIZE  rcvd: 91
+<a id="__codelineno-39-43" name="__codelineno-39-43"></a>
+<a id="__codelineno-39-44" name="__codelineno-39-44"></a>
+<a id="__codelineno-39-45" name="__codelineno-39-45"></a>## For the 'mail' alias
+<a id="__codelineno-39-46" name="__codelineno-39-46"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; mail.icecrown.es
+<a id="__codelineno-39-47" name="__codelineno-39-47"></a>;; global options: +cmd
+<a id="__codelineno-39-48" name="__codelineno-39-48"></a>;; Got answer:
+<a id="__codelineno-39-49" name="__codelineno-39-49"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 62966
+<a id="__codelineno-39-50" name="__codelineno-39-50"></a>;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-39-51" name="__codelineno-39-51"></a>
+<a id="__codelineno-39-52" name="__codelineno-39-52"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-39-53" name="__codelineno-39-53"></a>; EDNS: version: 0, flags:; udp: 4096
+<a id="__codelineno-39-54" name="__codelineno-39-54"></a>; COOKIE: c5ac7f415fe066aa0100000063ef1e9c7e18da9abf7650f1 (good)
+<a id="__codelineno-39-55" name="__codelineno-39-55"></a>;; QUESTION SECTION:
+<a id="__codelineno-39-56" name="__codelineno-39-56"></a>;mail.icecrown.es.      IN  A
+<a id="__codelineno-39-57" name="__codelineno-39-57"></a>
+<a id="__codelineno-39-58" name="__codelineno-39-58"></a>;; ANSWER SECTION:
+<a id="__codelineno-39-59" name="__codelineno-39-59"></a>mail.icecrown.es.   259200  IN  CNAME   arthas.icecrown.es.
+<a id="__codelineno-39-60" name="__codelineno-39-60"></a>arthas.icecrown.es. 259200  IN  A   10.0.1.200
+<a id="__codelineno-39-61" name="__codelineno-39-61"></a>
+<a id="__codelineno-39-62" name="__codelineno-39-62"></a>;; Query time: 0 msec
+<a id="__codelineno-39-63" name="__codelineno-39-63"></a>;; SERVER: 127.0.0.1#53(127.0.0.1)
+<a id="__codelineno-39-64" name="__codelineno-39-64"></a>;; WHEN: Fri Feb 17 07:28:44 CET 2023
+<a id="__codelineno-39-65" name="__codelineno-39-65"></a>;; MSG SIZE  rcvd: 110
+<a id="__codelineno-39-66" name="__codelineno-39-66"></a>
+<a id="__codelineno-39-67" name="__codelineno-39-67"></a>
+<a id="__codelineno-39-68" name="__codelineno-39-68"></a>## For the 'webmail' alias
+<a id="__codelineno-39-69" name="__codelineno-39-69"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; webmail.icecrown.es
+<a id="__codelineno-39-70" name="__codelineno-39-70"></a>;; global options: +cmd
+<a id="__codelineno-39-71" name="__codelineno-39-71"></a>;; Got answer:
+<a id="__codelineno-39-72" name="__codelineno-39-72"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 40072
+<a id="__codelineno-39-73" name="__codelineno-39-73"></a>;; flags: qr aa rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-39-74" name="__codelineno-39-74"></a>
+<a id="__codelineno-39-75" name="__codelineno-39-75"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-39-76" name="__codelineno-39-76"></a>; EDNS: version: 0, flags:; udp: 4096
+<a id="__codelineno-39-77" name="__codelineno-39-77"></a>; COOKIE: a1ff85fe806432700100000063ef1eb9ff2777f239f7c9a3 (good)
+<a id="__codelineno-39-78" name="__codelineno-39-78"></a>;; QUESTION SECTION:
+<a id="__codelineno-39-79" name="__codelineno-39-79"></a>;webmail.icecrown.es.       IN  A
+<a id="__codelineno-39-80" name="__codelineno-39-80"></a>
+<a id="__codelineno-39-81" name="__codelineno-39-81"></a>;; ANSWER SECTION:
+<a id="__codelineno-39-82" name="__codelineno-39-82"></a>webmail.icecrown.es.    259200  IN  CNAME   arthas.icecrown.es.
+<a id="__codelineno-39-83" name="__codelineno-39-83"></a>arthas.icecrown.es. 259200  IN  A   10.0.1.200
+<a id="__codelineno-39-84" name="__codelineno-39-84"></a>
+<a id="__codelineno-39-85" name="__codelineno-39-85"></a>;; Query time: 0 msec
+<a id="__codelineno-39-86" name="__codelineno-39-86"></a>;; SERVER: 127.0.0.1#53(127.0.0.1)
+<a id="__codelineno-39-87" name="__codelineno-39-87"></a>;; WHEN: Fri Feb 17 07:29:13 CET 2023
+<a id="__codelineno-39-88" name="__codelineno-39-88"></a>;; MSG SIZE  rcvd: 113
+</code></pre></div></td></tr></table></div>
+<p>As can be seen, the <code>status</code> for all is '<strong>NOERROR</strong>' and the '<strong>ANSWER SECTION</strong>' shows the DNS records in question.</p>
+</li>
+</ol>
+<p>At this point, the module would be configured in Zentyal. However, we still need to create the records with the server's public IP address in the DNS provider so that they are visible externally. Here are the steps to perform for AWS Route53:</p>
+<ol>
+<li>
+<p>Go to <code>Route 53 -&gt; Hosted zones -&gt; domain</code> and create the same records as in Zentyal but with the public IP:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/dns-route53_records.png"><img alt="DNS Route53 domain records" src="../assets/zentyal/dns-route53_records.png" title="DNS Route53 domain records"/></a></p>
+</li>
+<li>
+<p>We wait a few minutes for them to replicate globally.</p>
+</li>
+<li>
+<p>Finally, we check the resolution of the records:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-40-1">1</a></span>
+<span class="normal"><a href="#__codelineno-40-2">2</a></span>
+<span class="normal"><a href="#__codelineno-40-3">3</a></span>
+<span class="normal"><a href="#__codelineno-40-4">4</a></span>
+<span class="normal"><a href="#__codelineno-40-5">5</a></span>
+<span class="normal"><a href="#__codelineno-40-6">6</a></span>
+<span class="normal"><a href="#__codelineno-40-7">7</a></span>
+<span class="normal"><a href="#__codelineno-40-8">8</a></span>
+<span class="normal"><a href="#__codelineno-40-9">9</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1"></a><span class="c1">## For the domain</span>
+<a id="__codelineno-40-2" name="__codelineno-40-2"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>icecrown.es
+<a id="__codelineno-40-3" name="__codelineno-40-3"></a>
+<a id="__codelineno-40-4" name="__codelineno-40-4"></a><span class="c1">## For the server name</span>
+<a id="__codelineno-40-5" name="__codelineno-40-5"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>arthas.icecrown.es
+<a id="__codelineno-40-6" name="__codelineno-40-6"></a>
+<a id="__codelineno-40-7" name="__codelineno-40-7"></a><span class="c1">## ParFor the alias</span>
+<a id="__codelineno-40-8" name="__codelineno-40-8"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>mail.icecrown.es
+<a id="__codelineno-40-9" name="__codelineno-40-9"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>webmail.icecrown.es
+</code></pre></div></td></tr></table></div>
+<p>A continuación, los resultados que he obtenido:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-41-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-41-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-41-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-41-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-41-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-41-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-41-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-41-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-41-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-41-10">10</a></span>
+<span class="normal"><a href="#__codelineno-41-11">11</a></span>
+<span class="normal"><a href="#__codelineno-41-12">12</a></span>
+<span class="normal"><a href="#__codelineno-41-13">13</a></span>
+<span class="normal"><a href="#__codelineno-41-14">14</a></span>
+<span class="normal"><a href="#__codelineno-41-15">15</a></span>
+<span class="normal"><a href="#__codelineno-41-16">16</a></span>
+<span class="normal"><a href="#__codelineno-41-17">17</a></span>
+<span class="normal"><a href="#__codelineno-41-18">18</a></span>
+<span class="normal"><a href="#__codelineno-41-19">19</a></span>
+<span class="normal"><a href="#__codelineno-41-20">20</a></span>
+<span class="normal"><a href="#__codelineno-41-21">21</a></span>
+<span class="normal"><a href="#__codelineno-41-22">22</a></span>
+<span class="normal"><a href="#__codelineno-41-23">23</a></span>
+<span class="normal"><a href="#__codelineno-41-24">24</a></span>
+<span class="normal"><a href="#__codelineno-41-25">25</a></span>
+<span class="normal"><a href="#__codelineno-41-26">26</a></span>
+<span class="normal"><a href="#__codelineno-41-27">27</a></span>
+<span class="normal"><a href="#__codelineno-41-28">28</a></span>
+<span class="normal"><a href="#__codelineno-41-29">29</a></span>
+<span class="normal"><a href="#__codelineno-41-30">30</a></span>
+<span class="normal"><a href="#__codelineno-41-31">31</a></span>
+<span class="normal"><a href="#__codelineno-41-32">32</a></span>
+<span class="normal"><a href="#__codelineno-41-33">33</a></span>
+<span class="normal"><a href="#__codelineno-41-34">34</a></span>
+<span class="normal"><a href="#__codelineno-41-35">35</a></span>
+<span class="normal"><a href="#__codelineno-41-36">36</a></span>
+<span class="normal"><a href="#__codelineno-41-37">37</a></span>
+<span class="normal"><a href="#__codelineno-41-38">38</a></span>
+<span class="normal"><a href="#__codelineno-41-39">39</a></span>
+<span class="normal"><a href="#__codelineno-41-40">40</a></span>
+<span class="normal"><a href="#__codelineno-41-41">41</a></span>
+<span class="normal"><a href="#__codelineno-41-42">42</a></span>
+<span class="normal"><a href="#__codelineno-41-43">43</a></span>
+<span class="normal"><a href="#__codelineno-41-44">44</a></span>
+<span class="normal"><a href="#__codelineno-41-45">45</a></span>
+<span class="normal"><a href="#__codelineno-41-46">46</a></span>
+<span class="normal"><a href="#__codelineno-41-47">47</a></span>
+<span class="normal"><a href="#__codelineno-41-48">48</a></span>
+<span class="normal"><a href="#__codelineno-41-49">49</a></span>
+<span class="normal"><a href="#__codelineno-41-50">50</a></span>
+<span class="normal"><a href="#__codelineno-41-51">51</a></span>
+<span class="normal"><a href="#__codelineno-41-52">52</a></span>
+<span class="normal"><a href="#__codelineno-41-53">53</a></span>
+<span class="normal"><a href="#__codelineno-41-54">54</a></span>
+<span class="normal"><a href="#__codelineno-41-55">55</a></span>
+<span class="normal"><a href="#__codelineno-41-56">56</a></span>
+<span class="normal"><a href="#__codelineno-41-57">57</a></span>
+<span class="normal"><a href="#__codelineno-41-58">58</a></span>
+<span class="normal"><a href="#__codelineno-41-59">59</a></span>
+<span class="normal"><a href="#__codelineno-41-60">60</a></span>
+<span class="normal"><a href="#__codelineno-41-61">61</a></span>
+<span class="normal"><a href="#__codelineno-41-62">62</a></span>
+<span class="normal"><a href="#__codelineno-41-63">63</a></span>
+<span class="normal"><a href="#__codelineno-41-64">64</a></span>
+<span class="normal"><a href="#__codelineno-41-65">65</a></span>
+<span class="normal"><a href="#__codelineno-41-66">66</a></span>
+<span class="normal"><a href="#__codelineno-41-67">67</a></span>
+<span class="normal"><a href="#__codelineno-41-68">68</a></span>
+<span class="normal"><a href="#__codelineno-41-69">69</a></span>
+<span class="normal"><a href="#__codelineno-41-70">70</a></span>
+<span class="normal"><a href="#__codelineno-41-71">71</a></span>
+<span class="normal"><a href="#__codelineno-41-72">72</a></span>
+<span class="normal"><a href="#__codelineno-41-73">73</a></span>
+<span class="normal"><a href="#__codelineno-41-74">74</a></span>
+<span class="normal"><a href="#__codelineno-41-75">75</a></span>
+<span class="normal"><a href="#__codelineno-41-76">76</a></span>
+<span class="normal"><a href="#__codelineno-41-77">77</a></span>
+<span class="normal"><a href="#__codelineno-41-78">78</a></span>
+<span class="normal"><a href="#__codelineno-41-79">79</a></span>
+<span class="normal"><a href="#__codelineno-41-80">80</a></span>
+<span class="normal"><a href="#__codelineno-41-81">81</a></span>
+<span class="normal"><a href="#__codelineno-41-82">82</a></span>
+<span class="normal"><a href="#__codelineno-41-83">83</a></span>
+<span class="normal"><a href="#__codelineno-41-84">84</a></span>
+<span class="normal"><a href="#__codelineno-41-85">85</a></span>
+<span class="normal"><a href="#__codelineno-41-86">86</a></span>
+<span class="normal"><a href="#__codelineno-41-87">87</a></span>
+<span class="normal"><a href="#__codelineno-41-88">88</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1"></a>## For the domain
+<a id="__codelineno-41-2" name="__codelineno-41-2"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; @8.8.8.8 icecrown.es
+<a id="__codelineno-41-3" name="__codelineno-41-3"></a>; (1 server found)
+<a id="__codelineno-41-4" name="__codelineno-41-4"></a>;; global options: +cmd
+<a id="__codelineno-41-5" name="__codelineno-41-5"></a>;; Got answer:
+<a id="__codelineno-41-6" name="__codelineno-41-6"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 7888
+<a id="__codelineno-41-7" name="__codelineno-41-7"></a>;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-41-8" name="__codelineno-41-8"></a>
+<a id="__codelineno-41-9" name="__codelineno-41-9"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-41-10" name="__codelineno-41-10"></a>; EDNS: version: 0, flags:; udp: 512
+<a id="__codelineno-41-11" name="__codelineno-41-11"></a>;; QUESTION SECTION:
+<a id="__codelineno-41-12" name="__codelineno-41-12"></a>;icecrown.es.           IN  A
+<a id="__codelineno-41-13" name="__codelineno-41-13"></a>
+<a id="__codelineno-41-14" name="__codelineno-41-14"></a>;; ANSWER SECTION:
+<a id="__codelineno-41-15" name="__codelineno-41-15"></a>icecrown.es.        60  IN  A   15.237.168.75
+<a id="__codelineno-41-16" name="__codelineno-41-16"></a>
+<a id="__codelineno-41-17" name="__codelineno-41-17"></a>;; Query time: 16 msec
+<a id="__codelineno-41-18" name="__codelineno-41-18"></a>;; SERVER: 8.8.8.8#53(8.8.8.8)
+<a id="__codelineno-41-19" name="__codelineno-41-19"></a>;; WHEN: Fri Feb 17 07:30:36 CET 2023
+<a id="__codelineno-41-20" name="__codelineno-41-20"></a>;; MSG SIZE  rcvd: 56
+<a id="__codelineno-41-21" name="__codelineno-41-21"></a>
+<a id="__codelineno-41-22" name="__codelineno-41-22"></a>
+<a id="__codelineno-41-23" name="__codelineno-41-23"></a>## For the server name
+<a id="__codelineno-41-24" name="__codelineno-41-24"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; @8.8.8.8 arthas.icecrown.es
+<a id="__codelineno-41-25" name="__codelineno-41-25"></a>; (1 server found)
+<a id="__codelineno-41-26" name="__codelineno-41-26"></a>;; global options: +cmd
+<a id="__codelineno-41-27" name="__codelineno-41-27"></a>;; Got answer:
+<a id="__codelineno-41-28" name="__codelineno-41-28"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 33376
+<a id="__codelineno-41-29" name="__codelineno-41-29"></a>;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-41-30" name="__codelineno-41-30"></a>
+<a id="__codelineno-41-31" name="__codelineno-41-31"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-41-32" name="__codelineno-41-32"></a>; EDNS: version: 0, flags:; udp: 512
+<a id="__codelineno-41-33" name="__codelineno-41-33"></a>;; QUESTION SECTION:
+<a id="__codelineno-41-34" name="__codelineno-41-34"></a>;arthas.icecrown.es.        IN  A
+<a id="__codelineno-41-35" name="__codelineno-41-35"></a>
+<a id="__codelineno-41-36" name="__codelineno-41-36"></a>;; ANSWER SECTION:
+<a id="__codelineno-41-37" name="__codelineno-41-37"></a>arthas.icecrown.es. 120 IN  A   15.237.168.75
+<a id="__codelineno-41-38" name="__codelineno-41-38"></a>
+<a id="__codelineno-41-39" name="__codelineno-41-39"></a>;; Query time: 36 msec
+<a id="__codelineno-41-40" name="__codelineno-41-40"></a>;; SERVER: 8.8.8.8#53(8.8.8.8)
+<a id="__codelineno-41-41" name="__codelineno-41-41"></a>;; WHEN: Fri Feb 17 07:30:56 CET 2023
+<a id="__codelineno-41-42" name="__codelineno-41-42"></a>;; MSG SIZE  rcvd: 63
+<a id="__codelineno-41-43" name="__codelineno-41-43"></a>
+<a id="__codelineno-41-44" name="__codelineno-41-44"></a>
+<a id="__codelineno-41-45" name="__codelineno-41-45"></a>## For the 'mail' alias
+<a id="__codelineno-41-46" name="__codelineno-41-46"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; @8.8.8.8 mail.icecrown.es
+<a id="__codelineno-41-47" name="__codelineno-41-47"></a>; (1 server found)
+<a id="__codelineno-41-48" name="__codelineno-41-48"></a>;; global options: +cmd
+<a id="__codelineno-41-49" name="__codelineno-41-49"></a>;; Got answer:
+<a id="__codelineno-41-50" name="__codelineno-41-50"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 46107
+<a id="__codelineno-41-51" name="__codelineno-41-51"></a>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-41-52" name="__codelineno-41-52"></a>
+<a id="__codelineno-41-53" name="__codelineno-41-53"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-41-54" name="__codelineno-41-54"></a>; EDNS: version: 0, flags:; udp: 512
+<a id="__codelineno-41-55" name="__codelineno-41-55"></a>;; QUESTION SECTION:
+<a id="__codelineno-41-56" name="__codelineno-41-56"></a>;mail.icecrown.es.      IN  A
+<a id="__codelineno-41-57" name="__codelineno-41-57"></a>
+<a id="__codelineno-41-58" name="__codelineno-41-58"></a>;; ANSWER SECTION:
+<a id="__codelineno-41-59" name="__codelineno-41-59"></a>mail.icecrown.es.   300 IN  CNAME   arthas.icecrown.es.
+<a id="__codelineno-41-60" name="__codelineno-41-60"></a>arthas.icecrown.es. 120 IN  A   15.237.168.75
+<a id="__codelineno-41-61" name="__codelineno-41-61"></a>
+<a id="__codelineno-41-62" name="__codelineno-41-62"></a>;; Query time: 16 msec
+<a id="__codelineno-41-63" name="__codelineno-41-63"></a>;; SERVER: 8.8.8.8#53(8.8.8.8)
+<a id="__codelineno-41-64" name="__codelineno-41-64"></a>;; WHEN: Fri Feb 17 07:31:29 CET 2023
+<a id="__codelineno-41-65" name="__codelineno-41-65"></a>;; MSG SIZE  rcvd: 82
+<a id="__codelineno-41-66" name="__codelineno-41-66"></a>
+<a id="__codelineno-41-67" name="__codelineno-41-67"></a>
+<a id="__codelineno-41-68" name="__codelineno-41-68"></a>## For the 'webmail' alias
+<a id="__codelineno-41-69" name="__codelineno-41-69"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; @8.8.8.8 webmail.icecrown.es
+<a id="__codelineno-41-70" name="__codelineno-41-70"></a>; (1 server found)
+<a id="__codelineno-41-71" name="__codelineno-41-71"></a>;; global options: +cmd
+<a id="__codelineno-41-72" name="__codelineno-41-72"></a>;; Got answer:
+<a id="__codelineno-41-73" name="__codelineno-41-73"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 9490
+<a id="__codelineno-41-74" name="__codelineno-41-74"></a>;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-41-75" name="__codelineno-41-75"></a>
+<a id="__codelineno-41-76" name="__codelineno-41-76"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-41-77" name="__codelineno-41-77"></a>; EDNS: version: 0, flags:; udp: 512
+<a id="__codelineno-41-78" name="__codelineno-41-78"></a>;; QUESTION SECTION:
+<a id="__codelineno-41-79" name="__codelineno-41-79"></a>;webmail.icecrown.es.       IN  A
+<a id="__codelineno-41-80" name="__codelineno-41-80"></a>
+<a id="__codelineno-41-81" name="__codelineno-41-81"></a>;; ANSWER SECTION:
+<a id="__codelineno-41-82" name="__codelineno-41-82"></a>webmail.icecrown.es.    300 IN  CNAME   arthas.icecrown.es.
+<a id="__codelineno-41-83" name="__codelineno-41-83"></a>arthas.icecrown.es. 120 IN  A   15.237.168.75
+<a id="__codelineno-41-84" name="__codelineno-41-84"></a>
+<a id="__codelineno-41-85" name="__codelineno-41-85"></a>;; Query time: 36 msec
+<a id="__codelineno-41-86" name="__codelineno-41-86"></a>;; SERVER: 8.8.8.8#53(8.8.8.8)
+<a id="__codelineno-41-87" name="__codelineno-41-87"></a>;; WHEN: Fri Feb 17 07:31:59 CET 2023
+<a id="__codelineno-41-88" name="__codelineno-41-88"></a>;; MSG SIZE  rcvd: 85
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<p>After confirming the domain's functioning both internally (from Zentyal) and externally, the DNS module will be correctly configured, and we can proceed with the next module.</p>
+<h3 id="mail-module">Mail module<a class="headerlink" href="#mail-module" title="Permanent link">¶</a></h3>
+<p>With the domain controller module configured, we can now configure the <a href="https://doc.zentyal.org/en/mail.html">mail</a> module, as it depends on the former to be enabled first. In my specific case, I will establish the following optional settings:</p>
+<ul>
+<li>The postmaster user will be <code>postmaster@icecrown.es</code>.</li>
+<li>I will set 1GB as the default quota for mailboxes.</li>
+<li>The maximum size of an accepted message will be 25MB.</li>
+<li>Emails deleted in mailboxes will be automatically purged after 90 days.</li>
+<li>Emails in the spam folder will be automatically deleted after 90 days.</li>
+<li>Mail account synchronization through Fetchmail will be done every 5 minutes.</li>
+<li>Only IMAPS and POP3S protocols will be allowed.</li>
+<li>Fetchmail and Sieve will be disabled, as I won't be using them initially.</li>
+<li>The greylist will be enabled, and forwarding time will be reduced to 24 hours, with a 30-day deletion period.</li>
+</ul>
+<p>Here are the steps to configure the module:</p>
+<ol>
+<li>
+<p>Create the virtual mail domain, which will be the same as the domain configured in the DNS module. From the left-hand side menu, go to <code>Mail -&gt; Virtual Mail Domains</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-new_domain.png"><img alt="Mail new virtual domain" src="../assets/zentyal/mail-new_domain.png" title="Mail new virtual domain"/></a></p>
+</li>
+<li>
+<p>Establish the optional restrictive configurations mentioned from <code>Mail -&gt; General</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-additional_conf.png"><img alt="Mail additional configuration" src="../assets/zentyal/mail-additional_conf.png" title="Mail additional configuration"/></a></p>
+</li>
+<li>
+<p>Disable Fetchmail and Sieve:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-services.png"><img alt="Mail services" src="../assets/zentyal/mail-services.png" title="Mail services"/></a></p>
+</li>
+<li>
+<p>Enable the greylist from <code>Mail -&gt; Greylist</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-greylist.png"><img alt="Mail greylist" src="../assets/zentyal/mail-greylist.png" title="Mail greylist"/></a></p>
+</li>
+<li>
+<p>Enable the module:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_mail.png"><img alt="Mail enable" src="../assets/zentyal/modules_mail.png" title="Mail enable"/></a></p>
+</li>
+<li>
+<p>Create the <code>MX</code> type record in the domain. In my case, I will do it from Route53:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-dns_record.png"><img alt="Mail DNS record" src="../assets/zentyal/mail-dns_record.png" title="Mail DNS record"/></a></p>
+<p>Additionally, I will also create it in Zentyal, but as it is an alias, it will have to be done using the CLI:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-42-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1"></a>sudo<span class="w"> </span>samba-tool<span class="w"> </span>dns<span class="w"> </span>add<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>icecrown.es<span class="w"> </span>icecrown.es<span class="w"> </span>MX<span class="w"> </span><span class="s2">"mail.icecrown.es 10"</span><span class="w"> </span>-U<span class="w"> </span>zenadmin
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Check the new DNS record both internally and externally:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-43-1">1</a></span>
+<span class="normal"><a href="#__codelineno-43-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1"></a>dig<span class="w"> </span>MX<span class="w"> </span>icecrown.es
+<a id="__codelineno-43-2" name="__codelineno-43-2"></a>dig<span class="w"> </span>@8.8.8.8<span class="w"> </span>MX<span class="w"> </span>icecrown.es
+</code></pre></div></td></tr></table></div>
+<p>The result I get is:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-44-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-44-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-44-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-44-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-44-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-44-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-44-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-44-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-44-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-44-10">10</a></span>
+<span class="normal"><a href="#__codelineno-44-11">11</a></span>
+<span class="normal"><a href="#__codelineno-44-12">12</a></span>
+<span class="normal"><a href="#__codelineno-44-13">13</a></span>
+<span class="normal"><a href="#__codelineno-44-14">14</a></span>
+<span class="normal"><a href="#__codelineno-44-15">15</a></span>
+<span class="normal"><a href="#__codelineno-44-16">16</a></span>
+<span class="normal"><a href="#__codelineno-44-17">17</a></span>
+<span class="normal"><a href="#__codelineno-44-18">18</a></span>
+<span class="normal"><a href="#__codelineno-44-19">19</a></span>
+<span class="normal"><a href="#__codelineno-44-20">20</a></span>
+<span class="normal"><a href="#__codelineno-44-21">21</a></span>
+<span class="normal"><a href="#__codelineno-44-22">22</a></span>
+<span class="normal"><a href="#__codelineno-44-23">23</a></span>
+<span class="normal"><a href="#__codelineno-44-24">24</a></span>
+<span class="normal"><a href="#__codelineno-44-25">25</a></span>
+<span class="normal"><a href="#__codelineno-44-26">26</a></span>
+<span class="normal"><a href="#__codelineno-44-27">27</a></span>
+<span class="normal"><a href="#__codelineno-44-28">28</a></span>
+<span class="normal"><a href="#__codelineno-44-29">29</a></span>
+<span class="normal"><a href="#__codelineno-44-30">30</a></span>
+<span class="normal"><a href="#__codelineno-44-31">31</a></span>
+<span class="normal"><a href="#__codelineno-44-32">32</a></span>
+<span class="normal"><a href="#__codelineno-44-33">33</a></span>
+<span class="normal"><a href="#__codelineno-44-34">34</a></span>
+<span class="normal"><a href="#__codelineno-44-35">35</a></span>
+<span class="normal"><a href="#__codelineno-44-36">36</a></span>
+<span class="normal"><a href="#__codelineno-44-37">37</a></span>
+<span class="normal"><a href="#__codelineno-44-38">38</a></span>
+<span class="normal"><a href="#__codelineno-44-39">39</a></span>
+<span class="normal"><a href="#__codelineno-44-40">40</a></span>
+<span class="normal"><a href="#__codelineno-44-41">41</a></span>
+<span class="normal"><a href="#__codelineno-44-42">42</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1"></a>## Internal query
+<a id="__codelineno-44-2" name="__codelineno-44-2"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; MX icecrown.es
+<a id="__codelineno-44-3" name="__codelineno-44-3"></a>;; global options: +cmd
+<a id="__codelineno-44-4" name="__codelineno-44-4"></a>;; Got answer:
+<a id="__codelineno-44-5" name="__codelineno-44-5"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 432
+<a id="__codelineno-44-6" name="__codelineno-44-6"></a>;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-44-7" name="__codelineno-44-7"></a>
+<a id="__codelineno-44-8" name="__codelineno-44-8"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-44-9" name="__codelineno-44-9"></a>; EDNS: version: 0, flags:; udp: 4096
+<a id="__codelineno-44-10" name="__codelineno-44-10"></a>; COOKIE: 7d99083c5d639dad0100000063ef22121ec656087bc76972 (good)
+<a id="__codelineno-44-11" name="__codelineno-44-11"></a>;; QUESTION SECTION:
+<a id="__codelineno-44-12" name="__codelineno-44-12"></a>;icecrown.es.           IN  MX
+<a id="__codelineno-44-13" name="__codelineno-44-13"></a>
+<a id="__codelineno-44-14" name="__codelineno-44-14"></a>;; ANSWER SECTION:
+<a id="__codelineno-44-15" name="__codelineno-44-15"></a>icecrown.es.        900 IN  MX  10 mail.icecrown.es.
+<a id="__codelineno-44-16" name="__codelineno-44-16"></a>
+<a id="__codelineno-44-17" name="__codelineno-44-17"></a>;; Query time: 8 msec
+<a id="__codelineno-44-18" name="__codelineno-44-18"></a>;; SERVER: 127.0.0.1#53(127.0.0.1)
+<a id="__codelineno-44-19" name="__codelineno-44-19"></a>;; WHEN: Fri Feb 17 07:43:30 CET 2023
+<a id="__codelineno-44-20" name="__codelineno-44-20"></a>;; MSG SIZE  rcvd: 89
+<a id="__codelineno-44-21" name="__codelineno-44-21"></a>
+<a id="__codelineno-44-22" name="__codelineno-44-22"></a>
+<a id="__codelineno-44-23" name="__codelineno-44-23"></a>## External query
+<a id="__codelineno-44-24" name="__codelineno-44-24"></a>; &lt;&lt;&gt;&gt; DiG 9.16.1-Ubuntu &lt;&lt;&gt;&gt; @8.8.8.8 MX icecrown.es
+<a id="__codelineno-44-25" name="__codelineno-44-25"></a>; (1 server found)
+<a id="__codelineno-44-26" name="__codelineno-44-26"></a>;; global options: +cmd
+<a id="__codelineno-44-27" name="__codelineno-44-27"></a>;; Got answer:
+<a id="__codelineno-44-28" name="__codelineno-44-28"></a>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 28263
+<a id="__codelineno-44-29" name="__codelineno-44-29"></a>;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+<a id="__codelineno-44-30" name="__codelineno-44-30"></a>
+<a id="__codelineno-44-31" name="__codelineno-44-31"></a>;; OPT PSEUDOSECTION:
+<a id="__codelineno-44-32" name="__codelineno-44-32"></a>; EDNS: version: 0, flags:; udp: 512
+<a id="__codelineno-44-33" name="__codelineno-44-33"></a>;; QUESTION SECTION:
+<a id="__codelineno-44-34" name="__codelineno-44-34"></a>;icecrown.es.           IN  MX
+<a id="__codelineno-44-35" name="__codelineno-44-35"></a>
+<a id="__codelineno-44-36" name="__codelineno-44-36"></a>;; ANSWER SECTION:
+<a id="__codelineno-44-37" name="__codelineno-44-37"></a>icecrown.es.        300 IN  MX  10 mail.icecrown.es.
+<a id="__codelineno-44-38" name="__codelineno-44-38"></a>
+<a id="__codelineno-44-39" name="__codelineno-44-39"></a>;; Query time: 36 msec
+<a id="__codelineno-44-40" name="__codelineno-44-40"></a>;; SERVER: 8.8.8.8#53(8.8.8.8)
+<a id="__codelineno-44-41" name="__codelineno-44-41"></a>;; WHEN: Fri Feb 17 07:44:00 CET 2023
+<a id="__codelineno-44-42" name="__codelineno-44-42"></a>;; MSG SIZE  rcvd: 61
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Create the <code>postmaster@icecrown.es</code> user specified in step 2 and also a test user, which in my case will be named <code>test.djoven</code>. To do this, go to <code>Users and Computers -&gt; Manage</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-user_postmaster.png"><img alt="Mail postmaster user" src="../assets/zentyal/mail-user_postmaster.png" title="Mail postmaster user"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-test_account.png"><img alt="Mail test account" src="../assets/zentyal/mail-test_account.png" title="Mail test account"/></a></p>
+</li>
+</ol>
+<p>Finally, we will test with a mail client (Thunderbird in my case) that we can configure the account of the test user created:</p>
+<ol>
+<li>
+<p>Configure a new account in Thunderbird:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_new-account.png"><img alt="Thunderbird setup new account" src="../assets/zentyal/mail-thunderbird_new-account.png" title="Thunderbird setup new account"/></a></p>
+</li>
+<li>
+<p>Set the connection data with the SMTPS and IMAPS service:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_server.png"><img alt="Thunderbird setup server" src="../assets/zentyal/mail-thunderbird_server.png" title="Thunderbird setup server"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You must change the authentication type to '<strong>Normal password</strong>', otherwise authentication will fail.</p>
+</div>
+</li>
+<li>
+<p>After confirming the configuration, the following warning message about the certificate will appear, which is normal, as it is a self-signed certificate by Zentyal:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_certificate_warning.png"><img alt="Thunderbird setup certificate warning" src="../assets/zentyal/mail-thunderbird_certificate_warning.png" title="Thunderbird setup certificate warning"/></a></p>
+</li>
+<li>
+<p>Once the security exception is confirmed, we should be able to see the email account:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_login.png"><img alt="Thunderbird login" src="../assets/zentyal/mail-thunderbird_login.png" title="Thunderbird login"/></a></p>
+</li>
+<li>
+<p>Send a test email to ourselves and another to an external account to confirm the module's operation.</p>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>When we try to send the message, we will receive an error again due to the self-signed certificate, so we will have to confirm it again.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_sending-error-1.png"><img alt="Thunderbird sending error" src="../assets/zentyal/mail-thunderbird_sending-error-1.png" title="Thunderbird sending error"/></a></p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mail-thunderbird_sending-error-2.png"><img alt="Thunderbird accepting certificate" src="../assets/zentyal/mail-thunderbird_sending-error-2.png" title="Thunderbird accepting certificate"/></a></p>
+</li>
+<li>
+<p>If everything went well, we should have received the email both internally and externally, and also in the <code>/var/log/mail.log</code> log we should see similar records as:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-45-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-45-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-45-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-45-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-45-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-45-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-45-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-45-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-45-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-45-10">10</a></span>
+<span class="normal"><a href="#__codelineno-45-11">11</a></span>
+<span class="normal"><a href="#__codelineno-45-12">12</a></span>
+<span class="normal"><a href="#__codelineno-45-13">13</a></span>
+<span class="normal"><a href="#__codelineno-45-14">14</a></span>
+<span class="normal"><a href="#__codelineno-45-15">15</a></span>
+<span class="normal"><a href="#__codelineno-45-16">16</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: connect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36]
+<a id="__codelineno-45-2" name="__codelineno-45-2"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: 958BDFEEFC: client=36.red-45-4-127.staticip.rima-tde.net[88.6.127.36], sasl_method=PLAIN, sasl_username=test.
+<a id="__codelineno-45-3" name="__codelineno-45-3"></a>djoven@icecrown.es
+<a id="__codelineno-45-4" name="__codelineno-45-4"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/cleanup[27145]: 958BDFEEFC: message-id=&lt;17715909-c13a-eed6-7f23-18f697740075@icecrown.es&gt;
+<a id="__codelineno-45-5" name="__codelineno-45-5"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/qmgr[24894]: 958BDFEEFC: from=&lt;test.djoven@icecrown.es&gt;, size=681, nrcpt=2 (queue active)
+<a id="__codelineno-45-6" name="__codelineno-45-6"></a>Feb 17 07:02:41 ip-10-0-1-200 dovecot: lda(test.djoven@icecrown.es)&lt;27148&gt;&lt;b1LEMJEm72MMagAAcf9/Kw&gt;: msgid=&lt;17715909-c13a-eed6-7f23-18f697740075@icecrown.es&gt;: sav
+<a id="__codelineno-45-7" name="__codelineno-45-7"></a>ed mail to INBOX
+<a id="__codelineno-45-8" name="__codelineno-45-8"></a>
+<a id="__codelineno-45-9" name="__codelineno-45-9"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/pipe[27146]: 958BDFEEFC: to=&lt;test.djoven@icecrown.es&gt;, relay=dovecot, delay=0.29, delays=0.24/0.01/0/0.03, dsn=2.0.0, status=sent (delivered via dovecot service)
+<a id="__codelineno-45-10" name="__codelineno-45-10"></a>
+<a id="__codelineno-45-11" name="__codelineno-45-11"></a>Feb 17 07:02:41 ip-10-0-1-200 postfix/smtpd[27139]: disconnect from 36.red-45-4-127.staticip.rima-tde.net[88.6.127.36] ehlo=2 starttls=1 auth=1 mail=1 rcpt=2 data=1 quit=1 commands=9
+<a id="__codelineno-45-12" name="__codelineno-45-12"></a>Feb 17 07:02:42 ip-10-0-1-200 dovecot: imap-login: Disconnected (no auth attempts in 1 secs): user=&lt;&gt;, rip=88.6.127.36, lip=10.0.1.200, TLS handshaking: SSL_accept() failed: error:14094412:SSL routines:ssl3_read_bytes:sslv3 alert bad certificate: SSL alert number 42, session=&lt;mXZJ5t/0eLxYBn8k&gt;
+<a id="__codelineno-45-13" name="__codelineno-45-13"></a>
+<a id="__codelineno-45-14" name="__codelineno-45-14"></a>Feb 17 07:02:42 ip-10-0-1-200 postfix/smtp[27147]: 958BDFEEFC: to=&lt;external-account&gt;, relay=gmail-smtp-in.l.google.com[74.125.133.27]:25, delay=1, delays=0.24/0.01/0.08/0.67, dsn=2.0.0, status=sent (250 2.0.0 OK  1676617362 n13-20020adfe34d000000b002c56af91a8esi3912146wrj.115 - gsmtp)
+<a id="__codelineno-45-15" name="__codelineno-45-15"></a>
+<a id="__codelineno-45-16" name="__codelineno-45-16"></a>Feb 17 07:02:42 ip-10-0-1-200 postfix/qmgr[24894]: 958BDFEEFC: removed
+</code></pre></div></td></tr></table></div>
+<div class="admonition success">
+<p class="admonition-title">Success</p>
+<p>As can be seen, the status of both emails is <code>sent</code>.</p>
+</div>
+</li>
+</ol>
+<p>At this point, the mail module should be fully functional. However, it is not yet secured, so it is advisable not to use it yet until at least the Mailfilter module has been configured and enabled. Additionally, there is another page in this project called <a href="https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/#mail-module">Hardening</a> where the module's security will be further increased.</p>
+<p>Also, note that if the server is installed in the AWS cloud provider, sending emails is not allowed by default (check the next to last section of the <a href="https://zentyal-aws.projects.djoven.es/en/aws-configuration/#request-email-sending">AWS</a> page).</p>
+<h3 id="webmail-module">Webmail Module<a class="headerlink" href="#webmail-module" title="Permanent link">¶</a></h3>
+<p>The next module to configure will be the <a href="https://doc.zentyal.org/en/mail.html#webmail">Webmail</a> (Sogo), which will allow us to manage our email account from a web browser. Additionally, from the webmail, a user can change their password.</p>
+<ol>
+<li>
+<p>We enable the <a href="https://doc.zentyal.org/en/mail.html#activesync-support">ActiveSync</a> protocol from Mail -&gt; ActiveSync in case users want to synchronize their mobile devices.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-activesync.png"><img alt="Webmail ActiveSync" src="../assets/zentyal/webmail-activesync.png" title="Webmail ActiveSync"/></a></p>
+</li>
+<li>
+<p>We enable the module.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_webmail.png"><img alt="Webmail enable" src="../assets/zentyal/modules_webmail.png" title="Webmail enable"/></a></p>
+</li>
+<li>
+<p>We check that we can access the login page from a web browser with the URL: https://arthas.icecrown.es/SOGo:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It will show a warning message due to the certificate used by the service, which is normal since it is self-signed.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-access_unsafe.png"><img alt="Webmail unsafe message" src="../assets/zentyal/webmail-access_unsafe.png" title="Webmail unsafe message"/></a></p>
+</li>
+<li>
+<p>Once we accept the exception, we should be able to see the login page:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-access_login.png"><img alt="Webmail login webpage" src="../assets/zentyal/webmail-access_login.png" title="Webmail login webpage"/></a></p>
+</li>
+<li>
+<p>We log in with the test user to confirm that authentication works correctly and that we can see our mailbox.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-access_user.png"><img alt="Webmail user login" src="../assets/zentyal/webmail-access_user.png" title="Webmail user login"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If we do not see the mailbox, it is possible that we are experiencing an existing bug, which occurs when the insecure mail protocols are not configured, and the certificate used is self-signed. To solve this, see the section <code>IMAPS</code> on the <a href="https://zentyal-aws.projects.djoven.es/en/zentyal-bug-fixing/#imaps">bug fixing</a> page.</p>
+</div>
+</li>
+<li>
+<p>Finally, we try to send another email to ourselves to verify integration with the email module.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-sending_email.png"><img alt="Webmail sending an email" src="../assets/zentyal/webmail-sending_email.png" title="Webmail sending an email"/></a></p>
+</li>
+</ol>
+<p>At this point, the module is fully functional; however, I will set the following optional configurations:</p>
+<ul>
+<li>I will enable the option of automatic messages for vacations since it is disabled by default.</li>
+<li>I will initially set the number of workers (processes) that the module will use to 8.</li>
+</ul>
+<p>The following actions should be taken to apply the optional configurations:</p>
+<ol>
+<li>
+<p>We create the directory that will make the changes to the configuration templates (stubs) persistent against module updates.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-46-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-vp<span class="w"> </span>/etc/zentyal/stubs/sogo
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We copy the Sogo configuration template <code>sogo.conf.mas</code>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-47-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>-v<span class="w"> </span>/usr/share/zentyal/stubs/sogo/sogo.conf.mas<span class="w"> </span>/etc/zentyal/stubs/sogo/
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We set the parameter <code>SOGoVacationEnabled</code> to <code>YES</code> in the newly copied template.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-48-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-48-1" name="__codelineno-48-1"></a>sudo<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/SOGoVacationEnabled.*/SOGoVacationEnabled = YES;/'</span><span class="w"> </span>/etc/zentyal/stubs/sogo/sogo.conf.mas
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We restart the Webmail module to apply the change.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-49-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-49-1" name="__codelineno-49-1"></a>sudo<span class="w"> </span>zs<span class="w"> </span>sogo<span class="w"> </span>restart
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We log in to the Webadmin again and verify that the option is now available under <code>Preferences -&gt; Mail</code>.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/webmail-vacactions.png"><img alt="Webmail vacations" src="../assets/zentyal/webmail-vacactions.png" title="Webmail vacations"/></a></p>
+</li>
+<li>
+<p>We set the value of prefork in the configuration file <code>/etc/zentyal/sogo.conf</code>.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-50-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-50-1" name="__codelineno-50-1"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/#sogod_prefork.*/sogod_prefork=8/'</span><span class="w"> </span>/etc/zentyal/sogo.conf
+</code></pre></div></td></tr></table></div>
+<p>If we have many concurrent users using the module, it is possible that Sogo cannot manage all requests properly, so it will be necessary to increase this value. To detect this scenario, we simply need to search for records in the Sogo log located at <code>/var/log/sogo/sogo.log</code> similar to the following:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-51-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-51-1" name="__codelineno-51-1"></a>sogod<span class="w"> </span><span class="o">[</span><span class="m">3252</span><span class="o">]</span>:<span class="w"> </span><span class="o">[</span>ERROR<span class="o">]</span><span class="w"> </span>&lt;0x0x55c9db827250<span class="o">[</span>WOWatchDog<span class="o">]</span>&gt;<span class="w"> </span>No<span class="w"> </span>child<span class="w"> </span>available<span class="w"> </span>to<span class="w"> </span>handle<span class="w"> </span>incoming<span class="w"> </span>request!
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We restart the Webmail module to apply the change.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-52-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-52-1" name="__codelineno-52-1"></a>sudo<span class="w"> </span>zs<span class="w"> </span>sogo<span class="w"> </span>restart
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Finally, we check that the service has been started with the new value applied.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-53-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-53-1" name="__codelineno-53-1"></a>ps<span class="w"> </span>-ef<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>sogod<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-1
+</code></pre></div></td></tr></table></div>
+<p>In my case, the result obtained from the command was:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-54-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-54-1" name="__codelineno-54-1"></a>sogo<span class="w"> </span><span class="m">24430</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">00</span>:40<span class="w"> </span>?<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span>/usr/sbin/sogod<span class="w"> </span>-WOWorkersCount<span class="w"> </span><span class="m">8</span><span class="w"> </span>-WOPidFile<span class="w"> </span>/var/run/sogo/sogo.pid<span class="w"> </span>-WOLogFile<span class="w"> </span>/var/log/sogo/sogo.log
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<h3 id="antivirus-module">Antivirus Module<a class="headerlink" href="#antivirus-module" title="Permanent link">¶</a></h3>
+<p>The next module we will configure is the <a href="https://doc.zentyal.org/en/antivirus.html">Antivirus</a>. Although this module consumes a lot of RAM, it is necessary for the analysis of the emails managed by the mailfilter module.</p>
+<p>The configuration that we can define for this module from the Zentyal administration panel in the Development version is nonexistent. Therefore, we can only enable the module and verify that the signature database is up-to-date.</p>
+<ol>
+<li>
+<p>We enable the module.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_antivirus.png"><img alt="Antivirus enable" src="../assets/zentyal/modules_antivirus.png" title="Antivirus enable"/></a></p>
+</li>
+<li>
+<p>We update the signature database.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-55-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-55-1" name="__codelineno-55-1"></a>sudo<span class="w"> </span>freshclam<span class="w"> </span>-v
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>We confirm that the module is active.</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-56-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-56-1" name="__codelineno-56-1"></a>sudo<span class="w"> </span>zs<span class="w"> </span>antivirus<span class="w"> </span>status
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<p>If using a commercial version, we will have the following additional functionalities described <a href="https://doc.zentyal.org/en/antivirus.html#configuracion-del-modulo-antivirus">here</a>:</p>
+<ul>
+<li>System analysis.</li>
+<li>Live monitoring of directories.</li>
+</ul>
+<h3 id="mailfilter-module">Mailfilter module<a class="headerlink" href="#mailfilter-module" title="Permanent link">¶</a></h3>
+<p>After enabling the Antivirus, we will proceed to configure the <a href="https://doc.zentyal.org/en/mailfilter.html">Mailfilter</a> module, which will allow us to considerably increase the security of the organization's email service.</p>
+<p>The configuration that I will apply will be:</p>
+<ul>
+<li>I will use the email account <code>issues@icecrown.es</code> for notifications of problematic emails.</li>
+<li>I will set the threshold for emails considered as SPAM to 5.</li>
+<li>I will also set the auto-learn threshold to 5.</li>
+<li>I will add the domain to the whitelist.</li>
+<li>Except for the incorrect header policy, all other policies will be denied.</li>
+<li>I will disable certain extensions that can pose a security risk.</li>
+</ul>
+<p>Here are the steps to configure the module:</p>
+<ol>
+<li>
+<p>We enable the services of this module and set an email address for non-spam problematic emails from <code>Mail filter -&gt; SMTP Mail Filter</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-general.png"><img alt="Mailfilter services" src="../assets/zentyal/mailfilter-general.png" title="Mailfilter services"/></a></p>
+</li>
+<li>
+<p>We set the default policies regarding the behavior of the module in response to certain events:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-filter_policies.png"><img alt="Mailfilter event policies" src="../assets/zentyal/mailfilter-filter_policies.png" title="Mailfilter event policies"/></a></p>
+</li>
+<li>
+<p>We set the antispam policies from <code>Mail Filter -&gt; Antispam</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-antispam_configuration.png"><img alt="Mailfilter Antispam configuration" src="../assets/zentyal/mailfilter-antispam_configuration.png" title="Mailfilter Antispam configuration"/></a></p>
+</li>
+<li>
+<p>Optionally, we can add our domain to the whitelist so that it is not processed by the Mailfilter module:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-antispam_senders.png"><img alt="Mailfilter whitelist" src="../assets/zentyal/mailfilter-antispam_senders.png" title="Mailfilter whitelist"/></a></p>
+</li>
+<li>
+<p>We disable the following extensions from <code>Mail Filter -&gt; Files ACL -&gt; File extensions</code>:</p>
+<ul>
+<li>bas</li>
+<li>bat</li>
+<li>cmd</li>
+<li>dll</li>
+<li>exe</li>
+<li>ini</li>
+<li>msi</li>
+<li>reg</li>
+<li>sh</li>
+</ul>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-files_extensions.png"><img alt="Mailfilter file extensions" src="../assets/zentyal/mailfilter-files_extensions.png" title="Mailfilter file extensions"/></a></p>
+</li>
+<li>
+<p>We enable the module:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_mailfilter.png"><img alt="Mailfilter enable" src="../assets/zentyal/modules_mailfilter.png" title="Mailfilter enable"/></a></p>
+</li>
+<li>
+<p>We create the email account that we established in step 1 from <code>Users and Computers -&gt; Manage</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-issues_account.png"><img alt="Mail account for issues" src="../assets/zentyal/mailfilter-issues_account.png" title="Mail account for issues"/></a></p>
+</li>
+<li>
+<p>We send a simple email from an external domain and check in the log file <code>/var/log/mail.log</code> that the module has analyzed it through the Amavis service:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-57-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-57-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-57-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-57-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-57-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-57-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-57-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-57-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-57-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-57-10">10</a></span>
+<span class="normal"><a href="#__codelineno-57-11">11</a></span>
+<span class="normal"><a href="#__codelineno-57-12">12</a></span>
+<span class="normal"><a href="#__codelineno-57-13">13</a></span>
+<span class="normal"><a href="#__codelineno-57-14">14</a></span>
+<span class="normal"><a href="#__codelineno-57-15">15</a></span>
+<span class="normal"><a href="#__codelineno-57-16">16</a></span>
+<span class="normal"><a href="#__codelineno-57-17">17</a></span>
+<span class="normal"><a href="#__codelineno-57-18">18</a></span>
+<span class="normal"><a href="#__codelineno-57-19">19</a></span>
+<span class="normal"><a href="#__codelineno-57-20">20</a></span>
+<span class="normal"><a href="#__codelineno-57-21">21</a></span>
+<span class="normal"><a href="#__codelineno-57-22">22</a></span>
+<span class="normal"><a href="#__codelineno-57-23">23</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-57-1" name="__codelineno-57-1"></a>Feb 18 11:18:57 arthas postfix/smtpd[18582]: connect from mail-lj1-f176.google.com[209.85.208.176]
+<a id="__codelineno-57-2" name="__codelineno-57-2"></a>Feb 18 11:18:57 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f176.google.com, client_address=209.85.208.176/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
+<a id="__codelineno-57-3" name="__codelineno-57-3"></a>Feb 18 11:18:57 arthas postfix/smtpd[18582]: A69DDFEF59: client=mail-lj1-f176.google.com[209.85.208.176]
+<a id="__codelineno-57-4" name="__codelineno-57-4"></a>Feb 18 11:18:57 arthas postfix/cleanup[18587]: A69DDFEF59: message-id=&lt;CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com&gt;
+<a id="__codelineno-57-5" name="__codelineno-57-5"></a>Feb 18 11:18:57 arthas postfix/qmgr[18435]: A69DDFEF59: from=&lt;some-account@gmail.com&gt;, size=2749, nrcpt=1 (queue active)
+<a id="__codelineno-57-6" name="__codelineno-57-6"></a>Feb 18 11:18:57 arthas amavis[18438]: (18438-01) ESMTP :10024 /var/lib/amavis/amavis-20230218T111857-18438-QzIlgFHk: &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt; SIZE=2749 Received: from mail.icecrown.es ([127.0.0.1]) by localhost (arthas.icecrown.es [127.0.0.1]) (amavisd-new, port 10024) with ESMTP for &lt;test.djoven@icecrown.es&gt;; Sat, 18 Feb 2023 11:18:57 +0100 (CET)
+<a id="__codelineno-57-7" name="__codelineno-57-7"></a>Feb 18 11:18:57 arthas amavis[18438]: (18438-01) Checking: O_3VfGJTdv4Z [127.0.0.1] &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt;
+<a id="__codelineno-57-8" name="__codelineno-57-8"></a>Feb 18 11:18:59 arthas amavis[18591]: (18438-01) SA info: util: setuid: ruid=128 euid=128 rgid=136 136 egid=136 136
+<a id="__codelineno-57-9" name="__codelineno-57-9"></a>Feb 18 11:19:02 arthas postfix/smtpd[18592]: connect from localhost.localdomain[127.0.0.1]
+<a id="__codelineno-57-10" name="__codelineno-57-10"></a>Feb 18 11:19:02 arthas postfix/smtpd[18592]: 8975FFEF70: client=localhost.localdomain[127.0.0.1]
+<a id="__codelineno-57-11" name="__codelineno-57-11"></a>Feb 18 11:19:02 arthas postfix/cleanup[18587]: 8975FFEF70: message-id=&lt;CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com&gt;
+<a id="__codelineno-57-12" name="__codelineno-57-12"></a>Feb 18 11:19:02 arthas postfix/qmgr[18435]: 8975FFEF70: from=&lt;some-account@gmail.com&gt;, size=3762, nrcpt=1 (queue active)
+<a id="__codelineno-57-13" name="__codelineno-57-13"></a>
+<a id="__codelineno-57-14" name="__codelineno-57-14"></a>Feb 18 11:19:02 arthas amavis[18438]: (18438-01) O_3VfGJTdv4Z FWD from &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt;, BODY=7BIT 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8975FFEF70
+<a id="__codelineno-57-15" name="__codelineno-57-15"></a><span class="hll">Feb 18 11:19:02 arthas amavis[18438]: (18438-01) Passed CLEAN, [127.0.0.1] &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt;, Message-ID: &lt;CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com&gt;, Hits: -5.947
+</span><a id="__codelineno-57-16" name="__codelineno-57-16"></a>Feb 18 11:19:02 arthas postfix/smtp[18588]: A69DDFEF59: to=&lt;test.djoven@icecrown.es&gt;, relay=127.0.0.1[127.0.0.1]:10024, delay=4.9, delays=0.07/0.01/0.01/4.9, dsn=2.0.0, status=sent (250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as 8975FFEF70)
+<a id="__codelineno-57-17" name="__codelineno-57-17"></a>
+<a id="__codelineno-57-18" name="__codelineno-57-18"></a>Feb 18 11:19:02 arthas postfix/qmgr[18435]: A69DDFEF59: removed
+<a id="__codelineno-57-19" name="__codelineno-57-19"></a>
+<a id="__codelineno-57-20" name="__codelineno-57-20"></a>Feb 18 11:19:02 arthas dovecot: lda(test.djoven@icecrown.es)&lt;18594&gt;&lt;u/B4JBam8GOiSAAAcf9/Kw&gt;: msgid=&lt;CAHOKk5tCux0aM8WgNr_RQJ7YXBr1H6Er37AT5j9vvyJ1ZORSKw@mail.gmail.com&gt;: saved mail to INBOX
+<a id="__codelineno-57-21" name="__codelineno-57-21"></a>Feb 18 11:19:02 arthas postfix/pipe[18593]: 8975FFEF70: to=&lt;test.djoven@icecrown.es&gt;, relay=dovecot, delay=0.09, delays=0.03/0.01/0/0.05, dsn=2.0.0, status=sent (delivered via dovecot service)
+<a id="__codelineno-57-22" name="__codelineno-57-22"></a>
+<a id="__codelineno-57-23" name="__codelineno-57-23"></a>Feb 18 11:19:02 arthas postfix/qmgr[18435]: 8975FFEF70: removed
+</code></pre></div></td></tr></table></div>
+<p>As you can see, the message arrived from a Gmail account, was analyzed by the '<strong>Amavis</strong>' service, which scored it with '<strong>-5.947</strong>' and deemed it good, so the message arrived in the internal user's mailbox.</p>
+</li>
+<li>
+<p>Once we confirm that emails are properly received, we will proceed to verify the functioning of the module by sending another email with an attachment whose extension is <code>.sh</code> - denied in step 5 - from an external account. Here are the log records regarding the success of the block in <code>/var/log/mail.log</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-58-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-58-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-58-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-58-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-58-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-58-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-58-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-58-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-58-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-58-10">10</a></span>
+<span class="normal"><a href="#__codelineno-58-11">11</a></span>
+<span class="normal"><a href="#__codelineno-58-12">12</a></span>
+<span class="normal"><a href="#__codelineno-58-13">13</a></span>
+<span class="normal"><a href="#__codelineno-58-14">14</a></span>
+<span class="normal"><a href="#__codelineno-58-15">15</a></span>
+<span class="normal"><a href="#__codelineno-58-16">16</a></span>
+<span class="normal"><a href="#__codelineno-58-17">17</a></span>
+<span class="normal"><a href="#__codelineno-58-18">18</a></span>
+<span class="normal"><a href="#__codelineno-58-19">19</a></span>
+<span class="normal"><a href="#__codelineno-58-20">20</a></span>
+<span class="normal"><a href="#__codelineno-58-21">21</a></span>
+<span class="normal"><a href="#__codelineno-58-22">22</a></span>
+<span class="normal"><a href="#__codelineno-58-23">23</a></span>
+<span class="normal"><a href="#__codelineno-58-24">24</a></span>
+<span class="normal"><a href="#__codelineno-58-25">25</a></span>
+<span class="normal"><a href="#__codelineno-58-26">26</a></span>
+<span class="normal"><a href="#__codelineno-58-27">27</a></span>
+<span class="normal"><a href="#__codelineno-58-28">28</a></span>
+<span class="normal"><a href="#__codelineno-58-29">29</a></span>
+<span class="normal"><a href="#__codelineno-58-30">30</a></span>
+<span class="normal"><a href="#__codelineno-58-31">31</a></span>
+<span class="normal"><a href="#__codelineno-58-32">32</a></span>
+<span class="normal"><a href="#__codelineno-58-33">33</a></span>
+<span class="normal"><a href="#__codelineno-58-34">34</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-58-1" name="__codelineno-58-1"></a>Feb 18 11:31:30 arthas postfix/smtpd[18720]: connect from mail-lj1-f171.google.com[209.85.208.171]
+<a id="__codelineno-58-2" name="__codelineno-58-2"></a>Feb 18 11:31:30 arthas postgrey[16618]: action=pass, reason=client whitelist, client_name=mail-lj1-f171.google.com, client_address=209.85.208.171/32, sender=some-account@gmail.com, recipient=test.djoven@icecrown.es
+<a id="__codelineno-58-3" name="__codelineno-58-3"></a>Feb 18 11:31:30 arthas postfix/smtpd[18720]: 79C12FEF59: client=mail-lj1-f171.google.com[209.85.208.171]
+<a id="__codelineno-58-4" name="__codelineno-58-4"></a>Feb 18 11:31:30 arthas postfix/cleanup[18722]: 79C12FEF59: message-id=&lt;CAHOKk5uyuTatJ4c7_qp9oZsovphBziK_YDbUfHtO7Jkg89P5yQ@mail.gmail.com&gt;
+<a id="__codelineno-58-5" name="__codelineno-58-5"></a>Feb 18 11:31:30 arthas postfix/qmgr[18435]: 79C12FEF59: from=&lt;some-account@gmail.com&gt;, size=3158, nrcpt=1 (queue active)
+<a id="__codelineno-58-6" name="__codelineno-58-6"></a>
+<a id="__codelineno-58-7" name="__codelineno-58-7"></a>Feb 18 11:31:30 arthas amavis[18438]: (18438-02) ESMTP :10024 /var/lib/amavis/amavis-20230218T111857-18438-QzIlgFHk: &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt; SIZE=3158 Received: from mail.icecrown.es ([127.0.0.1]) by localhost (arthas.icecrown.es [127.0.0.1]) (amavisd-new, port 10024) with ESMTP for &lt;test.djoven@icecrown.es&gt;; Sat, 18 Feb 2023 11:31:30 +0100 (CET)
+<a id="__codelineno-58-8" name="__codelineno-58-8"></a>Feb 18 11:31:30 arthas amavis[18438]: (18438-02) Checking: BVbKQQ9S3o7N [127.0.0.1] &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt;
+<a id="__codelineno-58-9" name="__codelineno-58-9"></a>Feb 18 11:31:30 arthas amavis[18438]: (18438-02) p.path BANNED:1 test.djoven@icecrown.es: "P=p004,L=1,M=multipart/mixed | P=p003,L=1/2,M=application/x-shellscript,T=asc,N=sample-script.sh", matching_key="(?^i:\\.sh$)"
+<a id="__codelineno-58-10" name="__codelineno-58-10"></a>
+<a id="__codelineno-58-11" name="__codelineno-58-11"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: connect from localhost.localdomain[127.0.0.1]
+<a id="__codelineno-58-12" name="__codelineno-58-12"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: AA4D5FEF71: client=localhost.localdomain[127.0.0.1]
+<a id="__codelineno-58-13" name="__codelineno-58-13"></a>Feb 18 11:31:30 arthas postfix/cleanup[18722]: AA4D5FEF71: message-id=&lt;VABVbKQQ9S3o7N@arthas.icecrown.es&gt;
+<a id="__codelineno-58-14" name="__codelineno-58-14"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+<a id="__codelineno-58-15" name="__codelineno-58-15"></a>Feb 18 11:31:30 arthas postfix/qmgr[18435]: AA4D5FEF71: from=&lt;postmaster@arthas.icecrown.es&gt;, size=4373, nrcpt=1 (queue active)
+<a id="__codelineno-58-16" name="__codelineno-58-16"></a>
+<a id="__codelineno-58-17" name="__codelineno-58-17"></a>Feb 18 11:31:30 arthas amavis[18438]: (18438-02) yMQxchA40B3f(BVbKQQ9S3o7N) SEND from &lt;postmaster@arthas.icecrown.es&gt; -&gt; &lt;issues@icecrown.es&gt;, ENVID=AM.yMQxchA40B3f.20230218T103130Z@arthas.icecrown.es 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as AA4D5FEF71
+<a id="__codelineno-58-18" name="__codelineno-58-18"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: connect from localhost.localdomain[127.0.0.1]
+<a id="__codelineno-58-19" name="__codelineno-58-19"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: B0E32FEF75: client=localhost.localdomain[127.0.0.1]
+<a id="__codelineno-58-20" name="__codelineno-58-20"></a>Feb 18 11:31:30 arthas postfix/cleanup[18722]: B0E32FEF75: message-id=&lt;VSBVbKQQ9S3o7N@arthas.icecrown.es&gt;
+<a id="__codelineno-58-21" name="__codelineno-58-21"></a>Feb 18 11:31:30 arthas postfix/smtpd[18725]: disconnect from localhost.localdomain[127.0.0.1] ehlo=1 mail=1 rcpt=1 data=1 quit=1 commands=5
+<a id="__codelineno-58-22" name="__codelineno-58-22"></a>Feb 18 11:31:30 arthas postfix/qmgr[18435]: B0E32FEF75: from=&lt;&gt;, size=6606, nrcpt=1 (queue active)
+<a id="__codelineno-58-23" name="__codelineno-58-23"></a>
+<a id="__codelineno-58-24" name="__codelineno-58-24"></a>Feb 18 11:31:30 arthas amavis[18438]: (18438-02) jkDgUKQwzSN1(BVbKQQ9S3o7N) SEND from &lt;&gt; -&gt; &lt;some-account@gmail.com&gt;, BODY=7BIT ENVID=AM.jkDgUKQwzSN1.20230218T103130Z@arthas.icecrown.es 250 2.0.0 from MTA(smtp:[127.0.0.1]:10025): 250 2.0.0 Ok: queued as B0E32FEF75
+<a id="__codelineno-58-25" name="__codelineno-58-25"></a><span class="hll">Feb 18 11:31:30 arthas amavis[18438]: (18438-02) Blocked BANNED (application/x-shellscript,.asc,sample-script.sh), [127.0.0.1] &lt;some-account@gmail.com&gt; -&gt; &lt;test.djoven@icecrown.es&gt;, Message-ID: &lt;CAHOKk5uyuTatJ4c7_qp9oZsovphBziK_YDbUfHtO7Jkg89P5yQ@mail.gmail.com&gt;, Hits: -
+</span><a id="__codelineno-58-26" name="__codelineno-58-26"></a>Feb 18 11:31:30 arthas postfix/smtp[18723]: 79C12FEF59: to=&lt;test.djoven@icecrown.es&gt;, relay=127.0.0.1[127.0.0.1]:10024, delay=0.29, delays=0.08/0.01/0/0.2, dsn=2.5.0, status=sent (250 2.5.0 Ok, id=18438-02, BOUNCE)
+<a id="__codelineno-58-27" name="__codelineno-58-27"></a>Feb 18 11:31:30 arthas postfix/qmgr[18435]: 79C12FEF59: removed
+<a id="__codelineno-58-28" name="__codelineno-58-28"></a>
+<a id="__codelineno-58-29" name="__codelineno-58-29"></a>Feb 18 11:31:30 arthas dovecot: lda(issues@icecrown.es)&lt;18727&gt;&lt;zrubKwKp8GMnSQAAcf9/Kw&gt;: msgid=&lt;VABVbKQQ9S3o7N@arthas.icecrown.es&gt;: saved mail to INBOX
+<a id="__codelineno-58-30" name="__codelineno-58-30"></a><span class="hll">Feb 18 11:31:30 arthas postfix/pipe[18726]: AA4D5FEF71: to=&lt;issues@icecrown.es&gt;, relay=dovecot, delay=0.07, delays=0.02/0.01/0/0.04, dsn=2.0.0, status=sent (delivered via dovecot service)
+</span><a id="__codelineno-58-31" name="__codelineno-58-31"></a>Feb 18 11:31:30 arthas postfix/qmgr[18435]: AA4D5FEF71: removed
+<a id="__codelineno-58-32" name="__codelineno-58-32"></a>
+<a id="__codelineno-58-33" name="__codelineno-58-33"></a>Feb 18 11:31:31 arthas postfix/smtp[18728]: B0E32FEF75: to=&lt;some-account@gmail.com&gt;, relay=gmail-smtp-in.l.google.com[173.194.76.27]:25, delay=0.47, delays=0.02/0.01/0.08/0.36, dsn=2.0.0, status=sent (250 2.0.0 OK  1676716291 o14-20020a5d62ce000000b002c58cc4a950si7000660wrv.22 - gsmtp)
+<a id="__codelineno-58-34" name="__codelineno-58-34"></a>Feb 18 11:31:31 arthas postfix/qmgr[18435]: B0E32FEF75: removed
+</code></pre></div></td></tr></table></div>
+<p>As can be seen, the email from a GMail account arrived at the server, the Amavis service analyzed it and denied it due to the extension of the attached file. Then it notified <code>issues@icecrown.es</code> and finally returned the email to the external account.</p>
+</li>
+<li>
+<p>Finally, we confirm that the <code>issues@icecrown.es</code> account has an email with our latest test.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/mailfilter-confirmed_spam.png"><img alt="Mail confirmation" src="../assets/zentyal/mailfilter-confirmed_spam.png" title="Mail confirmation"/></a></p>
+</li>
+</ol>
+<p>At this point, our email service is secure enough to be used in production. However, it is highly recommended to configure at least <strong>SPF</strong> and <strong>DKIM</strong>, and ideally, <strong>DMARC</strong>. These security configurations are discussed on the <a href="https://zentyal-aws.projects.djoven.es/en/zentyal-hardening/#mail-module">Hardening</a> page. Additionally, it is also recommended to establish certificates issued by recognized certification authorities such as Let's Encrypt. Again, this will be addressed on another page of the project, specifically in <a href="https://zentyal-aws.projects.djoven.es/en/zentyal-certificates/">Certificates</a>.</p>
+<h3 id="ca-module">CA module<a class="headerlink" href="#ca-module" title="Permanent link">¶</a></h3>
+<p>In order to use the OpenVPN module, we need to configure the <a href="https://doc.zentyal.org/en/ca.html">CA</a> module beforehand, which is extremely easy to set up.</p>
+<ol>
+<li>
+<p>We create our certification entity from <code>Certificate Authority -&gt; General</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ca-creation.png"><img alt="CA creation" src="../assets/zentyal/ca-creation.png" title="CA Creation"/></a></p>
+</li>
+<li>
+<p>Finally, we save changes for our CA to be created.</p>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This module cannot be '<em>enabled</em>' like the others.</p>
+</div>
+</li>
+</ol>
+<p>Additionally, it is possible to issue certificates for the modules we are using with the correct CommonName, however, since we are going to issue certificates recognized through Let's Encrypt, we will not use such functionality. If you want to use it, you would have to go to <code>Certificate Authority -&gt; Services</code> as indicated below:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ca-services.png"><img alt="Certificates for services" src="../assets/zentyal/ca-services.png" title="Certificates for services"/></a></p>
+<h3 id="openvpn-module">OpenVPN Module<a class="headerlink" href="#openvpn-module" title="Permanent link">¶</a></h3>
+<p>The last module we will configure will be <a href="https://doc.zentyal.org/en/vpn.html">OpenVPN</a>. The purpose of using this module is to allow domain users to securely access the shared resources configured in the domain controller module from any location.</p>
+<p>The settings I will establish are:</p>
+<ul>
+<li>As an additional security measure, access will only be allowed using certificates with the CommonName prefix: Icecrown-RC-.</li>
+<li>The VPN connection prefix certificate will have a validity of 120 days. However, it should be noted that setting this value will force us to perform maintenance tasks every 4 months.</li>
+<li>A different VPN port and address than the default will be used.</li>
+</ul>
+<p>The following steps need to be performed to configure the module:</p>
+<ol>
+<li>
+<p>Create the certificate that we will use as the name. To do this, go to <code>Certificate Authority -&gt; General</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/ca-prefix-certificate.png"><img alt="CA prefix certificate" src="../assets/zentyal/ca-prefix-certificate.png" title="CA prefix certificate"/></a></p>
+</li>
+<li>
+<p>Create the VPN connection from <code>VPN -&gt; Servers</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-server.png"><img alt="OpenVPN server" src="../assets/zentyal/vpn-server.png" title="OpenVPN server"/></a></p>
+</li>
+<li>
+<p>Configure the connection from <code>VPN -&gt; Servers -&gt; Configuration</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-configuration-1.png"><img alt="OpenVPN configuration 1" src="../assets/zentyal/vpn-configuration-1.png" title="OpenVPN configuration 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-configuration-2.png"><img alt="OpenVPN configuration 2" src="../assets/zentyal/vpn-configuration-2.png" title="OpenVPN configuration 2"/></a></p>
+</li>
+<li>
+<p>Confirm that the server's internal network is configured in the VPN connection by going to <code>VPN -&gt; Servers -&gt; Advertised networks</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-network-configuration.png"><img alt="OpenVPN network configuration" src="../assets/zentyal/vpn-network-configuration.png" title="OpenVPN network configuration"/></a></p>
+</li>
+<li>
+<p>Enable the module:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/modules_openvpn.png"><img alt="OpenVPN enable" src="../assets/zentyal/modules_openvpn.png" title="OpenVPN enable"/></a></p>
+</li>
+<li>
+<p>Create a network service with the defined VPN connection port:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-service-1.png"><img alt="OpenVPN network service" src="../assets/zentyal/vpn-service-1.png" title="OpenVPN network service"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-service-2.png"><img alt="OpenVPN network service port" src="../assets/zentyal/vpn-service-2.png" title="OpenVPN network service port"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Remember that the protocol is <strong>UDP</strong>.</p>
+</div>
+</li>
+<li>
+<p>Finally, create a rule in the Zentyal firewall that allows the connection and save changes:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-firewall.png"><img alt="OpenVPN firewall rule" src="../assets/zentyal/vpn-firewall.png" title="OpenVPN firewall rule"/></a></p>
+</li>
+</ol>
+<p>With the module now configured, we create a certificate, user, and shared resource to confirm the full functionality of this module. To do so, follow these steps:</p>
+<ol>
+<li>
+<p>Create a certificate:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-test-certificate.png"><img alt="OpenVPN test certificate" src="../assets/zentyal/vpn-test-certificate.png" title="OpenVPN test certificate"/></a></p>
+</li>
+<li>
+<p>Create a domain user:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-test-user.png"><img alt="OpenVPN test user" src="../assets/zentyal/vpn-test-user.png" title="OpenVPN test user"/></a></p>
+</li>
+<li>
+<p>Create a shared folder with read and write permissions for the test user:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-test-share-1.png"><img alt="OpenVPN test share" src="../assets/zentyal/vpn-test-share-1.png" title="OpenVPN test share"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-test-share-2.png"><img alt="OpenVPN test share permissions" src="../assets/zentyal/vpn-test-share-2.png" title="OpenVPN test share permissions"/></a></p>
+</li>
+<li>
+<p>Save changes.</p>
+</li>
+<li>
+<p>Download a bundle with the VPN connection configuration for the client by going to <code>VPN -&gt; Servers -&gt; Download client bundle</code>:</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For this specific example, I will use a Windows 10 machine with OpenVPN already installed for the client.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-test-bundle.png"><img alt="OpenVPN test bundle" src="../assets/zentyal/vpn-test-bundle.png" title="OpenVPN test bundle"/></a></p>
+</li>
+<li>
+<p>Copy the bundle to the client from where you want to establish the VPN connection and configure the OpenVPN client:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-client-configuration.png"><img alt="OpenVPN client configuration" src="../assets/zentyal/vpn-client-configuration.png" title="OpenVPN client configuration"/></a></p>
+</li>
+<li>
+<p>Establish the connection from the OpenVPN client. If everything went well, we should be able to see similar logs in the Zentyal VPN connection log file called <code>/var/log/openvpn/Icecrown-RecursosCompartidos.log</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-59-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-59-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-59-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-59-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-59-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-59-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-59-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-59-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-59-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-59-10">10</a></span>
+<span class="normal"><a href="#__codelineno-59-11">11</a></span>
+<span class="normal"><a href="#__codelineno-59-12">12</a></span>
+<span class="normal"><a href="#__codelineno-59-13">13</a></span>
+<span class="normal"><a href="#__codelineno-59-14">14</a></span>
+<span class="normal"><a href="#__codelineno-59-15">15</a></span>
+<span class="normal"><a href="#__codelineno-59-16">16</a></span>
+<span class="normal"><a href="#__codelineno-59-17">17</a></span>
+<span class="normal"><a href="#__codelineno-59-18">18</a></span>
+<span class="normal"><a href="#__codelineno-59-19">19</a></span>
+<span class="normal"><a href="#__codelineno-59-20">20</a></span>
+<span class="normal"><a href="#__codelineno-59-21">21</a></span>
+<span class="normal"><a href="#__codelineno-59-22">22</a></span>
+<span class="normal"><a href="#__codelineno-59-23">23</a></span>
+<span class="normal"><a href="#__codelineno-59-24">24</a></span>
+<span class="normal"><a href="#__codelineno-59-25">25</a></span>
+<span class="normal"><a href="#__codelineno-59-26">26</a></span>
+<span class="normal"><a href="#__codelineno-59-27">27</a></span>
+<span class="normal"><a href="#__codelineno-59-28">28</a></span>
+<span class="normal"><a href="#__codelineno-59-29">29</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-59-1" name="__codelineno-59-1"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 TLS: Initial packet from [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5), sid=7c56b72b 70d7b663
+<a id="__codelineno-59-2" name="__codelineno-59-2"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=1, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown CA Authority Certificate
+<a id="__codelineno-59-3" name="__codelineno-59-3"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY X509NAME OK: C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
+<a id="__codelineno-59-4" name="__codelineno-59-4"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 VERIFY OK: depth=0, C=ES, ST=Spain, L=Zaragoza, O=Icecrown CA, CN=Icecrown-RC-Maria
+<a id="__codelineno-59-5" name="__codelineno-59-5"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_VER=2.6.0
+<a id="__codelineno-59-6" name="__codelineno-59-6"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_PLAT=win
+<a id="__codelineno-59-7" name="__codelineno-59-7"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_TCPNL=1
+<a id="__codelineno-59-8" name="__codelineno-59-8"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_MTU=1600
+<a id="__codelineno-59-9" name="__codelineno-59-9"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_NCP=2
+<a id="__codelineno-59-10" name="__codelineno-59-10"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_CIPHERS=AES-256-GCM:AES-128-GCM
+<a id="__codelineno-59-11" name="__codelineno-59-11"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_PROTO=478
+<a id="__codelineno-59-12" name="__codelineno-59-12"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZ4=1
+<a id="__codelineno-59-13" name="__codelineno-59-13"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZ4v2=1
+<a id="__codelineno-59-14" name="__codelineno-59-14"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_LZO=1
+<a id="__codelineno-59-15" name="__codelineno-59-15"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_COMP_STUB=1
+<a id="__codelineno-59-16" name="__codelineno-59-16"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_COMP_STUBv2=1
+<a id="__codelineno-59-17" name="__codelineno-59-17"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_GUI_VER=OpenVPN_GUI_11
+<a id="__codelineno-59-18" name="__codelineno-59-18"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 peer info: IV_SSO=openurl,webauth,crtext
+<a id="__codelineno-59-19" name="__codelineno-59-19"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 WARNING: 'tun-mtu' is used inconsistently, local='tun-mtu 1532', remote='tun-mtu 1500'
+<a id="__codelineno-59-20" name="__codelineno-59-20"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 WARNING: 'cipher' is present in local config but missing in remote config, local='cipher AES-256-CBC'
+<a id="__codelineno-59-21" name="__codelineno-59-21"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 Control Channel: TLSv1.3, cipher TLSv1.3 TLS_AES_256_GCM_SHA384, 4096 bit RSA
+<a id="__codelineno-59-22" name="__codelineno-59-22"></a>Sat Feb  4 20:51:33 2023 88.6.127.36:35754 [Icecrown-RC-Maria] Peer Connection Initiated with [AF_INET]88.6.127.36:35754 (via [AF_INET]10.0.1.200%ens5)
+<a id="__codelineno-59-23" name="__codelineno-59-23"></a>Sat Feb  4 20:51:33 2023 Icecrown-RC-Maria/88.6.127.36:35754 MULTI_sva: pool returned IPv4=192.168.210.2, IPv6=(Not enabled)
+<a id="__codelineno-59-24" name="__codelineno-59-24"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 PUSH: Received control message: 'PUSH_REQUEST'
+<a id="__codelineno-59-25" name="__codelineno-59-25"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 SENT CONTROL [Icecrown-RC-Maria]: 'PUSH_REPLY,route 10.0.1.0 255.255.255.0,route-gateway 192.168.210.1,ping 10,ping-restart 120,ifconfig 192.168.210.2 255.255.255.0,peer-id 0,cipher AES-256-GCM' (status=1)
+<a id="__codelineno-59-26" name="__codelineno-59-26"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Data Channel: using negotiated cipher 'AES-256-GCM'
+<a id="__codelineno-59-27" name="__codelineno-59-27"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Outgoing Data Channel: Cipher 'AES-256-GCM' initialized with 256 bit key
+<a id="__codelineno-59-28" name="__codelineno-59-28"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 Incoming Data Channel: Cipher 'AES-256-GCM' initialized with 256 bit key
+<a id="__codelineno-59-29" name="__codelineno-59-29"></a>Sat Feb  4 20:51:34 2023 Icecrown-RC-Maria/88.6.127.36:35754 MULTI: Learn: 00:ff:83:a2:23:96 -&gt; Icecrown-RC-Maria/88.6.127.36:35754
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Once the connection is established, from the file browser, we will set the server URL, which in my case is: <code>\\arthas.icecrown.es</code>. Then, it will ask us for the user credentials.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-client-credentials.png"><img alt="OpenVPN client log in credentials" src="../assets/zentyal/vpn-client-credentials.png" title="OpenVPN client log in credentials"/></a></p>
+</li>
+<li>
+<p>After logging in, we should see the user's personal directory and shared resources.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/zentyal/vpn-client-shares.png"><img alt="OpenVPN client view" src="../assets/zentyal/vpn-client-shares.png" title="OpenVPN client view"/></a></p>
+</li>
+<li>
+<p>Add a file to the <code>Maria</code> and <code>rrhh</code> resources and verify its creation from the Zentyal server CLI:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-60-1">1</a></span>
+<span class="normal"><a href="#__codelineno-60-2">2</a></span>
+<span class="normal"><a href="#__codelineno-60-3">3</a></span>
+<span class="normal"><a href="#__codelineno-60-4">4</a></span>
+<span class="normal"><a href="#__codelineno-60-5">5</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-60-1" name="__codelineno-60-1"></a>ls<span class="w"> </span>-l<span class="w"> </span>/home/maria/test-file-1.txt
+<a id="__codelineno-60-2" name="__codelineno-60-2"></a><span class="w">    </span>-rwxrwx--x+<span class="w"> </span><span class="m">1</span><span class="w"> </span>ICECROWN<span class="se">\m</span>aria<span class="w"> </span>ICECROWN<span class="se">\d</span>omain<span class="w"> </span>users<span class="w"> </span><span class="m">0</span><span class="w"> </span>Feb<span class="w">  </span><span class="m">4</span><span class="w"> </span><span class="m">20</span>:56<span class="w"> </span>/home/maria/test-file-1.txt
+<a id="__codelineno-60-3" name="__codelineno-60-3"></a>
+<a id="__codelineno-60-4" name="__codelineno-60-4"></a>ls<span class="w"> </span>-l<span class="w"> </span>/home/samba/shares/rrhh/test-file-2.txt
+<a id="__codelineno-60-5" name="__codelineno-60-5"></a><span class="w">    </span>-rwxrwx---+<span class="w"> </span><span class="m">1</span><span class="w"> </span>ICECROWN<span class="se">\m</span>aria<span class="w"> </span>ICECROWN<span class="se">\d</span>omain<span class="w"> </span>users<span class="w"> </span><span class="m">0</span><span class="w"> </span>Feb<span class="w">  </span><span class="m">4</span><span class="w"> </span><span class="m">20</span>:56<span class="w"> </span>/home/samba/shares/rrhh/test-file-2.txt
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<p>At this point, the server would be ready for production use. However, as mentioned several times, it is highly recommended to perform certain additional tasks such as:</p>
+<ul>
+<li>Use certificates issued by recognized certification authorities.</li>
+<li>Secure the email service with SPF, DKIM, and DMARC.</li>
+<li>Set restrictions on domain user passwords.</li>
+<li>Create a backup policy.</li>
+<li>Monitor the server.</li>
+<li>Know and schedule maintenance tasks.</li>
+</ul>
+<p>All these configurations will be explained on other pages of the project (see top menu).</p>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 12, 2023</span>
+<br/>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 12, 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Back to top
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "../..", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+<script src="../../assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

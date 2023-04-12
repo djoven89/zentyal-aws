@@ -1,0 +1,458 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/" rel="canonical"/>
+<link href="aws-configuration/" rel="next"/>
+<link href="assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>Zentyal &amp; AWS</title>
+<link href="assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#informacion-del-proyecto">
+          Saltar a contenido
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Cabecera" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href="." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Seleccionar idioma" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="./" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="en/" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Búsqueda" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Búsqueda" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Buscar" class="md-search__options">
+<button aria-label="Limpiar" class="md-search__icon md-icon" tabindex="-1" title="Limpiar" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Pestañas" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href=".">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="aws-configuration/">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="zentyal-installation/">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="zentyal-configuration/">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="monitoring/">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="recovery/">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navegación" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href="." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Home
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href=".">
+        Home
+      </a>
+<nav aria-label="Tabla de contenidos" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#aws">
+    AWS
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#zentyal">
+    Zentyal
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#requisitos">
+    Requisitos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#consideraciones">
+    Consideraciones
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#indice">
+    Índice
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="aws-configuration/">
+        AWS
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zentyal-installation/">
+        Install
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zentyal-configuration/">
+        Configuration
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="monitoring/">
+        Monitoring
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="recovery/">
+        Recovery
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<h1 id="informacion-del-proyecto">Información del proyecto<a class="headerlink" href="#informacion-del-proyecto" title="Permanent link">¶</a></h1>
+<p>El objetivo principal de este proyecto es mostrar y explicar una configuración detallada, robusta, segura y monitorizada del despliegue de un servidor <a href="https://zentyal.com/">Zentyal 7.0</a> en el proveedor cloud de Amazon <a href="https://aws.amazon.com/es/what-is-aws/">AWS</a> para un entorno de producción.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Es importante tener en cuenta que todo lo explicado en el proyecto es un <strong>ejemplo</strong> real de implementación, el cual puede usarse como base o guía para el diseño de vuestro propio entorno.</p>
+</div>
+<p>Las funciones que tendrá este servidor será de actuar como servidor de correo para la organización y adicionalmente, como servidor de recursos compartidos para los distintos departamentos.</p>
+<p>Finalmente, mencionar que también se realizarán múltiples configuraciones adicionales, como la securización mediante SPF, DKIM y DMARC para el servicio de correo, políticas de contraseñas para el controlador de dominio o incluso, mejoras a nivel de CLI.</p>
+<h2 id="aws">AWS<a class="headerlink" href="#aws" title="Permanent link">¶</a></h2>
+<p>Como se ha explicado, se usará AWS para alojar el servidor Zentyal. Este servidor tendrá un coste mensual, el cual dependerá de varios factores, como por ejemplo:</p>
+<ul>
+<li>Tipo de servidor.</li>
+<li>Tipo y número de volúmenes EBS.</li>
+<li>Tráfico que recibe el servidor.</li>
+<li>Políticas de copias de seguridad.</li>
+<li>Sistema de monitorización.</li>
+</ul>
+<p>Para este proyecto en concreto, se harán uso de los siguientes servicios disponibles de AWS:</p>
+<ul>
+<li><a href="https://docs.aws.amazon.com/es_es/Route53/latest/DeveloperGuide/Welcome.html">Route53</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/vpc/latest/userguide/what-is-amazon-vpc.html">VPC</a></li>
+<li><a href="https://aws.amazon.com/es/kms/">KMS</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/AWSEC2/latest/UserGuide/concepts.html">EC2</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html">CloudWatch</a></li>
+<li><a href="https://docs.aws.amazon.com/es_es/sns/latest/dg/welcome.html">SNS</a></li>
+</ul>
+<h2 id="zentyal">Zentyal<a class="headerlink" href="#zentyal" title="Permanent link">¶</a></h2>
+<p>El servidor Zentyal usará la última versión estable disponible, que a fecha de hoy es 7.0. Además, no se usará una licencia comercial, aunque es recomendable debido a las funcionalidades adicionales que ofrece así como la posibilidad de contactar con soporte en caso de incidencia o duda.</p>
+<p>Los módulos que se instalarán y configurarán serán:</p>
+<ul>
+<li><a href="https://doc.zentyal.org/es/firststeps.html#network-configuration-with-zentyal">Network</a></li>
+<li><a href="https://doc.zentyal.org/es/logs.html">Logs</a></li>
+<li><a href="https://doc.zentyal.org/es/firewall.html">Firewall</a></li>
+<li><a href="https://doc.zentyal.org/es/software.html">Software</a></li>
+<li><a href="https://doc.zentyal.org/es/ntp.html">NTP</a></li>
+<li><a href="https://doc.zentyal.org/es/dns.html">DNS</a></li>
+<li><a href="https://doc.zentyal.org/es/directory.html">Controlador de dominio</a></li>
+<li><a href="https://doc.zentyal.org/es/mail.html">Correo</a></li>
+<li><a href="https://doc.zentyal.org/es/mail.html#cliente-de-webmail">Webmail</a></li>
+<li><a href="https://doc.zentyal.org/es/antivirus.html">Antivirus</a></li>
+<li><a href="https://doc.zentyal.org/es/mailfilter.html">Mailfilter</a></li>
+<li><a href="https://doc.zentyal.org/es/ca.html">CA</a></li>
+<li><a href="https://doc.zentyal.org/es/vpn.html">OpenVPN</a></li>
+</ul>
+<p>Adicionalmente, se realizarán las siguientes configuraciones adicionales:</p>
+<ul>
+<li>Creación de una partición para el SWAP.</li>
+<li>Uso de varios volúmenes EBS para almacenar allí distintos tipos de información.</li>
+<li>Generación de certificados con <a href="https://letsencrypt.org/es/">Let's Encrypt</a>.</li>
+<li>Implementación de: <a href="https://support.google.com/a/answer/33786?hl=es-419">SPF</a>, <a href="https://support.google.com/a/answer/174124?hl=es-419">DKIM</a> y <a href="https://support.google.com/a/answer/2466580?hl=es">DMARC</a> para incrementar la seguridad del servicio de correo.</li>
+<li>Políticas de seguridad y rotación de contraseñas del dominio.</li>
+</ul>
+<h2 id="requisitos">Requisitos<a class="headerlink" href="#requisitos" title="Permanent link">¶</a></h2>
+<p>Para poder implementar o probar los pasos descritos en este proyecto, se requerirá de lo siguiente:</p>
+<ol>
+<li>Conocimiento en la administración de sistemas operativos Linux, y más concretamente, en Ubuntu.</li>
+<li>Conocimiento en el manejo de la CLI (línea de comandos).</li>
+<li>Privilegios de administrador sobre el servidor.</li>
+<li>En caso de querer usar AWS, se deberá de tener una cuenta con permisos suficientes para los servicios mencionados en el apartado 'AWS' de este mismo documento.</li>
+</ol>
+<h2 id="consideraciones">Consideraciones<a class="headerlink" href="#consideraciones" title="Permanent link">¶</a></h2>
+<p>A continuación se indican algunas consideraciones a tener en cuenta si se quiere implementar o probar el proyecto:</p>
+<ol>
+<li>Aunque los pasos están explicados, es altamente recomendable tener unos conocimientos mínimos sobre Linux ya que se utiliza bastante la terminal.</li>
+<li>Si se quiere implementar en producción, es altamente recomendable usar la versión comercial, ya que suele venir con acceso a soporte, lo cual puede ser muy útil ante incidencias o actualizaciones a versiones superiores de Zentyal.</li>
+<li>El proyecto ha sido probado en el proveedor cloud AWS, no obstante, debería poder funcionar en otros proveedores cloud.</li>
+<li>En caso de usarse en un proveedor cloud, es muy probable que el despliegue tenga un coste económico mensual.</li>
+<li>El módulo de red es el módulo más crítico en caso de querer implementar este proyecto en un proveedor cloud, por lo que hay que tener bien analizada y definida la configuración que tendrá antes de proceder con su configuración.</li>
+<li>Debido a los módulos instalados en Zentyal, el servidor requerirá de un mínimo de 4GB de RAM para la realización de pruebas, no obstante, si se quiere usar en producción habrá que añadir más RAM.</li>
+</ol>
+<h2 id="indice">Índice<a class="headerlink" href="#indice" title="Permanent link">¶</a></h2>
+<p>El índice del proyecto para su implementación sería:</p>
+<ol>
+<li>AWS</li>
+<li>Instalación</li>
+<li>Configuración</li>
+<li>Certificados</li>
+<li>Hardening</li>
+<li>Backup</li>
+<li>Monitorización</li>
+</ol>
+<p>En caso de querer implementar o probar el proyecto en un servidor on-premise o en otro proveedor cloud, los pasos 1, parte del 6 y 7 no se aplicarían.</p>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Última actualización:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+<br/>
+        Creado:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Volver al principio
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": ".", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+<script src="assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>

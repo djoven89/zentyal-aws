@@ -1,0 +1,792 @@
+
+<!DOCTYPE html>
+
+<html class="no-js" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="Daniel Joven" name="author"/>
+<link href="https://zentyal-aws.projects.djoven.es/recovery/" rel="canonical"/>
+<link href="../maintenance/" rel="prev"/>
+<link href="../zentyal-bug-fixing/" rel="next"/>
+<link href="../assets/favicon.ico" rel="icon"/>
+<meta content="mkdocs-1.4.2, mkdocs-material-9.1.6" name="generator"/>
+<title>Recovery - Zentyal &amp; AWS</title>
+<link href="../assets/stylesheets/main.ded33207.min.css" rel="stylesheet"/>
+<link href="../assets/stylesheets/palette.a0c5b2b5.min.css" rel="stylesheet"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&amp;display=fallback" rel="stylesheet"/>
+<style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+<script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+<link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"/><style>
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            
+                .gscrollbar-fixer { padding-right: 15px; }
+                .gdesc-inner { font-size: 0.75rem; }
+                body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color);}
+                body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color);}
+                body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color);}
+                </style><script src="../assets/javascripts/glightbox.min.js"></script></head>
+<body data-md-color-accent="red" data-md-color-primary="" data-md-color-scheme="default" dir="ltr">
+<script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+<input autocomplete="off" class="md-toggle" data-md-toggle="drawer" id="__drawer" type="checkbox"/>
+<input autocomplete="off" class="md-toggle" data-md-toggle="search" id="__search" type="checkbox"/>
+<label class="md-overlay" for="__drawer"></label>
+<div data-md-component="skip">
+<a class="md-skip" href="#recovery">
+          Saltar a contenido
+        </a>
+</div>
+<div data-md-component="announce">
+</div>
+<header class="md-header" data-md-component="header">
+<nav aria-label="Cabecera" class="md-header__inner md-grid">
+<a aria-label="Zentyal &amp; AWS" class="md-header__button md-logo" data-md-component="logo" href=".." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+<label class="md-header__button md-icon" for="__drawer">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"></path></svg>
+</label>
+<div class="md-header__title" data-md-component="header-title">
+<div class="md-header__ellipsis">
+<div class="md-header__topic">
+<span class="md-ellipsis">
+            Zentyal &amp; AWS
+          </span>
+</div>
+<div class="md-header__topic" data-md-component="header-topic">
+<span class="md-ellipsis">
+            
+              Recovery
+            
+          </span>
+</div>
+</div>
+</div>
+<form class="md-header__option" data-md-component="palette">
+<input aria-label="Switch to dark mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: light)" data-md-color-primary="" data-md-color-scheme="default" id="__palette_1" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_2" hidden="" title="Switch to dark mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+<input aria-label="Switch to light mode" class="md-option" data-md-color-accent="red" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-primary="" data-md-color-scheme="slate" id="__palette_2" name="__palette" type="radio"/>
+<label class="md-header__button md-icon" for="__palette_1" hidden="" title="Switch to light mode">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"></path></svg>
+</label>
+</form>
+<div class="md-header__option">
+<div class="md-select">
+<button aria-label="Seleccionar idioma" class="md-header__button md-icon">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12.87 15.07-2.54-2.51.03-.03A17.52 17.52 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04M18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12m-2.62 7 1.62-4.33L19.12 17h-3.24Z"></path></svg>
+</button>
+<div class="md-select__inner">
+<ul class="md-select__list">
+<li class="md-select__item">
+<a class="md-select__link" href="./" hreflang="es">
+                    Spanish
+                  </a>
+</li>
+<li class="md-select__item">
+<a class="md-select__link" href="../en/recovery/" hreflang="en">
+                    English
+                  </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<label class="md-header__button md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+</label>
+<div class="md-search" data-md-component="search" role="dialog">
+<label class="md-search__overlay" for="__search"></label>
+<div class="md-search__inner" role="search">
+<form class="md-search__form" name="search">
+<input aria-label="Búsqueda" autocapitalize="off" autocomplete="off" autocorrect="off" class="md-search__input" data-md-component="search-query" name="query" placeholder="Búsqueda" required="" spellcheck="false" type="text"/>
+<label class="md-search__icon md-icon" for="__search">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"></path></svg>
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"></path></svg>
+</label>
+<nav aria-label="Buscar" class="md-search__options">
+<button aria-label="Limpiar" class="md-search__icon md-icon" tabindex="-1" title="Limpiar" type="reset">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"></path></svg>
+</button>
+</nav>
+</form>
+<div class="md-search__output">
+<div class="md-search__scrollwrap" data-md-scrollfix="">
+<div class="md-search-result" data-md-component="search-result">
+<div class="md-search-result__meta">
+            Inicializando búsqueda
+          </div>
+<ol class="md-search-result__list" role="presentation"></ol>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md-header__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+</nav>
+</header>
+<div class="md-container" data-md-component="container">
+<nav aria-label="Pestañas" class="md-tabs" data-md-component="tabs">
+<div class="md-grid">
+<ul class="md-tabs__list">
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="..">
+      Home
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../aws-configuration/">
+      AWS
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-installation/">
+      Install
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-configuration/">
+      Configuration
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-certificates/">
+      Certificates
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-hardening/">
+      Hardening
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../backup/">
+      Backup
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../monitoring/">
+      Monitoring
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../maintenance/">
+      Maintenance
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link md-tabs__link--active" href="./">
+      Recovery
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../zentyal-bug-fixing/">
+      Bug fixing
+    </a>
+</li>
+<li class="md-tabs__item">
+<a class="md-tabs__link" href="../about/">
+      About me
+    </a>
+</li>
+</ul>
+</div>
+</nav>
+<main class="md-main" data-md-component="main">
+<div class="md-main__inner md-grid">
+<div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+<div class="md-sidebar__scrollwrap">
+<div class="md-sidebar__inner">
+<nav aria-label="Navegación" class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" data-md-level="0">
+<label class="md-nav__title" for="__drawer">
+<a aria-label="Zentyal &amp; AWS" class="md-nav__button md-logo" data-md-component="logo" href=".." title="Zentyal &amp; AWS">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"></path></svg>
+</a>
+    Zentyal &amp; AWS
+  </label>
+<div class="md-nav__source">
+<a class="md-source" data-md-component="source" href="https://github.com/djoven89/zentyal-aws" title="Ir al repositorio">
+<div class="md-source__icon md-icon">
+<svg viewbox="0 0 496 512" xmlns="http://www.w3.org/2000/svg"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+</div>
+<div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+</div>
+<ul class="md-nav__list" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="..">
+        Home
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../aws-configuration/">
+        AWS
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-installation/">
+        Install
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-configuration/">
+        Configuration
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-certificates/">
+        Certificates
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-hardening/">
+        Hardening
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../backup/">
+        Backup
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../monitoring/">
+        Monitoring
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../maintenance/">
+        Maintenance
+      </a>
+</li>
+<li class="md-nav__item md-nav__item--active">
+<input class="md-nav__toggle md-toggle" id="__toc" type="checkbox"/>
+<label class="md-nav__link md-nav__link--active" for="__toc">
+          Recovery
+          <span class="md-nav__icon md-icon"></span>
+</label>
+<a class="md-nav__link md-nav__link--active" href="./">
+        Recovery
+      </a>
+<nav aria-label="Tabla de contenidos" class="md-nav md-nav--secondary">
+<label class="md-nav__title" for="__toc">
+<span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+<ul class="md-nav__list" data-md-component="toc" data-md-scrollfix="">
+<li class="md-nav__item">
+<a class="md-nav__link" href="#recursos-compartidos">
+    Recursos compartidos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#correos">
+    Correos
+  </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="#sistema">
+    Sistema
+  </a>
+</li>
+</ul>
+</nav>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../zentyal-bug-fixing/">
+        Bug fixing
+      </a>
+</li>
+<li class="md-nav__item">
+<a class="md-nav__link" href="../about/">
+        About me
+      </a>
+</li>
+</ul>
+</nav>
+</div>
+</div>
+</div>
+<div class="md-content" data-md-component="content">
+<article class="md-content__inner md-typeset">
+<nav class="md-tags">
+<span class="md-tag">AWS</span>
+</nav>
+<h1 id="recovery">Recovery<a class="headerlink" href="#recovery" title="Permanent link">¶</a></h1>
+<p>En esta página se explicarán las tres casuísticas relativas a recoveries que pueden darse, desde la 'más' probable hasta la 'menos'. En los tres casos se harán uso de las políticas de copias de seguridad DLM definidas en la página de <a href="https://zentyal-aws.projects.djoven.es/backup/#aws-dlm">backup</a>.</p>
+<h2 id="recursos-compartidos">Recursos compartidos<a class="headerlink" href="#recursos-compartidos" title="Permanent link">¶</a></h2>
+<p>En este apartado simularé que un usuario ha eliminado un archivo importante llamado <code>Nomimas 2023.pdf</code> en un recurso compartido llamado <code>rrhh</code>. El proceso general consistirá en:</p>
+<ol>
+<li>Comprobaremos la existencia del recurso y posteriormente lo eliminaremos.</li>
+<li>Crearemos un volumen EBS de la última snapshot disponible.</li>
+<li>Montaremos el volumen en una ubicación temporal.</li>
+<li>Restauraremos el archivo eliminado.</li>
+<li>Comprobaremos que el usuario vuelve a tener el archivo y que éste es accesible.</li>
+<li>Desmontamos y eliminamos el volumen.</li>
+</ol>
+<p>Para simular la pérdida del documento importante, simplemente me conectaré con el usuario, comprobaré la existencia del documento y lo eliminaré.</p>
+<ol>
+<li>
+<p>Con el usuario comprobamos la existencia del documento en el recurso compartido:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_disaster-1.png"><img alt='"Check pdf file"' src="../assets/aws/recovery-shares_disaster-1.png" title="Check pdf file"/></a></p>
+</li>
+<li>
+<p>Eliminamos el recurso:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_disaster-2.png"><img alt='"Removing the pdf"' src="../assets/aws/recovery-shares_disaster-2.png" title="Removing the pdf"/></a></p>
+</li>
+</ol>
+<p>Con el desastre simulado, procederemos a su recuperación.</p>
+<ol>
+<li>
+<p>Desde <code>EC2 -&gt; Elastic Block Store -&gt; Snapshots -&gt; Create volume from snapshot</code> seleccionamos la última snapshot y creamos un volumen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_snapshot-1.png"><img alt='"Getting the latest snapshot"' src="../assets/aws/recovery-shares_snapshot-1.png" title="Getting the latest snapshot"/></a></p>
+</li>
+<li>
+<p>Configuramos el volumen temporal:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Deberá crearse en la misma zona de disponibilidad.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_snapshot-2.png"><img alt='"Creating the volume 1"' src="../assets/aws/recovery-shares_snapshot-2.png" title="Creating the volume 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_snapshot-3.png"><img alt='"Creating the volume 2"' src="../assets/aws/recovery-shares_snapshot-3.png" title="Creating the volume 2"/></a></p>
+</li>
+<li>
+<p>Verificamos que el volumen haya sido creado con éxito y que esté disponible:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_snapshot-4.png"><img alt='"Verifying the volume"' src="../assets/aws/recovery-shares_snapshot-4.png" title="Verifying the volume"/></a></p>
+</li>
+<li>
+<p>Asociamos el volumen a la instancia, para ello, vamos a <code>Actions -&gt; Attach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_snapshot-5.png"><img alt='"Attaching the volume"' src="../assets/aws/recovery-shares_snapshot-5.png" title="Attaching the volume"/></a></p>
+</li>
+<li>
+<p>Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1"></a>lsblk
+</code></pre></div></td></tr></table></div>
+<p>En mi entorno, el volumen ha sido montado como <code>nvme3n1p1</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-1-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-1-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-1-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-1-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-1-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-1-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-1-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-1-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-1-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-1-10">10</a></span>
+<span class="normal"><a href="#__codelineno-1-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1"></a>NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-1-2" name="__codelineno-1-2"></a>nvme0n1      259:0    0   30G  0 disk
+<a id="__codelineno-1-3" name="__codelineno-1-3"></a>├─nvme0n1p1  259:2    0 29.9G  0 part /
+<a id="__codelineno-1-4" name="__codelineno-1-4"></a>├─nvme0n1p14 259:3    0    4M  0 part
+<a id="__codelineno-1-5" name="__codelineno-1-5"></a>└─nvme0n1p15 259:4    0  106M  0 part /boot/efi
+<a id="__codelineno-1-6" name="__codelineno-1-6"></a>nvme2n1      259:1    0   10G  0 disk
+<a id="__codelineno-1-7" name="__codelineno-1-7"></a>└─nvme2n1p1  259:5    0   10G  0 part /home
+<a id="__codelineno-1-8" name="__codelineno-1-8"></a>nvme1n1      259:6    0   10G  0 disk
+<a id="__codelineno-1-9" name="__codelineno-1-9"></a>└─nvme1n1p1  259:7    0   10G  0 part /var/vmail
+<a id="__codelineno-1-10" name="__codelineno-1-10"></a>nvme3n1      259:8    0   10G  0 disk
+<a id="__codelineno-1-11" name="__codelineno-1-11"></a>└─nvme3n1p1  259:9    0   10G  0 part
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Creamos un directorio temporal donde montaremos el nuevo disco:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-2-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-v<span class="w"> </span>/mnt/shares-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Montamos el volumen:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-3-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>/dev/nvme3n1p1<span class="w"> </span>/mnt/shares-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Buscamos el documento en el recurso compartido <code>rrhh</code> en el directorio donde hemos montado el disco temporal:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-4-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1"></a>sudo<span class="w"> </span>find<span class="w"> </span>/mnt/shares-recovery/samba/shares/rrhh/<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+</code></pre></div></td></tr></table></div>
+<p>Ejemplo en mi servidor:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-5-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1"></a>-rwxrwx---+ 1 ICECROWN\maria ICECROWN\domain users 21377 Feb 27 20:57 '/mnt/shares-recovery/samba/shares/rrhh/Nominas 2023.pdf'
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Una vez identificado el archivo, procedemos a su restauración:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-6-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1"></a>cp<span class="w"> </span>-vp<span class="w"> </span>/mnt/shares-recovery/samba/shares/rrhh/Nominas<span class="se">\ </span><span class="m">2023</span>.pdf<span class="w"> </span>/home/samba/shares/rrhh/
+</code></pre></div></td></tr></table></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Es importante que usemos la opción <code>-p</code> para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el.</p>
+</div>
+</li>
+<li>
+<p>Desde el usuario, comprobaremos que el archivo fue recuperado y que es accesible:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_restoration.png"><img alt='"Confirming the email recovery"' src="../assets/aws/recovery-shares_restoration.png" title="Confirming the email recovery"/></a></p>
+</li>
+<li>
+<p>Una vez hayamos confirmado la restauración del fichero, procedemos a desmontar el disco y eliminar el directorio temporal creado:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-7-1">1</a></span>
+<span class="normal"><a href="#__codelineno-7-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1"></a>sudo<span class="w"> </span>umount<span class="w"> </span>-v<span class="w"> </span>/mnt/shares-recovery
+<a id="__codelineno-7-2" name="__codelineno-7-2"></a>sudo<span class="w"> </span>rmdir<span class="w"> </span>-v<span class="w"> </span>/mnt/shares-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Desvinculamos el volumen EBS de la instancia, para ello, vamos a <code>Actions -&gt; Detach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_detach.png"><img alt='"Detaching the volumen"' src="../assets/aws/recovery-shares_detach.png" title="Detaching the volumen"/></a></p>
+</li>
+<li>
+<p>Finalmente, eliminamos el volumen EBS desde <code>Actions -&gt; Delete volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-shares_volumen-remove.png"><img alt='"Removing the volumen"' src="../assets/aws/recovery-shares_volumen-remove.png" title="Removing the volumen"/></a></p>
+</li>
+</ol>
+<h2 id="correos">Correos<a class="headerlink" href="#correos" title="Permanent link">¶</a></h2>
+<p>El objetivo de este apartado es simular que un usuario llamado <code>maria</code> a eliminado un email llamado <code>Presupuesto 2023</code> con un adjunto. El proceso general es muy similar al anterior, que consiste de forma general en:</p>
+<ol>
+<li>Comprobaremos la existencia del email y posteriormente lo eliminaremos.</li>
+<li>Crearemos un volumen EBS de la última snapshot disponible.</li>
+<li>Montaremos el volumen en una ubicación temporal.</li>
+<li>Restauraremos el email eliminado.</li>
+<li>Comprobaremos que el usuario vuelve a tener acceso al email.</li>
+<li>Desmontamos y eliminamos el volumen.</li>
+</ol>
+<p>Para simular la pérdida de un email importante, usaré el webmail para verificar el correo y posteriormente, lo eliminaré.</p>
+<ol>
+<li>
+<p>Nos logeamos con el usuario y verificamos el email:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_disaster-1.png"><img alt='"Check the email"' src="../assets/aws/recovery-mail_disaster-1.png" title="Check the email"/></a></p>
+</li>
+<li>
+<p>Eliminamos el email:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_disaster-2.png"><img alt='"Removing the email 1"' src="../assets/aws/recovery-mail_disaster-2.png" title="Removing the email 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_disaster-3.png"><img alt='"Removing the email 2"' src="../assets/aws/recovery-mail_disaster-3.png" title="Removing the email 2"/></a></p>
+</li>
+</ol>
+<p>Ahora que tenemos simulado el desastre, procederemos a realizar las acciones necesarias para recuperar el email.</p>
+<ol>
+<li>
+<p>Desde <code>EC2 -&gt; Elastic Block Store -&gt; Snapshots -&gt; Create volume from snapshot</code> seleccionamos la última snapshot y creamos un volumen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-1.png"><img alt='"Getting the latest snapshot"' src="../assets/aws/recovery-mail_snapshot-1.png" title="Getting the latest snapshot"/></a></p>
+</li>
+<li>
+<p>Configuramos el volumen temporal:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Deberá crearse en la misma zona de disponibilidad.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-2.png"><img alt='"Creating the volume 1"' src="../assets/aws/recovery-mail_snapshot-2.png" title="Creating the volume 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-3.png"><img alt='"Creating the volume 2"' src="../assets/aws/recovery-mail_snapshot-3.png" title="Creating the volume 2"/></a></p>
+</li>
+<li>
+<p>Verificamos que el volumen haya sido creado con éxito y que esté disponible:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-4.png"><img alt='"Verifying the volume"' src="../assets/aws/recovery-mail_snapshot-4.png" title="Verifying the volume"/></a></p>
+</li>
+<li>
+<p>Asociamos el volumen a la instancia, para ello, vamos a <code>Actions -&gt; Attach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-5.png"><img alt='"Attaching the volume"' src="../assets/aws/recovery-mail_snapshot-5.png" title="Attaching the volume"/></a></p>
+</li>
+<li>
+<p>Nos conectamos vía SSH al servidor y verificamos que el sistema operativo detecta el nuevo volumen:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-8-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1"></a>lsblk
+</code></pre></div></td></tr></table></div>
+<p>En mi entorno, el volumen ha sido montado como <code>nvme3n1p1</code>:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-9-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-9-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-9-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-9-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-9-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-9-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-9-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-9-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-9-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-9-10">10</a></span>
+<span class="normal"><a href="#__codelineno-9-11">11</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1"></a>NAME         MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+<a id="__codelineno-9-2" name="__codelineno-9-2"></a>nvme1n1      259:0    0   10G  0 disk
+<a id="__codelineno-9-3" name="__codelineno-9-3"></a>└─nvme1n1p1  259:1    0   10G  0 part /var/vmail
+<a id="__codelineno-9-4" name="__codelineno-9-4"></a>nvme0n1      259:2    0   30G  0 disk
+<a id="__codelineno-9-5" name="__codelineno-9-5"></a>├─nvme0n1p1  259:5    0 29.9G  0 part /
+<a id="__codelineno-9-6" name="__codelineno-9-6"></a>├─nvme0n1p14 259:6    0    4M  0 part
+<a id="__codelineno-9-7" name="__codelineno-9-7"></a>└─nvme0n1p15 259:7    0  106M  0 part /boot/efi
+<a id="__codelineno-9-8" name="__codelineno-9-8"></a>nvme2n1      259:3    0   10G  0 disk
+<a id="__codelineno-9-9" name="__codelineno-9-9"></a>└─nvme2n1p1  259:4    0   10G  0 part /home
+<a id="__codelineno-9-10" name="__codelineno-9-10"></a>nvme3n1      259:8    0   10G  0 disk
+<a id="__codelineno-9-11" name="__codelineno-9-11"></a>└─nvme3n1p1  259:9    0   10G  0 part
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Creamos un directorio temporal donde montaremos el nuevo disco:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-10-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-v<span class="w"> </span>/mnt/mail-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Montamos el volumen:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-11-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>/dev/nvme3n1p1<span class="w"> </span>/mnt/mail-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Buscamos el correo del usuario <code>maria</code> en el directorio donde hemos montado el disco temporal:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-12-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1"></a>sudo<span class="w"> </span>find<span class="w"> </span>/mnt/mail-recovery/icecrown.es/maria/<span class="w"> </span>-type<span class="w"> </span>f<span class="w"> </span>-exec<span class="w"> </span>ls<span class="w"> </span>-l<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+</code></pre></div></td></tr></table></div>
+<p>Ejemplo en mi servidor:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-13-1">1</a></span>
+<span class="normal"><a href="#__codelineno-13-2">2</a></span>
+<span class="normal"><a href="#__codelineno-13-3">3</a></span>
+<span class="normal"><a href="#__codelineno-13-4">4</a></span>
+<span class="normal"><a href="#__codelineno-13-5">5</a></span>
+<span class="normal"><a href="#__codelineno-13-6">6</a></span>
+<span class="normal"><a href="#__codelineno-13-7">7</a></span>
+<span class="normal"><a href="#__codelineno-13-8">8</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1"></a>-rw------- 1 ebox ebox 2180 Feb 27 21:36 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.index.cache
+<a id="__codelineno-13-2" name="__codelineno-13-2"></a>-rw------- 1 ebox ebox 384 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.list.index.log
+<a id="__codelineno-13-3" name="__codelineno-13-3"></a>-rw------- 1 ebox ebox 8 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot-uidvalidity
+<a id="__codelineno-13-4" name="__codelineno-13-4"></a>-rw------- 1 ebox ebox 102 Feb 27 21:36 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot-uidlist
+<a id="__codelineno-13-5" name="__codelineno-13-5"></a>-rw------- 1 ebox ebox 24 Feb 27 21:36 /mnt/mail-recovery/icecrown.es/maria/Maildir/maildirsize
+<a id="__codelineno-13-6" name="__codelineno-13-6"></a>-r--r--r-- 1 ebox ebox 0 Feb 27 21:33 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot-uidvalidity.63fd1386
+<a id="__codelineno-13-7" name="__codelineno-13-7"></a>-rw------- 1 ebox ebox 31900 Feb 27 21:36 '/mnt/mail-recovery/icecrown.es/maria/Maildir/cur/1677530165.M104169P13132.arthas,S=31900,W=32366:2,S'
+<a id="__codelineno-13-8" name="__codelineno-13-8"></a>-rw------- 1 ebox ebox 1124 Feb 27 21:37 /mnt/mail-recovery/icecrown.es/maria/Maildir/dovecot.index.log
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Una vez identificado el correo, procedemos a su restauración:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-14-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1"></a>sudo<span class="w"> </span>cp<span class="w"> </span>-vp<span class="w"> </span><span class="s1">'/mnt/mail-recovery/icecrown.es/maria/Maildir/cur/1677530165.M104169P13132.arthas,S=31900,W=32366:2,S'</span><span class="w"> </span>/var/vmail/icecrown.es/maria/Maildir/cur/
+</code></pre></div></td></tr></table></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Es importante que se use la opción <code>-p</code> para preservar los permisos del archivo, de lo contrario, el usuario no podrá acceder a el. Además, también será importante que la restauración se haga en el mismo directorio, que en mi caso es: <code>icecrown.es/maria/Maildir/cur/</code>.</p>
+</div>
+</li>
+<li>
+<p>Desde la cuenta del usuario de correo, verificamos que lo hemos recuperado junto con su adjunto.</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_restoration.png"><img alt='"Confirming the email recovery"' src="../assets/aws/recovery-mail_restoration.png" title="Confirming the email recovery"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_restoration-2.png"><img alt='"Confirming the email recovery"' src="../assets/aws/recovery-mail_restoration-2.png" title="Confirming the email recovery"/></a></p>
+</li>
+<li>
+<p>Una vez restaurado con éxito el email, procedemos a desmontar el disco y eliminar el directorio temporal creado:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-15-1">1</a></span>
+<span class="normal"><a href="#__codelineno-15-2">2</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1"></a>sudo<span class="w"> </span>umount<span class="w"> </span>-v<span class="w"> </span>/mnt/mail-recovery
+<a id="__codelineno-15-2" name="__codelineno-15-2"></a>sudo<span class="w"> </span>rmdir<span class="w"> </span>-v<span class="w"> </span>/mnt/mail-recovery
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Desvinculamos el volumen EBS de la instancia, para ello, vamos a <code>Actions -&gt; Detach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_detach.png"><img alt='"Detaching the volumen"' src="../assets/aws/recovery-mail_detach.png" title="Detaching the volumen"/></a></p>
+</li>
+<li>
+<p>Finalmente, eliminamos el volumen EBS desde <code>Actions -&gt; Delete volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_volumen-remove.png"><img alt='"Removing the volumen"' src="../assets/aws/recovery-mail_volumen-remove.png" title="Removing the volumen"/></a></p>
+</li>
+</ol>
+<h2 id="sistema">Sistema<a class="headerlink" href="#sistema" title="Permanent link">¶</a></h2>
+<p>Para este apartado simularé que el sistema ha quedado totalmente inoperativo debido a que un administrador de sistemas ha eliminado accidentalmente el paquete <code>zentyal-core</code>. El proceso general consiste en:</p>
+<ol>
+<li>Provocaremos el desastre.</li>
+<li>Crearemos un volumen EBS de la última snapshot disponible.</li>
+<li>Reemplazaremos el volumen de la instancia.</li>
+<li>Comprobaremos que el servidor vuelve a estar operativo.</li>
+<li>Eliminamos el volumen original.</li>
+</ol>
+<p>Para simular el desastre, lo que haré será eliminar el paquete <code>zentyal-core</code>.</p>
+<ol>
+<li>
+<p>Nos logeamos en el servidor a través de SSH y comprobamos el estado de los paquetes de Zentyal:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-16-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s1">'zen(buntu|tyal)-'</span>
+</code></pre></div></td></tr></table></div>
+<p>El resultado obtenido en mi caso:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-17-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-17-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-17-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-17-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-17-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-17-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-17-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-17-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-17-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-17-10">10</a></span>
+<span class="normal"><a href="#__codelineno-17-11">11</a></span>
+<span class="normal"><a href="#__codelineno-17-12">12</a></span>
+<span class="normal"><a href="#__codelineno-17-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1"></a>ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+<a id="__codelineno-17-2" name="__codelineno-17-2"></a>ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+<a id="__codelineno-17-3" name="__codelineno-17-3"></a>ii  zentyal-core                          7.0.5                             all          Zentyal - Core
+<a id="__codelineno-17-4" name="__codelineno-17-4"></a>ii  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+<a id="__codelineno-17-5" name="__codelineno-17-5"></a>ii  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+<a id="__codelineno-17-6" name="__codelineno-17-6"></a>ii  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+<a id="__codelineno-17-7" name="__codelineno-17-7"></a>ii  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+<a id="__codelineno-17-8" name="__codelineno-17-8"></a>ii  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+<a id="__codelineno-17-9" name="__codelineno-17-9"></a>ii  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+<a id="__codelineno-17-10" name="__codelineno-17-10"></a>ii  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+<a id="__codelineno-17-11" name="__codelineno-17-11"></a>ii  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+<a id="__codelineno-17-12" name="__codelineno-17-12"></a>ii  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+<a id="__codelineno-17-13" name="__codelineno-17-13"></a>ii  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Eliminamos el paquete <code>zentyal-core</code> para causar la inestabilidad:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-18-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1"></a>sudo<span class="w"> </span>apt<span class="w"> </span>remove<span class="w"> </span>-y<span class="w"> </span>zentyal-core
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Finalmente, confirmamos que los módulos se han desinstalado, dejando el servidor ha quedado inoperativo:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-19-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s1">'zen(buntu|tyal)-'</span>
+</code></pre></div></td></tr></table></div>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-20-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-20-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-20-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-20-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-20-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-20-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-20-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-20-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-20-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-20-10">10</a></span>
+<span class="normal"><a href="#__codelineno-20-11">11</a></span>
+<span class="normal"><a href="#__codelineno-20-12">12</a></span>
+<span class="normal"><a href="#__codelineno-20-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1"></a>rc  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+<a id="__codelineno-20-2" name="__codelineno-20-2"></a>rc  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+<a id="__codelineno-20-3" name="__codelineno-20-3"></a>rc  zentyal-core                          7.0.5                             all          Zentyal - Core
+<a id="__codelineno-20-4" name="__codelineno-20-4"></a>rc  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+<a id="__codelineno-20-5" name="__codelineno-20-5"></a>rc  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+<a id="__codelineno-20-6" name="__codelineno-20-6"></a>rc  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+<a id="__codelineno-20-7" name="__codelineno-20-7"></a>rc  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+<a id="__codelineno-20-8" name="__codelineno-20-8"></a>rc  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+<a id="__codelineno-20-9" name="__codelineno-20-9"></a>rc  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+<a id="__codelineno-20-10" name="__codelineno-20-10"></a>rc  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+<a id="__codelineno-20-11" name="__codelineno-20-11"></a>rc  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+<a id="__codelineno-20-12" name="__codelineno-20-12"></a>rc  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+<a id="__codelineno-20-13" name="__codelineno-20-13"></a>rc  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+</code></pre></div></td></tr></table></div>
+</li>
+</ol>
+<p>Con el desastre correctamente implementado, procederemos a restaurarlo a través de la última snapshot disponible.</p>
+<ol>
+<li>
+<p>Desde <code>EC2 -&gt; Elastic Block Store -&gt; Snapshots -&gt; Create volume from snapshot</code> seleccionamos la última snapshot y creamos un volumen:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_snapshot-1.png"><img alt='"Getting the latest snapshot"' src="../assets/aws/recovery-system_snapshot-1.png" title="Getting the latest snapshot"/></a></p>
+</li>
+<li>
+<p>Configuramos el volumen:</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Deberá crearse en la misma zona de disponibilidad.</p>
+</div>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_snapshot-2.png"><img alt='"Creating the volume 1"' src="../assets/aws/recovery-system_snapshot-2.png" title="Creating the volume 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_snapshot-3.png"><img alt='"Creating the volume 2"' src="../assets/aws/recovery-system_snapshot-3.png" title="Creating the volume 2"/></a></p>
+</li>
+<li>
+<p>Verificamos que el volumen haya sido creado con éxito y que esté disponible:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-mail_snapshot-4.png"><img alt='"Verifying the volume"' src="../assets/aws/recovery-mail_snapshot-4.png" title="Verifying the volume"/></a></p>
+</li>
+<li>
+<p>Paramos la instancia EC2, para ello, vamos a <code>EC2 -&gt; Instances -&gt; Instance state</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_shutdown.png"><img alt='"Stopping the instance"' src="../assets/aws/recovery-system_shutdown.png" title="Stopping the instance"/></a></p>
+</li>
+<li>
+<p>Una vez parada, obtenemos el punto de montaje del volumen del sistema desde <code>EC2 -&gt; Elastic Block Store -&gt; Volumes</code> (opción <strong>Attached instances</strong>):</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-id.png"><img alt='"Getting the system volume ID"' src="../assets/aws/recovery-system_volume-id.png" title="Getting the system volume ID"/></a></p>
+</li>
+<li>
+<p>Desvinculamos el EBS del sistema desde <code>Actions -&gt; Detach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-detach.png"><img alt='"Detach the system volume"' src="../assets/aws/recovery-system_volume-detach.png" title="Detach the system volume"/></a></p>
+</li>
+<li>
+<p>Asociamos el volumen creado en el paso 2 desde <code>Actions -&gt; Detach volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-attach_1.png"><img alt='"Attach the new system volume 1"' src="../assets/aws/recovery-system_volume-attach_1.png" title="Attach the new system volume 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-attach_2.png"><img alt='"Attach the new system volume 2"' src="../assets/aws/recovery-system_volume-attach_2.png" title="Attach the new system volume 2"/></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>El punto de montaje (Device name) deberá ser el mismo que el obtenido en el paso 5.</p>
+</div>
+</li>
+<li>
+<p>Iniciamos la instancia desde <code>EC2 -&gt; Instances -&gt; Instance state</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_start.png"><img alt='"Starting the instance"' src="../assets/aws/recovery-system_start.png" title="Starting the instance"/></a></p>
+</li>
+<li>
+<p>Nos conectamos a la instancia y verificamos que volvemos a tener los paquetes correctamente instalados:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-21-1">1</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1"></a>dpkg<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>egrep<span class="w"> </span><span class="s1">'zen(buntu|tyal)-'</span>
+</code></pre></div></td></tr></table></div>
+<p>El resultado obtenido en mi caso:</p>
+<div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-22-1"> 1</a></span>
+<span class="normal"><a href="#__codelineno-22-2"> 2</a></span>
+<span class="normal"><a href="#__codelineno-22-3"> 3</a></span>
+<span class="normal"><a href="#__codelineno-22-4"> 4</a></span>
+<span class="normal"><a href="#__codelineno-22-5"> 5</a></span>
+<span class="normal"><a href="#__codelineno-22-6"> 6</a></span>
+<span class="normal"><a href="#__codelineno-22-7"> 7</a></span>
+<span class="normal"><a href="#__codelineno-22-8"> 8</a></span>
+<span class="normal"><a href="#__codelineno-22-9"> 9</a></span>
+<span class="normal"><a href="#__codelineno-22-10">10</a></span>
+<span class="normal"><a href="#__codelineno-22-11">11</a></span>
+<span class="normal"><a href="#__codelineno-22-12">12</a></span>
+<span class="normal"><a href="#__codelineno-22-13">13</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1"></a>ii  zentyal-antivirus                     7.0.2                             all          Zentyal - Antivirus
+<a id="__codelineno-22-2" name="__codelineno-22-2"></a>ii  zentyal-ca                            7.0.1                             all          Zentyal - Certification Authority
+<a id="__codelineno-22-3" name="__codelineno-22-3"></a>ii  zentyal-core                          7.0.5                             all          Zentyal - Core
+<a id="__codelineno-22-4" name="__codelineno-22-4"></a>ii  zentyal-dns                           7.0.2                             all          Zentyal - DNS Server
+<a id="__codelineno-22-5" name="__codelineno-22-5"></a>ii  zentyal-firewall                      7.0.0                             all          Zentyal - Firewall
+<a id="__codelineno-22-6" name="__codelineno-22-6"></a>ii  zentyal-mail                          7.0.2                             all          Zentyal - Mail
+<a id="__codelineno-22-7" name="__codelineno-22-7"></a>ii  zentyal-mailfilter                    7.0.0                             all          Zentyal - Mail Filter
+<a id="__codelineno-22-8" name="__codelineno-22-8"></a>ii  zentyal-network                       7.0.0                             all          Zentyal - Network Configuration
+<a id="__codelineno-22-9" name="__codelineno-22-9"></a>ii  zentyal-ntp                           7.0.0                             all          Zentyal - NTP Service
+<a id="__codelineno-22-10" name="__codelineno-22-10"></a>ii  zentyal-openvpn                       7.0.0                             all          Zentyal - VPN
+<a id="__codelineno-22-11" name="__codelineno-22-11"></a>ii  zentyal-samba                         7.0.1                             all          Zentyal - Domain Controller and File Sharing
+<a id="__codelineno-22-12" name="__codelineno-22-12"></a>ii  zentyal-software                      7.0.0                             all          Zentyal - Software Management
+<a id="__codelineno-22-13" name="__codelineno-22-13"></a>ii  zentyal-sogo                          7.0.0                             all          Zentyal - Web Mail
+</code></pre></div></td></tr></table></div>
+</li>
+<li>
+<p>Eliminamos el volumen EBS inestable, para ello vamos a <code>EC2 -&gt; Elastic Block Store -&gt; Volumes -&gt; Delete volume</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-remove.png"><img alt='"Removing the old volume"' src="../assets/aws/recovery-system_volume-remove.png" title="Removing the old volume"/></a></p>
+</li>
+<li>
+<p>Finalmente, modificamos la etiqueta <code>Name</code> del nuevo volumen desde <code>Tags -&gt; Manage tags</code>:</p>
+<p><a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-tags_1.png"><img alt='"Tagging the new volume 1"' src="../assets/aws/recovery-system_volume-tags_1.png" title="Tagging the new volume 1"/></a>
+<a class="glightbox" data-desc-position="bottom" data-height="auto" data-type="image" data-width="100%" href="../assets/aws/recovery-system_volume-tags_2.png"><img alt='"Tagging the new volume 2"' src="../assets/aws/recovery-system_volume-tags_2.png" title="Tagging the new volume 2"/></a></p>
+</li>
+</ol>
+<hr/>
+<div class="md-source-file">
+<small>
+    
+      Última actualización:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+<br/>
+        Creado:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">12 de abril de 2023</span>
+</small>
+</div>
+</article>
+</div>
+</div>
+<button class="md-top md-icon" data-md-component="top" hidden="" type="button">
+<svg viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"></path></svg>
+            Volver al principio
+          </button>
+</main>
+<footer class="md-footer">
+<div class="md-footer-meta md-typeset">
+<div class="md-footer-meta__inner md-grid">
+<div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" rel="noopener" target="_blank">
+      Material for MkDocs
+    </a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+<div class="md-dialog" data-md-component="dialog">
+<div class="md-dialog__inner md-typeset"></div>
+</div>
+<script id="__config" type="application/json">{"base": "..", "features": ["navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "toc.integrate", "content.code.copy", "content.code.annotate", "navigation.top"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copiado al portapapeles", "clipboard.copy": "Copiar al portapapeles", "search.result.more.one": "1 m\u00e1s en esta p\u00e1gina", "search.result.more.other": "# m\u00e1s en esta p\u00e1gina", "search.result.none": "No se encontraron documentos", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Teclee para comenzar b\u00fasqueda", "search.result.term.missing": "Falta", "select.version": "Seleccionar versi\u00f3n"}}</script>
+<script src="../assets/javascripts/bundle.51198bba.min.js"></script>
+<script>document$.subscribe(() => {const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});})</script></body>
+</html>
